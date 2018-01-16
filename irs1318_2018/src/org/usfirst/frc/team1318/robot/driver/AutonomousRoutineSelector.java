@@ -28,6 +28,11 @@ public class AutonomousRoutineSelector
     private final IDigitalInput dipSwitchC;
     private final IDigitalInput dipSwitchD;
 
+    private enum Position
+    {
+        Center, Left, Right, Special;
+    }
+
     /**
      * Initializes a new AutonomousDriver
      */
@@ -57,9 +62,8 @@ public class AutonomousRoutineSelector
         boolean isSwitchSideLeft = (rawSideData.charAt(0) == 'L');
         boolean isScaleSideLeft = (rawSideData.charAt(1) == 'L');
 
-        int positionSelection = 0; // Robot position where 0 is center, 1 is left, and 2 is right (3 is reserved for special cases)
-
         // add next base2 number (1, 2, 4, 8, 16, etc.) here based on number of dipswitches and which is on...
+        int positionSelection = 0;
         if (this.dipSwitchA.get())
         {
             positionSelection += 1;
@@ -69,28 +73,41 @@ public class AutonomousRoutineSelector
             positionSelection += 2;
         }
 
+        // Robot position: 0 is center, 1 is left, and 2 is right (3 is reserved for special cases)
+        Position position;
+        switch (positionSelection)
+        {
+            case 0:
+                position = Position.Center;
+                break;
+            case 1:
+                position = Position.Left;
+                break;
+            case 2:
+                position = Position.Right;
+                break;
+            case 3:
+            default:
+                position = Position.Special;
+                break;
+        }
+
         // print routine parameters to the smartdash
-        this.logger.logInteger(
-            AutonomousRoutineSelector.LogName, "position",
-            positionSelection);
+        this.logger.logString(AutonomousRoutineSelector.LogName, "position", position.toString());
+        this.logger.logBoolean(AutonomousRoutineSelector.LogName, "isOpportunistic", isOpportunistic);
+        this.logger.logBoolean(AutonomousRoutineSelector.LogName, "prefersSwitch", prefersSwitch);
 
-        this.logger.logBoolean(AutonomousRoutineSelector.LogName, "isOpportunistic",
-            isOpportunistic);
-
-        this.logger.logBoolean(AutonomousRoutineSelector.LogName, "prefersSwitch",
-            prefersSwitch);
-
-        if (positionSelection == 3)
+        if (position == Position.Special)
         {
             return specialRoutineSelection(isOpportunistic, prefersSwitch);
         }
         else if (isOpportunistic)
         {
-            return opportunisticRoutineSelection(positionSelection, prefersSwitch, isSwitchSideLeft, isScaleSideLeft);
+            return opportunisticRoutineSelection(position, prefersSwitch, isSwitchSideLeft, isScaleSideLeft);
         }
         else
         {
-            return setRoutineSelection(positionSelection, prefersSwitch, isSwitchSideLeft, isScaleSideLeft);
+            return setRoutineSelection(position, prefersSwitch, isSwitchSideLeft, isScaleSideLeft);
         }
     }
 
@@ -109,7 +126,6 @@ public class AutonomousRoutineSelector
         {
             return GetFillerRoutine();
         }
-
     }
 
     /**
@@ -118,14 +134,17 @@ public class AutonomousRoutineSelector
      * @return most efficient routine (in-line with starting side)
      */
     private static IControlTask opportunisticRoutineSelection(
-        int positionSelection, boolean prefersSwitch, boolean isSwitchSideLeft, boolean isScaleSideLeft)
+        Position position,
+        boolean prefersSwitch,
+        boolean isSwitchSideLeft,
+        boolean isScaleSideLeft)
     {
-        switch (positionSelection)
+        switch (position)
         {
-            case 0: // center
+            case Center:
                 return PlaceCubeOnSwitchFromMiddle();
 
-            case 1: // left
+            case Left:
                 if (isSwitchSideLeft && isScaleSideLeft)
                 {
                     return prefersSwitch ? PlaceCubeOnSameSideSwitch(true) : PlaceCubeOnSameSideScale(true);
@@ -138,7 +157,8 @@ public class AutonomousRoutineSelector
                 {
                     return PlaceCubeOnSameSideSwitch(true);
                 }
-            case 2: // right
+
+            case Right:
                 if (!isSwitchSideLeft && !isScaleSideLeft)
                 {
                     return prefersSwitch ? PlaceCubeOnSameSideSwitch(true) : PlaceCubeOnSameSideScale(true);
@@ -151,6 +171,8 @@ public class AutonomousRoutineSelector
                 {
                     return PlaceCubeOnSameSideSwitch(true);
                 }
+
+            case Special:
             default:
                 return GetFillerRoutine();
         }
@@ -162,11 +184,14 @@ public class AutonomousRoutineSelector
      * @return routine for either scale or switch, whichever was selected with the fourth switch
      */
     private static IControlTask setRoutineSelection(
-        int positionSelection, boolean prefersSwitch, boolean isSwitchSideLeft, boolean isScaleSideLeft)
+        Position position,
+        boolean prefersSwitch,
+        boolean isSwitchSideLeft,
+        boolean isScaleSideLeft)
     {
-        switch (positionSelection)
+        switch (position)
         {
-            case 0:
+            case Center:
                 if (prefersSwitch)
                 {
                     return PlaceCubeOnSwitchFromMiddle();
@@ -175,7 +200,8 @@ public class AutonomousRoutineSelector
                 {
                     return PlaceCubeOnScaleFromMiddle();
                 }
-            case 1:
+
+            case Left:
                 if (prefersSwitch)
                 {
                     return isSwitchSideLeft ? PlaceCubeOnSameSideSwitch(true) : PlaceCubeOnOppositeSideSwitch(true);
@@ -184,7 +210,8 @@ public class AutonomousRoutineSelector
                 {
                     return isScaleSideLeft ? PlaceCubeOnSameSideScale(true) : PlaceCubeOnOppositeSideScale(true);
                 }
-            case 2:
+
+            case Right:
                 if (prefersSwitch)
                 {
                     return !isSwitchSideLeft ? PlaceCubeOnSameSideSwitch(false) : PlaceCubeOnOppositeSideSwitch(false);
@@ -193,6 +220,8 @@ public class AutonomousRoutineSelector
                 {
                     return !isScaleSideLeft ? PlaceCubeOnSameSideScale(false) : PlaceCubeOnOppositeSideScale(false);
                 }
+
+            case Special:
             default:
                 return GetFillerRoutine();
         }
