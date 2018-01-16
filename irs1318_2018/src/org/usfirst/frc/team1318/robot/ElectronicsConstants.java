@@ -23,6 +23,9 @@ public class ElectronicsConstants
     //================================================== Auto ==============================================================
 
     public static final int AUTO_DIP_SWITCH_A_CHANNEL = -1;
+    public static final int AUTO_DIP_SWITCH_B_CHANNEL = -1;
+    public static final int AUTO_DIP_SWITCH_C_CHANNEL = -1;
+    public static final int AUTO_DIP_SWITCH_D_CHANNEL = -1;
 
     //================================================== Vision ==============================================================
 
