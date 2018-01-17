@@ -95,4 +95,7 @@ public class TuningConstants
     public static final double DRIVETRAIN_VELOCITY_MAX_POWER_LEVEL = 1.0;
 
     public static final double DRIVETRAIN_ENCODER_ODOMETRY_ANGLE_CORRECTION = 1.0; // account for turning weirdness (any degree offset in the angle)
+
+    // AI Tuning
+    public static final double AI_TUNING_SAMPLE_TIME = 2.0;
 }
