@@ -18,12 +18,12 @@ public class PIDAutoTuneTask extends Organism
 
     private double lastTime;
 
-    private enum STAGE
+    private enum Stage
     {
         SETUP, STEP1, STEP2, STEP3, ENDSTEP
     };
 
-    private STAGE currentStage;
+    private Stage currentStage;
 
     // Initialize this organism with a set of initial ranges to choose from
     public PIDAutoTuneTask(
@@ -46,7 +46,7 @@ public class PIDAutoTuneTask extends Organism
     @Override
     public void begin()
     {
-        this.currentStage = STAGE.SETUP;
+        this.currentStage = Stage.SETUP;
         this.timer = new Timer();
         this.talon.setControlMode(TalonSRXControlMode.PercentOutput);
         this.cumulativeError = 0;
@@ -55,7 +55,7 @@ public class PIDAutoTuneTask extends Organism
     @Override
     public void update()
     {
-        if (currentStage != STAGE.SETUP && currentStage != STAGE.ENDSTEP)
+        if (currentStage != Stage.SETUP && currentStage != Stage.ENDSTEP)
         {
             this.cumulativeError += Math.abs(talon.getError()) * (timer.get() - lastTime);
         }
@@ -66,7 +66,7 @@ public class PIDAutoTuneTask extends Organism
         }
 
         if ((talon.getLimitSwitchStatus().isReverseClosed || talon.getLimitSwitchStatus().isForwardClosed)
-            && this.currentStage != STAGE.SETUP)
+            && this.currentStage != Stage.SETUP)
         {
             this.endStep();
             talon.stop();
@@ -101,11 +101,11 @@ public class PIDAutoTuneTask extends Organism
         talon.set(-0.2); // Set talon to bottom
         if (talon.getLimitSwitchStatus().isReverseClosed || talon.getLimitSwitchStatus().isForwardClosed)
         {
-            Genome g = this.getGenome();
             talon.setControlMode(TalonSRXControlMode.Position);
+            Genome g = this.getGenome();
             talon.setPIDF(g.getGene(0), g.getGene(1), g.getGene(2), g.getGene(3), 0);
 
-            currentStage = STAGE.STEP1;
+            currentStage = Stage.STEP1;
             timer.reset();
             timer.start();
         }
@@ -116,7 +116,7 @@ public class PIDAutoTuneTask extends Organism
         talon.set(TuningConstants.AI_STEP_1_POSITION);
         if (timer.hasPeriodPassed(TuningConstants.AI_TUNING_SAMPLE_TIME))
         {
-            currentStage = STAGE.STEP2;
+            currentStage = Stage.STEP2;
         }
     }
 
@@ -125,7 +125,7 @@ public class PIDAutoTuneTask extends Organism
         talon.set(TuningConstants.AI_STEP_2_POSITION);
         if (timer.hasPeriodPassed(TuningConstants.AI_TUNING_SAMPLE_TIME))
         {
-            currentStage = STAGE.STEP3;
+            currentStage = Stage.STEP3;
         }
     }
 
@@ -134,7 +134,7 @@ public class PIDAutoTuneTask extends Organism
         talon.set(TuningConstants.AI_STEP_3_POSITION);
         if (timer.hasPeriodPassed(TuningConstants.AI_TUNING_SAMPLE_TIME))
         {
-            currentStage = STAGE.ENDSTEP;
+            currentStage = Stage.ENDSTEP;
         }
     }
 
@@ -149,7 +149,7 @@ public class PIDAutoTuneTask extends Organism
     public void stop()
     {
         // TODO Auto-generated method stub
-        currentStage = STAGE.ENDSTEP;
+        currentStage = Stage.ENDSTEP;
     }
 
     @Override
