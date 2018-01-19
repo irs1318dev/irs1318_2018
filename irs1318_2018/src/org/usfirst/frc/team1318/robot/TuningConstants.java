@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1318.robot;
 
+import org.usfirst.frc.team1318.robot.ai.Range;
+
 /**
  * All constants related to tuning the operation of the robot.
  * 
@@ -98,4 +100,15 @@ public class TuningConstants
 
     // AI Tuning
     public static final double AI_TUNING_SAMPLE_TIME = 2.0;
+    public static final Range[] AI_GENE_BOUNDS = {
+        new Range(0, 1), new Range(0, 1),
+        new Range(0, 1), new Range(0, 1) }; // Maximum and minimum values for each F, P, I, and D value (in order).
+    public static final Range[] AI_INITIAL = null; // Maximum and minimum values to populate initial sample (set to null to populate randomly)
+    public static final double AI_MUTATION_RATE = 0.05; // Mutation rate for genes when recombining
+    public static final double AI_ACCELERATED_MUTATION_RATE = 0.15; // Mutation rate when genes stagnate
+    public static final double AI_STAGNATION_ERROR = 0.02; // Fitness error to classify 
+    public static final int AI_GENERATIONS = 15;
+    public static final int AI_POPULATION_SIZE = 40;
+    public static final int AI_BOTTLENECK_SIZE = 28;
+
 }

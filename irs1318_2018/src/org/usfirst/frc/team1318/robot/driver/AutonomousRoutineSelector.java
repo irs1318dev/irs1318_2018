@@ -1,6 +1,8 @@
 package org.usfirst.frc.team1318.robot.driver;
 
 import org.usfirst.frc.team1318.robot.ElectronicsConstants;
+import org.usfirst.frc.team1318.robot.TuningConstants;
+import org.usfirst.frc.team1318.robot.ai.RAPIDSettings;
 import org.usfirst.frc.team1318.robot.common.IDashboardLogger;
 import org.usfirst.frc.team1318.robot.common.wpilib.IDigitalInput;
 import org.usfirst.frc.team1318.robot.common.wpilib.IWpilibProvider;
@@ -8,6 +10,7 @@ import org.usfirst.frc.team1318.robot.driver.common.IControlTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.ConcurrentTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.DriveDistancePositionTimedTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.DriveDistanceTimedTask;
+import org.usfirst.frc.team1318.robot.driver.controltasks.RAPIDElevatorTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.SequentialTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.TurnTimedTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.WaitTask;
@@ -173,9 +176,19 @@ public class AutonomousRoutineSelector
                 }
 
             case Special:
+                return RAPIDTuneElevator(ElectronicsConstants.ELEVATOR_INNER_MOTOR_CHANNEL,
+                    ElectronicsConstants.ELEVATOR_TOP_LIMIT_CHANNEL, ElectronicsConstants.ELEVATOR_BOTTOM_LIMIT_CHANNEL);
             default:
                 return GetFillerRoutine();
         }
+    }
+
+    private static IControlTask RAPIDTuneElevator(int talonPort, int topLimitSwitchChannel, int bottomLimitSwitchChannel)
+    {
+        RAPIDSettings settings = new RAPIDSettings(TuningConstants.AI_INITIAL, TuningConstants.AI_MUTATION_RATE,
+            TuningConstants.AI_ACCELERATED_MUTATION_RATE, TuningConstants.AI_STAGNATION_ERROR, TuningConstants.AI_GENERATIONS,
+            TuningConstants.AI_POPULATION_SIZE, TuningConstants.AI_BOTTLENECK_SIZE, TuningConstants.AI_GENE_BOUNDS);
+        return new RAPIDElevatorTask(settings, talonPort, topLimitSwitchChannel, bottomLimitSwitchChannel);
     }
 
     /**

@@ -11,7 +11,7 @@ import org.usfirst.frc.team1318.robot.common.wpilib.ITalonSRX;
 import org.usfirst.frc.team1318.robot.common.wpilib.WpilibProvider;
 import org.usfirst.frc.team1318.robot.driver.common.IControlTask;
 
-public class RAPIDTask extends RAPID
+public class RAPIDElevatorTask extends RAPID
 {
     private RAPIDSettings settings;
     private int deviceNumber;
@@ -24,13 +24,35 @@ public class RAPIDTask extends RAPID
 
     private int curOrganism = -1;
 
-    public RAPIDTask(RAPIDSettings settings, int deviceNumber, int limitSwitchTopChannel, int limitSwitchBottomChannel)
+    public RAPIDElevatorTask(RAPIDSettings settings, int deviceNumber, int limitSwitchTopChannel, int limitSwitchBottomChannel)
     {
         super(settings);
         this.currentTask = null;
         this.deviceNumber = deviceNumber;
         this.limitSwitchTopChannel = limitSwitchTopChannel;
         this.limitSwitchBottomChannel = limitSwitchBottomChannel;
+    }
+
+    @Override
+    public void begin()
+    {
+        // TODO Auto-generated method stub
+        WpilibProvider provider = this.getInjector().getInstance(WpilibProvider.class);
+        limitSwitchTop = provider.getDigitalInput(limitSwitchTopChannel);
+        limitSwitchBottom = provider.getDigitalInput(limitSwitchBottomChannel);
+        talon = provider.getTalonSRX(deviceNumber);
+
+        // Initialize population
+        sample = new PIDAutoTuneTask[settings.populationSize];
+        if (settings.initialValues != null)
+        {
+            this.initialize(sample, settings.initialValues);
+        }
+        else
+        {
+            this.initialize(sample);
+        }
+        System.out.println("Population initialized!");
     }
 
     @Override
@@ -64,36 +86,16 @@ public class RAPIDTask extends RAPID
                 }
             }
         }
-
-    }
-
-    @Override
-    public void begin()
-    {
-        // TODO Auto-generated method stub
-        WpilibProvider provider = this.getInjector().getInstance(WpilibProvider.class);
-        limitSwitchTop = provider.getDigitalInput(limitSwitchTopChannel);
-        limitSwitchBottom = provider.getDigitalInput(limitSwitchBottomChannel);
-        talon = provider.getTalonSRX(deviceNumber);
-
-        // Initialize population
-        sample = new PIDAutoTuneTask[settings.populationSize];
-        if (settings.initialValues != null)
-        {
-            this.initialize(sample, settings.initialValues);
-        }
-        else
-        {
-            this.initialize(sample);
-        }
-        System.out.println("Population initialized!");
     }
 
     @Override
     public void stop()
     {
         // TODO Auto-generated method stub
-
+        if (this.currentTask != null)
+        {
+            this.currentTask.stop();
+        }
     }
 
     @Override

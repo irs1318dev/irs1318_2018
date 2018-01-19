@@ -37,4 +37,10 @@ public class ElectronicsConstants
     public static final int DRIVETRAIN_LEFT_FOLLOWER_CHANNEL = 2;
     public static final int DRIVETRAIN_RIGHT_MOTOR_CHANNEL = 3;
     public static final int DRIVETRAIN_RIGHT_FOLLOWER_CHANNEL = 4;
+
+    //================================================== Elevator ==============================================================
+    public static final int ELEVATOR_INNER_MOTOR_CHANNEL = -1;
+    public static final int ELEVATOR_OUTER_MOTOR_CHANNEL = -1;
+    public static final int ELEVATOR_TOP_LIMIT_CHANNEL = -1;
+    public static final int ELEVATOR_BOTTOM_LIMIT_CHANNEL = -1;
 }
