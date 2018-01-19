@@ -41,6 +41,4 @@ public class ElectronicsConstants
     //================================================== Elevator ==============================================================
     public static final int ELEVATOR_INNER_MOTOR_CHANNEL = -1;
     public static final int ELEVATOR_OUTER_MOTOR_CHANNEL = -1;
-    public static final int ELEVATOR_TOP_LIMIT_CHANNEL = -1;
-    public static final int ELEVATOR_BOTTOM_LIMIT_CHANNEL = -1;
 }

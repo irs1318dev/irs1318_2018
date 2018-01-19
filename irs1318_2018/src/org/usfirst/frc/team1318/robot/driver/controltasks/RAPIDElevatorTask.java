@@ -6,7 +6,6 @@ import org.usfirst.frc.team1318.robot.ai.Organism;
 import org.usfirst.frc.team1318.robot.ai.RAPID;
 import org.usfirst.frc.team1318.robot.ai.RAPIDSettings;
 import org.usfirst.frc.team1318.robot.ai.Range;
-import org.usfirst.frc.team1318.robot.common.wpilib.IDigitalInput;
 import org.usfirst.frc.team1318.robot.common.wpilib.ITalonSRX;
 import org.usfirst.frc.team1318.robot.common.wpilib.WpilibProvider;
 import org.usfirst.frc.team1318.robot.driver.common.IControlTask;
@@ -15,22 +14,16 @@ public class RAPIDElevatorTask extends RAPID
 {
     private RAPIDSettings settings;
     private int deviceNumber;
-    private int limitSwitchTopChannel;
-    private int limitSwitchBottomChannel;
     private ITalonSRX talon;
-    private IDigitalInput limitSwitchTop;
-    private IDigitalInput limitSwitchBottom;
     private IControlTask currentTask;
 
     private int curOrganism = -1;
 
-    public RAPIDElevatorTask(RAPIDSettings settings, int deviceNumber, int limitSwitchTopChannel, int limitSwitchBottomChannel)
+    public RAPIDElevatorTask(RAPIDSettings settings, int deviceNumber)
     {
         super(settings);
         this.currentTask = null;
         this.deviceNumber = deviceNumber;
-        this.limitSwitchTopChannel = limitSwitchTopChannel;
-        this.limitSwitchBottomChannel = limitSwitchBottomChannel;
     }
 
     @Override
@@ -38,8 +31,6 @@ public class RAPIDElevatorTask extends RAPID
     {
         // TODO Auto-generated method stub
         WpilibProvider provider = this.getInjector().getInstance(WpilibProvider.class);
-        limitSwitchTop = provider.getDigitalInput(limitSwitchTopChannel);
-        limitSwitchBottom = provider.getDigitalInput(limitSwitchBottomChannel);
         talon = provider.getTalonSRX(deviceNumber);
 
         // Initialize population
@@ -123,13 +114,12 @@ public class RAPIDElevatorTask extends RAPID
     protected Organism getNewOrganism()
     {
         // TODO Auto-generated method stub
-        return new PIDAutoTuneTask(talon, limitSwitchTop, limitSwitchBottom, null);
+        return new PIDAutoTuneTask(talon, null);
     }
 
     @Override
     protected Organism getNewOrganism(Range[] initialValues, Range[] geneBounds)
     {
-        return new PIDAutoTuneTask(talon, limitSwitchTop, limitSwitchBottom,
-            initialValues, settings.geneBounds);
+        return new PIDAutoTuneTask(talon, initialValues, settings.geneBounds);
     }
 }

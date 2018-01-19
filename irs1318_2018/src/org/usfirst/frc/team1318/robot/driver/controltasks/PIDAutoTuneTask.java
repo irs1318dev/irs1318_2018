@@ -4,7 +4,6 @@ import org.usfirst.frc.team1318.robot.TuningConstants;
 import org.usfirst.frc.team1318.robot.ai.Genome;
 import org.usfirst.frc.team1318.robot.ai.Organism;
 import org.usfirst.frc.team1318.robot.ai.Range;
-import org.usfirst.frc.team1318.robot.common.wpilib.IDigitalInput;
 import org.usfirst.frc.team1318.robot.common.wpilib.ITalonSRX;
 import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXControlMode;
 
@@ -13,8 +12,6 @@ import edu.wpi.first.wpilibj.Timer;
 public class PIDAutoTuneTask extends Organism
 {
     private ITalonSRX talon;
-    private IDigitalInput limitTop;
-    private IDigitalInput limitBottom;
     private boolean hasCompleted = false;
     private double cumulativeError;
     private Timer timer;
@@ -30,23 +27,19 @@ public class PIDAutoTuneTask extends Organism
 
     // Initialize this organism with a set of initial ranges to choose from
     public PIDAutoTuneTask(
-        ITalonSRX talon, IDigitalInput limitTop, IDigitalInput limitBottom,
+        ITalonSRX talon,
         Range[] initial, Range[] geneBounds)
     {
         super(initial, geneBounds);
-        this.limitBottom = limitBottom;
-        this.limitTop = limitTop;
         this.talon = talon;
     }
 
     // Initialize this organism with a genome
     public PIDAutoTuneTask(
-        ITalonSRX talon, IDigitalInput limitTop, IDigitalInput limitBottom,
+        ITalonSRX talon,
         Genome genome)
     {
         super(genome);
-        this.limitBottom = limitBottom;
-        this.limitTop = limitTop;
         this.talon = talon;
     }
 
@@ -92,7 +85,7 @@ public class PIDAutoTuneTask extends Organism
     {
         // TODO Auto-generated method stub
         talon.set(-0.2); // Set talon to bottom
-        if (limitBottom.get()) // If the bottom limit switch is triggered
+        if (talon.getLimitSwitchStatus().isReverseClosed || talon.getLimitSwitchStatus().isForwardClosed)
         {
             Genome g = this.getGenome();
             talon.setControlMode(TalonSRXControlMode.Position);
