@@ -55,7 +55,7 @@ public class PIDAutoTuneTask extends Organism
     {
         this.currentStage = STAGE.SETUP;
         this.timer = new Timer();
-        this.talon.changeControlMode(TalonSRXControlMode.PercentOutput);
+        this.talon.setControlMode(TalonSRXControlMode.PercentOutput);
         this.cumulativeError = 0;
     }
 
@@ -95,7 +95,7 @@ public class PIDAutoTuneTask extends Organism
         if (limitBottom.get()) // If the bottom limit switch is triggered
         {
             Genome g = this.getGenome();
-            talon.changeControlMode(TalonSRXControlMode.Position);
+            talon.setControlMode(TalonSRXControlMode.Position);
             talon.setPIDF(g.getGene(0), g.getGene(1), g.getGene(2), g.getGene(3), 0);
 
             currentStage = STAGE.STEP1;
