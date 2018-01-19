@@ -32,6 +32,7 @@ public abstract class RAPID extends ControlTaskBase
                 aFit /= sample.length;
                 System.out.println(
                     "Generation " + curGeneration + "\t Average Fitness: " + aFit + "\t Max Fitness " + sample[0].getFitness());
+                System.out.println("Top Organism: " + sample[0]);
             }
 
             // Check for stagnating population
