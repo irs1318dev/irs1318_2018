@@ -99,16 +99,19 @@ public class TuningConstants
     public static final double DRIVETRAIN_ENCODER_ODOMETRY_ANGLE_CORRECTION = 1.0; // account for turning weirdness (any degree offset in the angle)
 
     // AI Tuning
-    public static final double AI_TUNING_SAMPLE_TIME = 2.0;
+    public static final double AI_TUNING_SAMPLE_TIME = 1.5;
     public static final Range[] AI_GENE_BOUNDS = {
-        new Range(0, 1), new Range(0, 1),
-        new Range(0, 1), new Range(0, 1) }; // Maximum and minimum values for each F, P, I, and D value (in order).
+        new Range(0, 1032), new Range(0, 0),
+        new Range(0, 0), new Range(0, 0) }; // Maximum and minimum values for each P, I, and D, and F value (in order).
     public static final Range[] AI_INITIAL = null; // Maximum and minimum values to populate initial sample (set to null to populate randomly)
     public static final double AI_MUTATION_RATE = 0.05; // Mutation rate for genes when recombining
     public static final double AI_ACCELERATED_MUTATION_RATE = 0.15; // Mutation rate when genes stagnate
     public static final double AI_STAGNATION_ERROR = 0.02; // Fitness error to classify 
-    public static final int AI_GENERATIONS = 15;
-    public static final int AI_POPULATION_SIZE = 40;
-    public static final int AI_BOTTLENECK_SIZE = 28;
+    public static final int AI_GENERATIONS = 13;
+    public static final int AI_POPULATION_SIZE = 35;
+    public static final int AI_BOTTLENECK_SIZE = 24;
+    public static final int AI_STEP_1_POSITION = 4092;
+    public static final int AI_STEP_2_POSITION = 4092;
+    public static final int AI_STEP_3_POSITION = 4092;
 
 }

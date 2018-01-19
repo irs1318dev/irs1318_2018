@@ -57,8 +57,22 @@ public class PIDAutoTuneTask extends Organism
     {
         if (currentStage != STAGE.SETUP && currentStage != STAGE.ENDSTEP)
         {
-            cumulativeError += Math.abs(talon.getError()) * (timer.get() - lastTime);
+            this.cumulativeError += Math.abs(talon.getError()) * (timer.get() - lastTime);
         }
+
+        if (talon.getLimitSwitchStatus().isReverseClosed)
+        {
+            talon.reset();
+        }
+
+        if ((talon.getLimitSwitchStatus().isReverseClosed || talon.getLimitSwitchStatus().isForwardClosed)
+            && this.currentStage != STAGE.SETUP)
+        {
+            this.endStep();
+            talon.stop();
+            this.cumulativeError = Double.MAX_VALUE;
+        }
+
         switch (currentStage)
         {
             case SETUP:
@@ -99,7 +113,7 @@ public class PIDAutoTuneTask extends Organism
 
     private void step1()
     {
-        talon.set(0.5);
+        talon.set(TuningConstants.AI_STEP_1_POSITION);
         if (timer.hasPeriodPassed(TuningConstants.AI_TUNING_SAMPLE_TIME))
         {
             currentStage = STAGE.STEP2;
@@ -108,7 +122,7 @@ public class PIDAutoTuneTask extends Organism
 
     private void step2()
     {
-        talon.set(0.2);
+        talon.set(TuningConstants.AI_STEP_2_POSITION);
         if (timer.hasPeriodPassed(TuningConstants.AI_TUNING_SAMPLE_TIME))
         {
             currentStage = STAGE.STEP3;
@@ -117,7 +131,7 @@ public class PIDAutoTuneTask extends Organism
 
     private void step3()
     {
-        talon.set(0.8);
+        talon.set(TuningConstants.AI_STEP_3_POSITION);
         if (timer.hasPeriodPassed(TuningConstants.AI_TUNING_SAMPLE_TIME))
         {
             currentStage = STAGE.ENDSTEP;
@@ -126,6 +140,8 @@ public class PIDAutoTuneTask extends Organism
 
     private void endStep()
     {
+        talon.setControlMode(TalonSRXControlMode.Disabled);
+        talon.set(0);
         this.hasCompleted = true;
     }
 
