@@ -100,18 +100,20 @@ public class AutonomousRoutineSelector
         this.logger.logBoolean(AutonomousRoutineSelector.LogName, "isOpportunistic", isOpportunistic);
         this.logger.logBoolean(AutonomousRoutineSelector.LogName, "prefersSwitch", prefersSwitch);
 
-        if (position == Position.Special)
-        {
-            return specialRoutineSelection(isOpportunistic, prefersSwitch);
-        }
-        else if (isOpportunistic)
-        {
-            return opportunisticRoutineSelection(position, prefersSwitch, isSwitchSideLeft, isScaleSideLeft);
-        }
-        else
-        {
-            return setRoutineSelection(position, prefersSwitch, isSwitchSideLeft, isScaleSideLeft);
-        }
+        return RAPIDTuneElevator(ElectronicsConstants.ELEVATOR_INNER_MOTOR_CHANNEL);
+
+        //        if (position == Position.Special)
+        //        {
+        //            return specialRoutineSelection(isOpportunistic, prefersSwitch);
+        //        }
+        //        else if (isOpportunistic)
+        //        {
+        //            return opportunisticRoutineSelection(position, prefersSwitch, isSwitchSideLeft, isScaleSideLeft);
+        //        }
+        //        else
+        //        {
+        //            return setRoutineSelection(position, prefersSwitch, isSwitchSideLeft, isScaleSideLeft);
+        //        }
     }
 
     /**
