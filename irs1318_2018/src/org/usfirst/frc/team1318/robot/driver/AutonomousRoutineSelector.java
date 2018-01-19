@@ -176,19 +176,18 @@ public class AutonomousRoutineSelector
                 }
 
             case Special:
-                return RAPIDTuneElevator(ElectronicsConstants.ELEVATOR_INNER_MOTOR_CHANNEL,
-                    ElectronicsConstants.ELEVATOR_TOP_LIMIT_CHANNEL, ElectronicsConstants.ELEVATOR_BOTTOM_LIMIT_CHANNEL);
+                return RAPIDTuneElevator(ElectronicsConstants.ELEVATOR_INNER_MOTOR_CHANNEL);
             default:
                 return GetFillerRoutine();
         }
     }
 
-    private static IControlTask RAPIDTuneElevator(int talonPort, int topLimitSwitchChannel, int bottomLimitSwitchChannel)
+    private static IControlTask RAPIDTuneElevator(int talonPort)
     {
         RAPIDSettings settings = new RAPIDSettings(TuningConstants.AI_INITIAL, TuningConstants.AI_MUTATION_RATE,
             TuningConstants.AI_ACCELERATED_MUTATION_RATE, TuningConstants.AI_STAGNATION_ERROR, TuningConstants.AI_GENERATIONS,
             TuningConstants.AI_POPULATION_SIZE, TuningConstants.AI_BOTTLENECK_SIZE, TuningConstants.AI_GENE_BOUNDS);
-        return new RAPIDElevatorTask(settings, talonPort, topLimitSwitchChannel, bottomLimitSwitchChannel);
+        return new RAPIDElevatorTask(settings, talonPort);
     }
 
     /**
