@@ -140,7 +140,7 @@ public class PIDAutoTuneTask extends Organism
     public void stop()
     {
         // TODO Auto-generated method stub
-
+        currentStage = STAGE.ENDSTEP;
     }
 
     @Override
