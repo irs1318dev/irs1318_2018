@@ -240,22 +240,22 @@ public class ElevatorMechanism implements IMechanism
             if (this.usePositionalMode)
             {
                 this.innerCarriagePID = new PIDHandler(
-                    TuningConstants.DRIVETRAIN_POSITION_PID_LEFT_KP,
-                    TuningConstants.DRIVETRAIN_POSITION_PID_LEFT_KI,
-                    TuningConstants.DRIVETRAIN_POSITION_PID_LEFT_KD,
-                    TuningConstants.DRIVETRAIN_POSITION_PID_LEFT_KF,
+                    TuningConstants.ELEVATOR_POSITION_PID_INNER_KP,
+                    TuningConstants.ELEVATOR_POSITION_PID_INNER_KI,
+                    TuningConstants.ELEVATOR_POSITION_PID_INNER_KD,
+                    TuningConstants.ELEVATOR_POSITION_PID_INNER_KF,
                     1.0,
-                    -TuningConstants.DRIVETRAIN_POSITIONAL_MAX_POWER_LEVEL,
-                    TuningConstants.DRIVETRAIN_POSITIONAL_MAX_POWER_LEVEL,
+                    -TuningConstants.ELEVATOR_POSITIONAL_MAX_POWER_LEVEL,
+                    TuningConstants.ELEVATOR_POSITIONAL_MAX_POWER_LEVEL,
                     this.timer);
                 this.outerCarriagePID = new PIDHandler(
-                    TuningConstants.DRIVETRAIN_POSITION_PID_RIGHT_KP,
-                    TuningConstants.DRIVETRAIN_POSITION_PID_RIGHT_KI,
-                    TuningConstants.DRIVETRAIN_POSITION_PID_RIGHT_KD,
-                    TuningConstants.DRIVETRAIN_POSITION_PID_RIGHT_KF,
+                    TuningConstants.ELEVATOR_POSITION_PID_OUTER_KP,
+                    TuningConstants.ELEVATOR_POSITION_PID_OUTER_KI,
+                    TuningConstants.ELEVATOR_POSITION_PID_OUTER_KD,
+                    TuningConstants.ELEVATOR_POSITION_PID_OUTER_KF,
                     1.0,
-                    -TuningConstants.DRIVETRAIN_POSITIONAL_MAX_POWER_LEVEL,
-                    TuningConstants.DRIVETRAIN_POSITIONAL_MAX_POWER_LEVEL,
+                    -TuningConstants.ELEVATOR_POSITIONAL_MAX_POWER_LEVEL,
+                    TuningConstants.ELEVATOR_POSITIONAL_MAX_POWER_LEVEL,
                     this.timer);
             }
             else

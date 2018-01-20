@@ -50,7 +50,7 @@ public class TuningConstants
 
     //================================================== DriveTrain ==============================================================
 
-    // Drivetrain PID keys/default values:
+    // PID keys/default values:
     public static final boolean DRIVETRAIN_USE_PID = true;
 
     // Velocity PID (right)
@@ -95,4 +95,20 @@ public class TuningConstants
     public static final double DRIVETRAIN_VELOCITY_MAX_POWER_LEVEL = 1.0;
 
     public static final double DRIVETRAIN_ENCODER_ODOMETRY_ANGLE_CORRECTION = 1.0; // account for turning weirdness (any degree offset in the angle)
+
+    //================================================== Elevator ==============================================================
+
+    // Position PID (right)
+    public static final double ELEVATOR_POSITION_PID_INNER_KP = 0.0;
+    public static final double ELEVATOR_POSITION_PID_INNER_KI = 0.0;
+    public static final double ELEVATOR_POSITION_PID_INNER_KD = 0.0;
+    public static final double ELEVATOR_POSITION_PID_INNER_KF = 0.0;
+
+    // Position PID (left)
+    public static final double ELEVATOR_POSITION_PID_OUTER_KP = 0.0;
+    public static final double ELEVATOR_POSITION_PID_OUTER_KI = 0.0;
+    public static final double ELEVATOR_POSITION_PID_OUTER_KD = 0.0;
+    public static final double ELEVATOR_POSITION_PID_OUTER_KF = 0.0;
+
+    public static final double ELEVATOR_POSITIONAL_MAX_POWER_LEVEL = .6;
 }
