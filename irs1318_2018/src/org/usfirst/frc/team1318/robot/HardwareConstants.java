@@ -32,22 +32,22 @@ public class HardwareConstants
 
     //================================================== Elevator ==============================================================
 
-    public static final double ELEVATOR_OUTER_MAX_HEIGHT = 36.0; // max height of the elevator
-    public static final double ELEVATOR_INNER_MAX_HEIGHT = 0.0; // max height of the elevator
-
-    public static final double ELEVATOR_OUTER_ENCODER_PULSES_PER_REVOLUTION = 4096.0;
-    public static final double ELEVATOR_OUTER_ROTATION_TRAVEL = 4.2; // the amount of travel in the chain per rotation of the encoder (in inches)
-    public static final double ELEVATOR_OUTER_PULSE_DISTANCE = HardwareConstants.ELEVATOR_OUTER_ROTATION_TRAVEL
-        / HardwareConstants.ELEVATOR_OUTER_ENCODER_PULSES_PER_REVOLUTION;
+    public static final double ELEVATOR_INNER_MAX_HEIGHT = 36.0; // max height of the elevator
+    public static final double ELEVATOR_OUTER_MAX_HEIGHT = 0.0; // max height of the elevator
 
     public static final double ELEVATOR_INNER_ENCODER_PULSES_PER_REVOLUTION = 4096.0;
-    public static final double ELEVATOR_INNER_ROTATION_TRAVEL = 0.0; // the amount of travel in the chain per rotation of the encoder (in inches)
+    public static final double ELEVATOR_INNER_ROTATION_TRAVEL = 4.2; // the amount of travel in the chain per rotation of the encoder (in inches)
     public static final double ELEVATOR_INNER_PULSE_DISTANCE = HardwareConstants.ELEVATOR_INNER_ROTATION_TRAVEL
         / HardwareConstants.ELEVATOR_INNER_ENCODER_PULSES_PER_REVOLUTION;
 
+    public static final double ELEVATOR_OUTER_ENCODER_PULSES_PER_REVOLUTION = 4096.0;
+    public static final double ELEVATOR_OUTER_ROTATION_TRAVEL = 0.0; // the amount of travel in the chain per rotation of the encoder (in inches)
+    public static final double ELEVATOR_OUTER_PULSE_DISTANCE = HardwareConstants.ELEVATOR_OUTER_ROTATION_TRAVEL
+        / HardwareConstants.ELEVATOR_OUTER_ENCODER_PULSES_PER_REVOLUTION;
+
     // Elevator motor/sensor orientations
-    public static final boolean ELEVATOR_OUTER_INVERT_OUTPUT = false;
-    public static final boolean ELEVATOR_OUTER_INVERT_SENSOR = false;
     public static final boolean ELEVATOR_INNER_INVERT_OUTPUT = false;
     public static final boolean ELEVATOR_INNER_INVERT_SENSOR = false;
+    public static final boolean ELEVATOR_OUTER_INVERT_OUTPUT = false;
+    public static final boolean ELEVATOR_OUTER_INVERT_SENSOR = false;
 }
