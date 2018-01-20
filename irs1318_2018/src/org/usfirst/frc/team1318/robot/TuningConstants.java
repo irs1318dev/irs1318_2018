@@ -110,5 +110,24 @@ public class TuningConstants
     public static final double ELEVATOR_POSITION_PID_OUTER_KD = 0.0;
     public static final double ELEVATOR_POSITION_PID_OUTER_KF = 0.0;
 
-    public static final double ELEVATOR_POSITIONAL_MAX_POWER_LEVEL = .6;
+    public static final boolean ELEVATOR_INNER_FORWARD_LIMIT_SWITCH_ENABLED = false;
+    public static final boolean ELEVATOR_INNER_FORWARD_LIMIT_SWITCH_NORMALLY_OPEN = false;
+    public static final boolean ELEVATOR_INNER_REVERSE_LIMIT_SWITCH_ENABLED = false;
+    public static final boolean ELEVATOR_INNER_REVERSE_LIMIT_SWITCH_NORMALLY_OPEN = false;
+
+    public static final boolean ELEVATOR_OUTER_FORWARD_LIMIT_SWITCH_ENABLED = false;
+    public static final boolean ELEVATOR_OUTER_FORWARD_LIMIT_SWITCH_NORMALLY_OPEN = false;
+    public static final boolean ELEVATOR_OUTER_REVERSE_LIMIT_SWITCH_ENABLED = false;
+    public static final boolean ELEVATOR_OUTER_REVERSE_LIMIT_SWITCH_NORMALLY_OPEN = false;
+
+    // Elevator motor/sensor orientations
+    public static final boolean ELEVATOR_INNER_INVERT_OUTPUT = false;
+    public static final boolean ELEVATOR_INNER_INVERT_SENSOR = false;
+    public static final boolean ELEVATOR_OUTER_INVERT_OUTPUT = false;
+    public static final boolean ELEVATOR_OUTER_INVERT_SENSOR = false;
+
+    public static final boolean ELEVATOR_LEFT_CARRIAGE_INTAKE_INVERT_OUTPUT = false;
+    public static final boolean ELEVATOR_RIGHT_CARRIAGE_INTAKE_INVERT_OUTPUT = false;
+    public static final boolean ELEVATOR_LEFT_OUTER_INTAKE_INVERT_OUTPUT = false;
+    public static final boolean ELEVATOR_RIGHT_OUTER_INTAKE_INVERT_OUTPUT = false;
 }
