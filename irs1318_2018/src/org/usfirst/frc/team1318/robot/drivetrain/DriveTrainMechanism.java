@@ -330,7 +330,7 @@ public class DriveTrainMechanism implements IMechanism
                 this.rightPID = null;
             }
 
-            mode = TalonSRXControlMode;
+            mode = TalonSRXControlMode.Velocity;
             this.leftMotor.setSelectedSlot(DriveTrainMechanism.pidSlotId);
             this.rightMotor.setSelectedSlot(DriveTrainMechanism.pidSlotId);
         }
