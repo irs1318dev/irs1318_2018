@@ -130,4 +130,23 @@ public class TuningConstants
     public static final boolean ELEVATOR_RIGHT_CARRIAGE_INTAKE_INVERT_OUTPUT = false;
     public static final boolean ELEVATOR_LEFT_OUTER_INTAKE_INVERT_OUTPUT = false;
     public static final boolean ELEVATOR_RIGHT_OUTER_INTAKE_INVERT_OUTPUT = false;
+
+    // Elevator positions
+    public static final double ELEVATOR_INNER_CARRY_POSITION = 0 / HardwareConstants.ELEVATOR_INNER_PULSE_DISTANCE;
+    public static final double ELEVATOR_OUTER_CARRY_POSITION = 2.0 / HardwareConstants.ELEVATOR_OUTER_PULSE_DISTANCE;
+    public static final double ELEVATOR_INNER_SWITCH_POSITION = 0 / HardwareConstants.ELEVATOR_INNER_PULSE_DISTANCE;
+    public static final double ELEVATOR_OUTER_SWITCH_POSITION = 2.0 / HardwareConstants.ELEVATOR_OUTER_PULSE_DISTANCE;
+    public static final double ELEVATOR_INNER_LOW_SCALE_POSITION = 0 / HardwareConstants.ELEVATOR_INNER_PULSE_DISTANCE;
+    public static final double ELEVATOR_OUTER_LOW_SCALE_POSITION = 2.0 / HardwareConstants.ELEVATOR_OUTER_PULSE_DISTANCE;
+    public static final double ELEVATOR_INNER_HIGH_SCALE_POSITION = 0 / HardwareConstants.ELEVATOR_INNER_PULSE_DISTANCE;
+    public static final double ELEVATOR_OUTER_HIGH_SCALE_POSITION = 2.0 / HardwareConstants.ELEVATOR_OUTER_PULSE_DISTANCE;
+
+    // Elevator velocities
+    public static final double ELEVATOR_MOVE_VELOCITY = 0;
+
+    // Elevator intake powers
+    public static final double ELEVATOR_LEFT_OUTER_INTAKE_POWER = 0;
+    public static final double ELEVATOR_RIGHT_OUTER_INTAKE_POWER = 0;
+    public static final double ELEVATOR_LEFT_CARRIAGE_INTAKE_POWER = 0;
+    public static final double ELEVATOR_RIGHT_CARRIAGE_INTAKE_POWER = 0;
 }

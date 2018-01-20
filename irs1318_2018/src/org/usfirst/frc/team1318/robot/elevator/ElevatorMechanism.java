@@ -3,15 +3,19 @@ package org.usfirst.frc.team1318.robot.elevator;
 import javax.inject.Singleton;
 
 import org.usfirst.frc.team1318.robot.ElectronicsConstants;
+import org.usfirst.frc.team1318.robot.HardwareConstants;
 import org.usfirst.frc.team1318.robot.TuningConstants;
 import org.usfirst.frc.team1318.robot.common.IDashboardLogger;
 import org.usfirst.frc.team1318.robot.common.IMechanism;
+import org.usfirst.frc.team1318.robot.common.wpilib.DoubleSolenoidValue;
+import org.usfirst.frc.team1318.robot.common.wpilib.IDoubleSolenoid;
 import org.usfirst.frc.team1318.robot.common.wpilib.ITalonSRX;
 import org.usfirst.frc.team1318.robot.common.wpilib.ITimer;
 import org.usfirst.frc.team1318.robot.common.wpilib.IWpilibProvider;
 import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXControlMode;
 import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXFeedbackDevice;
 import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXNeutralMode;
+import org.usfirst.frc.team1318.robot.driver.Operation;
 import org.usfirst.frc.team1318.robot.driver.common.Driver;
 
 import com.google.inject.Inject;
@@ -38,6 +42,8 @@ public class ElevatorMechanism implements IMechanism
     private final ITalonSRX leftOuterIntakeMotor;
     private final ITalonSRX rightOuterIntakeMotor;
 
+    private final IDoubleSolenoid intakeExtender;
+
     private Driver driver;
 
     private double innerElevatorVelocity;
@@ -46,6 +52,11 @@ public class ElevatorMechanism implements IMechanism
     private double outerElevatorVelocity;
     private double outerElevatorError;
     private int outerElevatorPosition;
+
+    private double desiredInnerHeight;
+    private double desiredOuterHeight;
+
+    private double lastUpdateTime;
 
     /**
      * Initializes a new DriveTrainMechanism
@@ -61,6 +72,9 @@ public class ElevatorMechanism implements IMechanism
     {
         this.logger = logger;
         this.timer = timer;
+
+        this.desiredInnerHeight = 0;
+        this.desiredOuterHeight = 0;
 
         this.innerElevatorMotor = provider.getTalonSRX(ElectronicsConstants.ELEVATOR_INNER_MOTOR_CHANNEL);
         this.innerElevatorMotor.setNeutralMode(TalonSRXNeutralMode.Brake);
@@ -105,6 +119,9 @@ public class ElevatorMechanism implements IMechanism
         this.outerElevatorVelocity = 0.0;
         this.outerElevatorError = 0.0;
         this.outerElevatorPosition = 0;
+
+        this.intakeExtender = provider.getDoubleSolenoid(ElectronicsConstants.ELEVATOR_INTAKE_ARM_CHANNEL_A,
+            ElectronicsConstants.ELEVATOR_INTAKE_ARM_CHANNEL_B);
 
         this.setControlMode();
     }
@@ -200,9 +217,92 @@ public class ElevatorMechanism implements IMechanism
     @Override
     public void update()
     {
-        // apply the power settings to the motors
-        this.innerElevatorMotor.set(0);
-        this.outerElevatorMotor.set(0);
+        double currentTime = this.timer.get();
+        double deltaTime = currentTime - this.lastUpdateTime;
+
+        if (this.driver.getDigital(Operation.ElevatorCarryPosition))
+        {
+            this.desiredInnerHeight = TuningConstants.ELEVATOR_INNER_CARRY_POSITION;
+            this.desiredOuterHeight = TuningConstants.ELEVATOR_OUTER_CARRY_POSITION;
+
+        }
+        else if (this.driver.getDigital(Operation.ElevatorSwitchPosition))
+        {
+            this.desiredInnerHeight = TuningConstants.ELEVATOR_INNER_SWITCH_POSITION;
+            this.desiredOuterHeight = TuningConstants.ELEVATOR_OUTER_SWITCH_POSITION;
+        }
+        else if (this.driver.getDigital(Operation.ElevatorLowScalePosition))
+        {
+            this.desiredInnerHeight = TuningConstants.ELEVATOR_INNER_LOW_SCALE_POSITION;
+            this.desiredOuterHeight = TuningConstants.ELEVATOR_OUTER_LOW_SCALE_POSITION;
+        }
+        else if (this.driver.getDigital(Operation.ElevatorHighScalePosition))
+        {
+            this.desiredInnerHeight = TuningConstants.ELEVATOR_INNER_HIGH_SCALE_POSITION;
+            this.desiredOuterHeight = TuningConstants.ELEVATOR_OUTER_HIGH_SCALE_POSITION;
+        }
+
+        if (this.driver.getDigital(Operation.ElevatorMoveUp))
+        {
+            double deltaPosition = deltaTime * TuningConstants.ELEVATOR_MOVE_VELOCITY;
+            double remainingInnerHeight = HardwareConstants.ELEVATOR_INNER_MAX_HEIGHT - desiredInnerHeight;
+
+            if (deltaPosition > remainingInnerHeight)
+            {
+                this.desiredInnerHeight = HardwareConstants.ELEVATOR_INNER_MAX_HEIGHT;
+                this.desiredOuterHeight += (deltaPosition - remainingInnerHeight);
+            }
+            else
+            {
+                this.desiredInnerHeight += deltaPosition;
+            }
+        }
+        else if (this.driver.getDigital(Operation.ElevatorMoveDown))
+        {
+            double deltaPosition = -deltaTime * TuningConstants.ELEVATOR_MOVE_VELOCITY;
+            double remainingOuterHeight = desiredOuterHeight;
+
+            if (deltaPosition < desiredOuterHeight)
+            {
+                this.desiredOuterHeight = 0;
+                this.desiredInnerHeight += (deltaPosition - remainingOuterHeight);
+            }
+            else
+            {
+                this.desiredOuterHeight += deltaPosition;
+            }
+        }
+
+        double leftOuterIntakePower = 0;
+        double rightOuterIntakePower = 0;
+        double leftCarriageIntakePower = 0;
+        double rightCarriageIntakePower = 0;
+
+        if (this.driver.getDigital(Operation.ElevatorIntake))
+        {
+            leftOuterIntakePower = TuningConstants.ELEVATOR_LEFT_OUTER_INTAKE_POWER;
+            rightOuterIntakePower = TuningConstants.ELEVATOR_RIGHT_OUTER_INTAKE_POWER;
+            leftCarriageIntakePower = TuningConstants.ELEVATOR_LEFT_CARRIAGE_INTAKE_POWER;
+            rightCarriageIntakePower = TuningConstants.ELEVATOR_RIGHT_CARRIAGE_INTAKE_POWER;
+        }
+        else if (this.driver.getDigital(Operation.ElevatorOuttake))
+        {
+            leftOuterIntakePower = -TuningConstants.ELEVATOR_LEFT_OUTER_INTAKE_POWER;
+            rightOuterIntakePower = -TuningConstants.ELEVATOR_RIGHT_OUTER_INTAKE_POWER;
+            leftCarriageIntakePower = -TuningConstants.ELEVATOR_LEFT_CARRIAGE_INTAKE_POWER;
+            rightCarriageIntakePower = -TuningConstants.ELEVATOR_RIGHT_CARRIAGE_INTAKE_POWER;
+        }
+
+        if (this.driver.getDigital(Operation.ElevatorIntakeArmUp))
+        {
+            this.intakeExtender.set(DoubleSolenoidValue.kReverse);
+        }
+        else if (this.driver.getDigital(Operation.ElevatorIntakeArmDown))
+        {
+            this.intakeExtender.set(DoubleSolenoidValue.kForward);
+        }
+
+        lastUpdateTime = currentTime;
     }
 
     /**
@@ -226,6 +326,8 @@ public class ElevatorMechanism implements IMechanism
         this.outerElevatorVelocity = 0.0;
         this.outerElevatorError = 0.0;
         this.outerElevatorPosition = 0;
+
+        this.intakeExtender.set(DoubleSolenoidValue.kOff);
     }
 
     /**
