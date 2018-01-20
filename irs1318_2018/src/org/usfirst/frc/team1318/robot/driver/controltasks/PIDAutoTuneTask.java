@@ -279,7 +279,7 @@ public class PIDAutoTuneTask extends Organism
         if (!unfit)
         {
             // Higher overshoot and time for motors to stabilize means less fitness.
-            this.fitness = 100 / (aOvershoot + aStabilization);
+            this.fitness = 100 / ((aOvershoot * TuningConstants.AI_OVERSHOOT_WEIGHT + aStabilization) + 1);
         }
         else
         {

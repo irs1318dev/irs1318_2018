@@ -113,4 +113,5 @@ public class TuningConstants
     public static final double AI_MAX_STABILIZATION_ERROR = 100; // Maximum deviation from expected position to count as stabilized
     public static final double AI_STABILIZATION_TIME = 0.5; // Time (in seconds) that mechanism must remain stable 
     public static final double[] TRIAL_POSITIONS = { 0.5, 0.8, 0.2 };
+    public static final double AI_OVERSHOOT_WEIGHT = 0;
 }
