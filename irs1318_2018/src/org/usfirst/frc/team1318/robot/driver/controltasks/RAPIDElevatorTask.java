@@ -7,6 +7,8 @@ import org.usfirst.frc.team1318.robot.ai.RAPID;
 import org.usfirst.frc.team1318.robot.ai.RAPIDSettings;
 import org.usfirst.frc.team1318.robot.ai.Range;
 import org.usfirst.frc.team1318.robot.common.wpilib.ITalonSRX;
+import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXFeedbackDevice;
+import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXNeutralMode;
 import org.usfirst.frc.team1318.robot.common.wpilib.WpilibProvider;
 import org.usfirst.frc.team1318.robot.driver.common.IControlTask;
 
@@ -33,8 +35,13 @@ public class RAPIDElevatorTask extends RAPID
         // TODO Auto-generated method stub
         WpilibProvider provider = this.getInjector().getInstance(WpilibProvider.class);
         talon = provider.getTalonSRX(deviceNumber);
-        talon.setInvertOutput(false);
-        talon.setInvertSensor(false);
+
+        this.talon.setSensorType(TalonSRXFeedbackDevice.QuadEncoder);
+        this.talon.setNeutralMode(TalonSRXNeutralMode.Brake);
+        this.talon.setInvertOutput(true);
+        this.talon.setInvertSensor(true);
+        this.talon.setForwardLimitSwitch(true, true);
+        this.talon.setReverseLimitSwitch(true, true);
 
         // Initialize population
         sample = new PIDAutoTuneTask[settings.populationSize];
