@@ -14,6 +14,7 @@ import org.usfirst.frc.team1318.robot.common.wpilib.ITimer;
 import org.usfirst.frc.team1318.robot.common.wpilib.IWpilibProvider;
 import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXControlMode;
 import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXFeedbackDevice;
+import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXLimitSwitchStatus;
 import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXNeutralMode;
 import org.usfirst.frc.team1318.robot.driver.Operation;
 import org.usfirst.frc.team1318.robot.driver.common.Driver;
@@ -32,8 +33,9 @@ public class ElevatorMechanism implements IMechanism
     private static final String LogName = "el";
     private static final int pidSlotId = 0;
 
-    private final IDashboardLogger logger;
     private final ITimer timer;
+
+    private final IDashboardLogger logger;
 
     private final ITalonSRX innerElevatorMotor;
     private final ITalonSRX outerElevatorMotor;
@@ -49,9 +51,13 @@ public class ElevatorMechanism implements IMechanism
     private double innerElevatorVelocity;
     private double innerElevatorError;
     private int innerElevatorPosition;
+    private boolean innerElevatorForwardLimitSwitchStatus;
+    private boolean innerElevatorReverseLimitSwitchStatus;
     private double outerElevatorVelocity;
     private double outerElevatorError;
     private int outerElevatorPosition;
+    private boolean outerElevatorForwardLimitSwitchStatus;
+    private boolean outerElevatorReverseLimitSwitchStatus;
 
     private double desiredInnerHeight;
     private double desiredOuterHeight;
@@ -66,11 +72,12 @@ public class ElevatorMechanism implements IMechanism
      */
     @Inject
     public ElevatorMechanism(
+        ITimer timer,
         IDashboardLogger logger,
-        IWpilibProvider provider,
-        ITimer timer)
+        IWpilibProvider provider)
     {
         this.logger = logger;
+
         this.timer = timer;
 
         this.desiredInnerHeight = 0;
@@ -116,9 +123,13 @@ public class ElevatorMechanism implements IMechanism
         this.innerElevatorVelocity = 0.0;
         this.innerElevatorError = 0.0;
         this.innerElevatorPosition = 0;
+        this.innerElevatorForwardLimitSwitchStatus = false;
+        this.innerElevatorReverseLimitSwitchStatus = false;
         this.outerElevatorVelocity = 0.0;
         this.outerElevatorError = 0.0;
         this.outerElevatorPosition = 0;
+        this.outerElevatorForwardLimitSwitchStatus = false;
+        this.outerElevatorReverseLimitSwitchStatus = false;
 
         this.intakeExtender = provider.getDoubleSolenoid(ElectronicsConstants.ELEVATOR_INTAKE_ARM_CHANNEL_A,
             ElectronicsConstants.ELEVATOR_INTAKE_ARM_CHANNEL_B);
@@ -181,6 +192,42 @@ public class ElevatorMechanism implements IMechanism
     }
 
     /**
+     * get the status from the inner elevator limit switch
+     * @return a value indicating whether the limit switch is pressed
+     */
+    public boolean getInnerForwardLimitSwitchStatus()
+    {
+        return this.innerElevatorForwardLimitSwitchStatus;
+    }
+
+    /**
+     * get the status from the outer elevator limit switch
+     * @return a value indicating whether the limit switch is pressed
+     */
+    public boolean getOuterForwardLimitSwitchStatus()
+    {
+        return this.outerElevatorForwardLimitSwitchStatus;
+    }
+
+    /**
+     * get the status from the inner elevator limit switch
+     * @return a value indicating whether the limit switch is pressed
+     */
+    public boolean getInnerReverseLimitSwitchStatus()
+    {
+        return this.innerElevatorReverseLimitSwitchStatus;
+    }
+
+    /**
+     * get the status from the outer elevator limit switch
+     * @return a value indicating whether the limit switch is pressed
+     */
+    public boolean getOuterReverseLimitSwitchStatus()
+    {
+        return this.outerElevatorReverseLimitSwitchStatus;
+    }
+
+    /**
      * set the driver that the mechanism should use
      * @param driver to use
      */
@@ -199,16 +246,29 @@ public class ElevatorMechanism implements IMechanism
         this.innerElevatorVelocity = this.innerElevatorMotor.getVelocity();
         this.innerElevatorError = this.innerElevatorMotor.getError();
         this.innerElevatorPosition = this.innerElevatorMotor.getPosition();
+
+        TalonSRXLimitSwitchStatus innerLimitSwitchStatus = this.innerElevatorMotor.getLimitSwitchStatus();
+        this.innerElevatorForwardLimitSwitchStatus = innerLimitSwitchStatus.isForwardClosed;
+        this.innerElevatorReverseLimitSwitchStatus = innerLimitSwitchStatus.isReverseClosed;
+
         this.outerElevatorVelocity = this.outerElevatorMotor.getVelocity();
         this.outerElevatorError = this.outerElevatorMotor.getError();
         this.outerElevatorPosition = this.outerElevatorMotor.getPosition();
 
-        this.logger.logNumber(ElevatorMechanism.LogName, "innerCarriageVelocity", this.innerElevatorVelocity);
-        this.logger.logNumber(ElevatorMechanism.LogName, "innerCarriageError", this.innerElevatorError);
-        this.logger.logNumber(ElevatorMechanism.LogName, "innerCarriagePosition", this.innerElevatorPosition);
-        this.logger.logNumber(ElevatorMechanism.LogName, "outerCarriageVelocity", this.outerElevatorVelocity);
-        this.logger.logNumber(ElevatorMechanism.LogName, "outerCarriageError", this.outerElevatorError);
-        this.logger.logNumber(ElevatorMechanism.LogName, "outerCarriagePosition", this.outerElevatorPosition);
+        TalonSRXLimitSwitchStatus outerLimitSwitchStatus = this.outerElevatorMotor.getLimitSwitchStatus();
+        this.outerElevatorForwardLimitSwitchStatus = outerLimitSwitchStatus.isForwardClosed;
+        this.outerElevatorReverseLimitSwitchStatus = outerLimitSwitchStatus.isReverseClosed;
+
+        this.logger.logNumber(ElevatorMechanism.LogName, "innerElevatorVelocity", this.innerElevatorVelocity);
+        this.logger.logNumber(ElevatorMechanism.LogName, "innerElevatorError", this.innerElevatorError);
+        this.logger.logNumber(ElevatorMechanism.LogName, "innerElevatorPosition", this.innerElevatorPosition);
+        this.logger.logBoolean(ElevatorMechanism.LogName, "innerElevatorReverseLimitSwitch", this.innerElevatorReverseLimitSwitchStatus);
+        this.logger.logBoolean(ElevatorMechanism.LogName, "innerElevatorForwardLimitSwitch", this.innerElevatorForwardLimitSwitchStatus);
+        this.logger.logNumber(ElevatorMechanism.LogName, "outerElevatorVelocity", this.outerElevatorVelocity);
+        this.logger.logNumber(ElevatorMechanism.LogName, "outerElevatorError", this.outerElevatorError);
+        this.logger.logNumber(ElevatorMechanism.LogName, "outerElevatorPosition", this.outerElevatorPosition);
+        this.logger.logBoolean(ElevatorMechanism.LogName, "outerElevatorReverseLimitSwitch", this.outerElevatorReverseLimitSwitchStatus);
+        this.logger.logBoolean(ElevatorMechanism.LogName, "outerElevatorForwardLimitSwitch", this.outerElevatorForwardLimitSwitchStatus);
     }
 
     /**
