@@ -40,8 +40,6 @@ public class ElevatorMechanism implements IMechanism
 
     private Driver driver;
 
-    private boolean usePID;
-
     private double innerElevatorVelocity;
     private double innerElevatorError;
     private int innerElevatorPosition;
