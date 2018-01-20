@@ -52,7 +52,7 @@ public class TuningConstants
 
     //================================================== DriveTrain ==============================================================
 
-    // Drivetrain PID keys/default values:
+    // PID keys/default values:
     public static final boolean DRIVETRAIN_USE_PID = true;
 
     // Velocity PID (right)
@@ -114,4 +114,39 @@ public class TuningConstants
     public static final double AI_STABILIZATION_TIME = 0.5; // Time (in seconds) that mechanism must remain stable 
     public static final double[] TRIAL_POSITIONS = { 0.5, 0.8, 0.2 };
     public static final double AI_OVERSHOOT_WEIGHT = 0;
+
+    //================================================== Elevator ==============================================================
+
+    // Position PID (right)
+    public static final double ELEVATOR_POSITION_PID_INNER_KP = 0.0;
+    public static final double ELEVATOR_POSITION_PID_INNER_KI = 0.0;
+    public static final double ELEVATOR_POSITION_PID_INNER_KD = 0.0;
+    public static final double ELEVATOR_POSITION_PID_INNER_KF = 0.0;
+
+    // Position PID (left)
+    public static final double ELEVATOR_POSITION_PID_OUTER_KP = 0.0;
+    public static final double ELEVATOR_POSITION_PID_OUTER_KI = 0.0;
+    public static final double ELEVATOR_POSITION_PID_OUTER_KD = 0.0;
+    public static final double ELEVATOR_POSITION_PID_OUTER_KF = 0.0;
+
+    public static final boolean ELEVATOR_INNER_FORWARD_LIMIT_SWITCH_ENABLED = true;
+    public static final boolean ELEVATOR_INNER_FORWARD_LIMIT_SWITCH_NORMALLY_OPEN = true;
+    public static final boolean ELEVATOR_INNER_REVERSE_LIMIT_SWITCH_ENABLED = true;
+    public static final boolean ELEVATOR_INNER_REVERSE_LIMIT_SWITCH_NORMALLY_OPEN = true;
+
+    public static final boolean ELEVATOR_OUTER_FORWARD_LIMIT_SWITCH_ENABLED = true;
+    public static final boolean ELEVATOR_OUTER_FORWARD_LIMIT_SWITCH_NORMALLY_OPEN = true;
+    public static final boolean ELEVATOR_OUTER_REVERSE_LIMIT_SWITCH_ENABLED = true;
+    public static final boolean ELEVATOR_OUTER_REVERSE_LIMIT_SWITCH_NORMALLY_OPEN = true;
+
+    // Elevator motor/sensor orientations
+    public static final boolean ELEVATOR_INNER_INVERT_OUTPUT = true;
+    public static final boolean ELEVATOR_INNER_INVERT_SENSOR = true;
+    public static final boolean ELEVATOR_OUTER_INVERT_OUTPUT = false;
+    public static final boolean ELEVATOR_OUTER_INVERT_SENSOR = false;
+
+    public static final boolean ELEVATOR_LEFT_CARRIAGE_INTAKE_INVERT_OUTPUT = false;
+    public static final boolean ELEVATOR_RIGHT_CARRIAGE_INTAKE_INVERT_OUTPUT = false;
+    public static final boolean ELEVATOR_LEFT_OUTER_INTAKE_INVERT_OUTPUT = false;
+    public static final boolean ELEVATOR_RIGHT_OUTER_INTAKE_INVERT_OUTPUT = false;
 }
