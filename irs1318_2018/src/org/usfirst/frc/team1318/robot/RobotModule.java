@@ -42,7 +42,7 @@ public class RobotModule extends AbstractModule
         //mechanismList.add(injector.getInstance(PowerManager.class));
         //mechanismList.add(injector.getInstance(VisionManager.class));
         //mechanismList.add(injector.getInstance(CompressorMechanism.class));
-        //mechanismList.add(injector.getInstance(SomeMechanism.class));
+        //mechanismList.add(injector.getInstance(ElevatorMechanism.class));
         return new MechanismManager(mechanismList);
     }
 
