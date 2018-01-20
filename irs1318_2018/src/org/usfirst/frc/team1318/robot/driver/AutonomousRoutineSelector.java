@@ -189,7 +189,7 @@ public class AutonomousRoutineSelector
         RAPIDSettings settings = new RAPIDSettings(TuningConstants.AI_INITIAL, TuningConstants.AI_MUTATION_RATE,
             TuningConstants.AI_ACCELERATED_MUTATION_RATE, TuningConstants.AI_STAGNATION_ERROR, TuningConstants.AI_GENERATIONS,
             TuningConstants.AI_POPULATION_SIZE, TuningConstants.AI_BOTTLENECK_SIZE, TuningConstants.AI_GENE_BOUNDS);
-        return new RAPIDElevatorTask(settings, talonPort);
+        return new RAPIDElevatorTask(settings, talonPort, TuningConstants.TRIAL_POSITIONS);
     }
 
     /**

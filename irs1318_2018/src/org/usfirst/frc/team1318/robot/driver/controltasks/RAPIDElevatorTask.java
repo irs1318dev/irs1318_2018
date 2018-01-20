@@ -16,14 +16,15 @@ public class RAPIDElevatorTask extends RAPID
     private int deviceNumber;
     private ITalonSRX talon;
     private IControlTask currentTask;
-
+    private double[] trialPositions;
     private int curOrganism = -1;
 
-    public RAPIDElevatorTask(RAPIDSettings settings, int deviceNumber)
+    public RAPIDElevatorTask(RAPIDSettings settings, int deviceNumber, double[] trialPositions)
     {
         super(settings);
         this.currentTask = null;
         this.deviceNumber = deviceNumber;
+        this.trialPositions = trialPositions;
     }
 
     @Override
@@ -32,6 +33,8 @@ public class RAPIDElevatorTask extends RAPID
         // TODO Auto-generated method stub
         WpilibProvider provider = this.getInjector().getInstance(WpilibProvider.class);
         talon = provider.getTalonSRX(deviceNumber);
+        talon.setInvertOutput(false);
+        talon.setInvertSensor(false);
 
         // Initialize population
         sample = new PIDAutoTuneTask[settings.populationSize];
@@ -96,7 +99,7 @@ public class RAPIDElevatorTask extends RAPID
         Arrays.sort(sample);
         System.out.println("\nTop Organisms (Population: " + sample.length + ")");
         System.out.print("1. " + sample[0] + "; ");
-        for (int i = 1; i < settings.PRINT_LENGTH; i++)
+        for (int i = 1; i < RAPIDSettings.PRINT_LENGTH; i++)
         {
             System.out.println();
             System.out.print((i + 1) + ". " + sample[i] + "; ");
@@ -114,12 +117,12 @@ public class RAPIDElevatorTask extends RAPID
     protected Organism getNewOrganism()
     {
         // TODO Auto-generated method stub
-        return new PIDAutoTuneTask(talon, null);
+        return new PIDAutoTuneTask(talon, null, trialPositions);
     }
 
     @Override
     protected Organism getNewOrganism(Range[] initialValues, Range[] geneBounds)
     {
-        return new PIDAutoTuneTask(talon, initialValues, settings.geneBounds);
+        return new PIDAutoTuneTask(talon, initialValues, settings.geneBounds, trialPositions);
     }
 }
