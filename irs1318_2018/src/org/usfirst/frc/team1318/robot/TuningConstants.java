@@ -98,13 +98,13 @@ public class TuningConstants
 
     //================================================== Elevator ==============================================================
 
-    // Position PID (right)
+    // Position PID (inner)
     public static final double ELEVATOR_POSITION_PID_INNER_KP = 0.0;
     public static final double ELEVATOR_POSITION_PID_INNER_KI = 0.0;
     public static final double ELEVATOR_POSITION_PID_INNER_KD = 0.0;
     public static final double ELEVATOR_POSITION_PID_INNER_KF = 0.0;
 
-    // Position PID (left)
+    // Position PID (outer)
     public static final double ELEVATOR_POSITION_PID_OUTER_KP = 0.0;
     public static final double ELEVATOR_POSITION_PID_OUTER_KI = 0.0;
     public static final double ELEVATOR_POSITION_PID_OUTER_KD = 0.0;
@@ -131,7 +131,7 @@ public class TuningConstants
     public static final boolean ELEVATOR_LEFT_OUTER_INTAKE_INVERT_OUTPUT = false;
     public static final boolean ELEVATOR_RIGHT_OUTER_INTAKE_INVERT_OUTPUT = false;
 
-    // Elevator positions
+    // Elevator positions (in inches)
     public static final double ELEVATOR_INNER_CARRY_POSITION = 0;
     public static final double ELEVATOR_OUTER_CARRY_POSITION = 2.0;
     public static final double ELEVATOR_INNER_SWITCH_POSITION = 0;
