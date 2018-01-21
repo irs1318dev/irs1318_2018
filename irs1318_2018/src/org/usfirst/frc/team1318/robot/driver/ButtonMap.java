@@ -135,14 +135,14 @@ public class ButtonMap implements IButtonMap
             put(
                 Operation.ElevatorIntake,
                 new DigitalOperationDescription(
-                    UserInputDevice.None,
-                    UserInputDeviceButton.NONE,
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_STICK_BOTTOM_LEFT_BUTTON,
                     ButtonType.Simple));
             put(
                 Operation.ElevatorOuttake,
                 new DigitalOperationDescription(
-                    UserInputDevice.None,
-                    UserInputDeviceButton.NONE,
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_STICK_TOP_LEFT_BUTTON,
                     ButtonType.Simple));
             put(
                 Operation.ElevatorIntakeArmUp,

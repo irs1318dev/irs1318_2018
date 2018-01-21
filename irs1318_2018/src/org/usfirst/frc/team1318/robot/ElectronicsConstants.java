@@ -40,12 +40,12 @@ public class ElectronicsConstants
 
     //================================================== Elevator ==============================================================
 
-    public static final int ELEVATOR_INNER_MOTOR_CHANNEL = -1;
-    public static final int ELEVATOR_OUTER_MOTOR_CHANNEL = -1;
-    public static final int ELEVATOR_LEFT_CARRIAGE_INTAKE_MOTOR_CHANNEL = -1;
-    public static final int ELEVATOR_RIGHT_CARRIAGE_INTAKE_MOTOR_CHANNEL = -1;
-    public static final int ELEVATOR_LEFT_OUTER_INTAKE_MOTOR_CHANNEL = -1;
-    public static final int ELEVATOR_RIGHT_OUTER_INTAKE_MOTOR_CHANNEL = -1;
+    public static final int ELEVATOR_INNER_MOTOR_CHANNEL = 5;
+    public static final int ELEVATOR_OUTER_MOTOR_CHANNEL = 6;
+    public static final int ELEVATOR_LEFT_CARRIAGE_INTAKE_MOTOR_CHANNEL = 7;
+    public static final int ELEVATOR_RIGHT_CARRIAGE_INTAKE_MOTOR_CHANNEL = 8;
+    public static final int ELEVATOR_LEFT_OUTER_INTAKE_MOTOR_CHANNEL = 9;
+    public static final int ELEVATOR_RIGHT_OUTER_INTAKE_MOTOR_CHANNEL = 10;
     public static final int ELEVATOR_INTAKE_ARM_CHANNEL_A = -1;
     public static final int ELEVATOR_INTAKE_ARM_CHANNEL_B = -1;
 }
