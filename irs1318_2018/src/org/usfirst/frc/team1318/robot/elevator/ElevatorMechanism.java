@@ -366,10 +366,10 @@ public class ElevatorMechanism implements IMechanism
         }
         else if (this.driver.getDigital(Operation.ElevatorOuttake))
         {
-            leftOuterIntakePower = -TuningConstants.ELEVATOR_LEFT_OUTER_INTAKE_POWER;
-            rightOuterIntakePower = -TuningConstants.ELEVATOR_RIGHT_OUTER_INTAKE_POWER;
-            leftCarriageIntakePower = -TuningConstants.ELEVATOR_LEFT_CARRIAGE_INTAKE_POWER;
-            rightCarriageIntakePower = -TuningConstants.ELEVATOR_RIGHT_CARRIAGE_INTAKE_POWER;
+            leftOuterIntakePower = -TuningConstants.ELEVATOR_LEFT_OUTER_OUTTAKE_POWER;
+            rightOuterIntakePower = -TuningConstants.ELEVATOR_RIGHT_OUTER_OUTTAKE_POWER;
+            leftCarriageIntakePower = -TuningConstants.ELEVATOR_LEFT_CARRIAGE_OUTTAKE_POWER;
+            rightCarriageIntakePower = -TuningConstants.ELEVATOR_RIGHT_CARRIAGE_OUTTAKE_POWER;
         }
 
         this.leftOuterIntakeMotor.set(leftOuterIntakePower);
