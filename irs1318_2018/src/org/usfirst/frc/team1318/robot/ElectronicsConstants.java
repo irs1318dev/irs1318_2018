@@ -48,4 +48,5 @@ public class ElectronicsConstants
     public static final int ELEVATOR_RIGHT_OUTER_INTAKE_MOTOR_CHANNEL = 10;
     public static final int ELEVATOR_INTAKE_ARM_CHANNEL_A = -1;
     public static final int ELEVATOR_INTAKE_ARM_CHANNEL_B = -1;
+    public static final int ELEVATOR_THROUGH_BEAM_SENSOR_CHANNEL = -1;
 }

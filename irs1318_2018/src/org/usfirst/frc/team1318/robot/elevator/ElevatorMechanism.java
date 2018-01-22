@@ -8,6 +8,7 @@ import org.usfirst.frc.team1318.robot.TuningConstants;
 import org.usfirst.frc.team1318.robot.common.IDashboardLogger;
 import org.usfirst.frc.team1318.robot.common.IMechanism;
 import org.usfirst.frc.team1318.robot.common.wpilib.DoubleSolenoidValue;
+import org.usfirst.frc.team1318.robot.common.wpilib.IAnalogInput;
 import org.usfirst.frc.team1318.robot.common.wpilib.IDoubleSolenoid;
 import org.usfirst.frc.team1318.robot.common.wpilib.ITalonSRX;
 import org.usfirst.frc.team1318.robot.common.wpilib.ITimer;
@@ -44,6 +45,8 @@ public class ElevatorMechanism implements IMechanism
     private final ITalonSRX leftOuterIntakeMotor;
     private final ITalonSRX rightOuterIntakeMotor;
 
+    private final IAnalogInput throughBeamSensor;
+
     private final IDoubleSolenoid intakeExtender;
 
     private Driver driver;
@@ -61,6 +64,9 @@ public class ElevatorMechanism implements IMechanism
 
     private double desiredInnerHeight;
     private double desiredOuterHeight;
+
+    private double throughBeamVoltage;
+    private boolean isThroughBeamBlocked;
 
     private double lastUpdateTime;
 
@@ -138,6 +144,8 @@ public class ElevatorMechanism implements IMechanism
 
         this.intakeExtender = provider.getDoubleSolenoid(ElectronicsConstants.ELEVATOR_INTAKE_ARM_CHANNEL_A,
             ElectronicsConstants.ELEVATOR_INTAKE_ARM_CHANNEL_B);
+
+        this.throughBeamSensor = provider.getAnalogInput(ElectronicsConstants.ELEVATOR_THROUGH_BEAM_SENSOR_CHANNEL);
 
         this.innerElevatorVelocity = 0.0;
         this.innerElevatorError = 0.0;
@@ -260,6 +268,9 @@ public class ElevatorMechanism implements IMechanism
     @Override
     public void readSensors()
     {
+        this.throughBeamVoltage = this.throughBeamSensor.getVoltage();
+        this.isThroughBeamBlocked = (int)(throughBeamVoltage) == 0;
+
         this.innerElevatorVelocity = this.innerElevatorMotor.getVelocity();
         this.innerElevatorError = this.innerElevatorMotor.getError();
         this.innerElevatorPosition = this.innerElevatorMotor.getPosition();
@@ -286,6 +297,7 @@ public class ElevatorMechanism implements IMechanism
         this.logger.logNumber(ElevatorMechanism.LogName, "outerElevatorPosition", this.outerElevatorPosition);
         this.logger.logBoolean(ElevatorMechanism.LogName, "outerElevatorReverseLimitSwitch", this.outerElevatorReverseLimitSwitchStatus);
         this.logger.logBoolean(ElevatorMechanism.LogName, "outerElevatorForwardLimitSwitch", this.outerElevatorForwardLimitSwitchStatus);
+        this.logger.logNumber(ElevatorMechanism.LogName, "throughBeamSensorVoltage", this.throughBeamVoltage);
     }
 
     /**
