@@ -269,7 +269,7 @@ public class ElevatorMechanism implements IMechanism
     public void readSensors()
     {
         this.throughBeamVoltage = this.throughBeamSensor.getVoltage();
-        this.isThroughBeamBlocked = (throughBeamVoltage) < 3;
+        this.isThroughBeamBlocked = throughBeamVoltage < 3;
 
         this.innerElevatorVelocity = this.innerElevatorMotor.getVelocity();
         this.innerElevatorError = this.innerElevatorMotor.getError();
@@ -308,6 +308,16 @@ public class ElevatorMechanism implements IMechanism
     {
         double currentTime = this.timer.get();
         double deltaTime = currentTime - this.lastUpdateTime;
+
+        if (this.innerElevatorReverseLimitSwitchStatus)
+        {
+            innerElevatorMotor.reset();
+        }
+
+        if (this.outerElevatorReverseLimitSwitchStatus)
+        {
+            outerElevatorMotor.reset();
+        }
 
         if (this.driver.getDigital(Operation.ElevatorCarryPosition))
         {
