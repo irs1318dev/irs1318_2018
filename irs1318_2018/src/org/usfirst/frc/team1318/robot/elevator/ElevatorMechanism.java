@@ -269,7 +269,7 @@ public class ElevatorMechanism implements IMechanism
     public void readSensors()
     {
         this.throughBeamVoltage = this.throughBeamSensor.getVoltage();
-        this.isThroughBeamBlocked = (int)(throughBeamVoltage) == 0;
+        this.isThroughBeamBlocked = (throughBeamVoltage) < 3;
 
         this.innerElevatorVelocity = this.innerElevatorMotor.getVelocity();
         this.innerElevatorError = this.innerElevatorMotor.getError();
