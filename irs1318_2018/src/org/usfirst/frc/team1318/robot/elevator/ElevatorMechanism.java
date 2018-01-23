@@ -394,8 +394,19 @@ public class ElevatorMechanism implements IMechanism
             rightCarriageIntakePower = -TuningConstants.ELEVATOR_RIGHT_CARRIAGE_OUTTAKE_POWER;
         }
 
-        this.leftOuterIntakeMotor.set(leftOuterIntakePower);
-        this.rightOuterIntakeMotor.set(rightOuterIntakePower);
+        // Use outer intakes only if inner elevator is below a certain height
+        if (this.outerElevatorPosition > TuningConstants.ELEVATOR_MINIMUM_OUTER_INTAKE_USE_HEIGHT
+            / HardwareConstants.ELEVATOR_OUTER_ENCODER_PULSES_PER_REVOLUTION)
+        {
+            this.leftOuterIntakeMotor.set(leftOuterIntakePower);
+            this.rightOuterIntakeMotor.set(rightOuterIntakePower);
+        }
+        else
+        {
+            this.leftOuterIntakeMotor.set(0);
+            this.rightOuterIntakeMotor.set(0);
+        }
+
         this.leftCarriageIntakeMotor.set(leftCarriageIntakePower);
         this.rightCarriageIntakeMotor.set(rightCarriageIntakePower);
 

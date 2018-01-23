@@ -140,6 +140,7 @@ public class TuningConstants
     public static final double ELEVATOR_OUTER_LOW_SCALE_POSITION = 2.0;
     public static final double ELEVATOR_INNER_HIGH_SCALE_POSITION = 0;
     public static final double ELEVATOR_OUTER_HIGH_SCALE_POSITION = 2.0;
+    public static final double ELEVATOR_MINIMUM_OUTER_INTAKE_USE_HEIGHT = 12.0;
 
     // Elevator velocities
     public static final double ELEVATOR_MOVE_VELOCITY = 2.0; // inches per second
