@@ -54,11 +54,13 @@ public class ElevatorMechanism implements IMechanism
     private double innerElevatorVelocity;
     private double innerElevatorError;
     private int innerElevatorPosition;
+    private double innerElevatorHeight;
     private boolean innerElevatorForwardLimitSwitchStatus;
     private boolean innerElevatorReverseLimitSwitchStatus;
     private double outerElevatorVelocity;
     private double outerElevatorError;
     private int outerElevatorPosition;
+    private double outerElevatorHeight;
     private boolean outerElevatorForwardLimitSwitchStatus;
     private boolean outerElevatorReverseLimitSwitchStatus;
 
@@ -150,11 +152,13 @@ public class ElevatorMechanism implements IMechanism
         this.innerElevatorVelocity = 0.0;
         this.innerElevatorError = 0.0;
         this.innerElevatorPosition = 0;
+        this.innerElevatorHeight = 0.0;
         this.innerElevatorForwardLimitSwitchStatus = false;
         this.innerElevatorReverseLimitSwitchStatus = false;
         this.outerElevatorVelocity = 0.0;
         this.outerElevatorError = 0.0;
         this.outerElevatorPosition = 0;
+        this.outerElevatorHeight = 0.0;
         this.outerElevatorForwardLimitSwitchStatus = false;
         this.outerElevatorReverseLimitSwitchStatus = false;
 
@@ -269,11 +273,12 @@ public class ElevatorMechanism implements IMechanism
     public void readSensors()
     {
         this.throughBeamVoltage = this.throughBeamSensor.getVoltage();
-        this.isThroughBeamBlocked = throughBeamVoltage < 3;
+        this.isThroughBeamBlocked = this.throughBeamVoltage < TuningConstants.ELEVATOR_THROUGH_BEAM_UNBLOCKED_VOLTAGE_THRESHOLD;
 
         this.innerElevatorVelocity = this.innerElevatorMotor.getVelocity();
         this.innerElevatorError = this.innerElevatorMotor.getError();
         this.innerElevatorPosition = this.innerElevatorMotor.getPosition();
+        this.innerElevatorHeight = this.innerElevatorPosition * HardwareConstants.ELEVATOR_INNER_PULSE_DISTANCE;
 
         TalonSRXLimitSwitchStatus innerLimitSwitchStatus = this.innerElevatorMotor.getLimitSwitchStatus();
         this.innerElevatorForwardLimitSwitchStatus = innerLimitSwitchStatus.isForwardClosed;
@@ -282,6 +287,7 @@ public class ElevatorMechanism implements IMechanism
         this.outerElevatorVelocity = this.outerElevatorMotor.getVelocity();
         this.outerElevatorError = this.outerElevatorMotor.getError();
         this.outerElevatorPosition = this.outerElevatorMotor.getPosition();
+        this.outerElevatorHeight = this.outerElevatorPosition * HardwareConstants.ELEVATOR_OUTER_PULSE_DISTANCE;
 
         TalonSRXLimitSwitchStatus outerLimitSwitchStatus = this.outerElevatorMotor.getLimitSwitchStatus();
         this.outerElevatorForwardLimitSwitchStatus = outerLimitSwitchStatus.isForwardClosed;
@@ -290,14 +296,17 @@ public class ElevatorMechanism implements IMechanism
         this.logger.logNumber(ElevatorMechanism.LogName, "innerElevatorVelocity", this.innerElevatorVelocity);
         this.logger.logNumber(ElevatorMechanism.LogName, "innerElevatorError", this.innerElevatorError);
         this.logger.logNumber(ElevatorMechanism.LogName, "innerElevatorPosition", this.innerElevatorPosition);
+        this.logger.logNumber(ElevatorMechanism.LogName, "innerElevatorHeight", this.innerElevatorHeight);
         this.logger.logBoolean(ElevatorMechanism.LogName, "innerElevatorReverseLimitSwitch", this.innerElevatorReverseLimitSwitchStatus);
         this.logger.logBoolean(ElevatorMechanism.LogName, "innerElevatorForwardLimitSwitch", this.innerElevatorForwardLimitSwitchStatus);
         this.logger.logNumber(ElevatorMechanism.LogName, "outerElevatorVelocity", this.outerElevatorVelocity);
         this.logger.logNumber(ElevatorMechanism.LogName, "outerElevatorError", this.outerElevatorError);
         this.logger.logNumber(ElevatorMechanism.LogName, "outerElevatorPosition", this.outerElevatorPosition);
+        this.logger.logNumber(ElevatorMechanism.LogName, "outerElevatorHeight", this.outerElevatorHeight);
         this.logger.logBoolean(ElevatorMechanism.LogName, "outerElevatorReverseLimitSwitch", this.outerElevatorReverseLimitSwitchStatus);
         this.logger.logBoolean(ElevatorMechanism.LogName, "outerElevatorForwardLimitSwitch", this.outerElevatorForwardLimitSwitchStatus);
         this.logger.logNumber(ElevatorMechanism.LogName, "throughBeamSensorVoltage", this.throughBeamVoltage);
+        this.logger.logBoolean(ElevatorMechanism.LogName, "throughBeamBlocked", this.isThroughBeamBlocked);
     }
 
     /**
@@ -311,12 +320,12 @@ public class ElevatorMechanism implements IMechanism
 
         if (this.innerElevatorReverseLimitSwitchStatus)
         {
-            innerElevatorMotor.reset();
+            this.innerElevatorMotor.reset();
         }
 
         if (this.outerElevatorReverseLimitSwitchStatus)
         {
-            outerElevatorMotor.reset();
+            this.outerElevatorMotor.reset();
         }
 
         if (this.driver.getDigital(Operation.ElevatorCarryPosition))
@@ -371,8 +380,8 @@ public class ElevatorMechanism implements IMechanism
             }
         }
 
-        this.innerElevatorMotor.set(this.desiredInnerHeight / HardwareConstants.ELEVATOR_INNER_ENCODER_PULSES_PER_REVOLUTION);
-        this.outerElevatorMotor.set(this.desiredOuterHeight / HardwareConstants.ELEVATOR_OUTER_ENCODER_PULSES_PER_REVOLUTION);
+        this.innerElevatorMotor.set(this.desiredInnerHeight / HardwareConstants.ELEVATOR_INNER_PULSE_DISTANCE);
+        this.outerElevatorMotor.set(this.desiredOuterHeight / HardwareConstants.ELEVATOR_INNER_PULSE_DISTANCE);
 
         double leftOuterIntakePower = 0.0;
         double rightOuterIntakePower = 0.0;
@@ -388,15 +397,14 @@ public class ElevatorMechanism implements IMechanism
         }
         else if (this.driver.getDigital(Operation.ElevatorOuttake))
         {
-            leftOuterIntakePower = -TuningConstants.ELEVATOR_LEFT_OUTER_OUTTAKE_POWER;
-            rightOuterIntakePower = -TuningConstants.ELEVATOR_RIGHT_OUTER_OUTTAKE_POWER;
-            leftCarriageIntakePower = -TuningConstants.ELEVATOR_LEFT_CARRIAGE_OUTTAKE_POWER;
-            rightCarriageIntakePower = -TuningConstants.ELEVATOR_RIGHT_CARRIAGE_OUTTAKE_POWER;
+            leftOuterIntakePower = TuningConstants.ELEVATOR_LEFT_OUTER_OUTTAKE_POWER;
+            rightOuterIntakePower = TuningConstants.ELEVATOR_RIGHT_OUTER_OUTTAKE_POWER;
+            leftCarriageIntakePower = TuningConstants.ELEVATOR_LEFT_CARRIAGE_OUTTAKE_POWER;
+            rightCarriageIntakePower = TuningConstants.ELEVATOR_RIGHT_CARRIAGE_OUTTAKE_POWER;
         }
 
-        // Use outer intakes only if inner elevator is below a certain height
-        if (this.outerElevatorPosition > TuningConstants.ELEVATOR_MINIMUM_OUTER_INTAKE_USE_HEIGHT
-            / HardwareConstants.ELEVATOR_OUTER_ENCODER_PULSES_PER_REVOLUTION)
+        // Use outer intakes only if carriage is below a certain height
+        if (this.innerElevatorHeight + this.outerElevatorHeight <= TuningConstants.ELEVATOR_MAXIMUM_OUTER_INTAKE_USE_HEIGHT)
         {
             this.leftOuterIntakeMotor.set(leftOuterIntakePower);
             this.rightOuterIntakeMotor.set(rightOuterIntakePower);
@@ -444,8 +452,17 @@ public class ElevatorMechanism implements IMechanism
         this.innerElevatorVelocity = 0.0;
         this.innerElevatorError = 0.0;
         this.innerElevatorPosition = 0;
+        this.innerElevatorHeight = 0.0;
+        this.innerElevatorForwardLimitSwitchStatus = false;
+        this.innerElevatorReverseLimitSwitchStatus = false;
         this.outerElevatorVelocity = 0.0;
         this.outerElevatorError = 0.0;
         this.outerElevatorPosition = 0;
+        this.outerElevatorHeight = 0.0;
+        this.outerElevatorForwardLimitSwitchStatus = false;
+        this.outerElevatorReverseLimitSwitchStatus = false;
+
+        this.desiredInnerHeight = 0.0;
+        this.desiredOuterHeight = 0.0;
     }
 }

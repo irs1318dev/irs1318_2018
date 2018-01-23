@@ -131,6 +131,8 @@ public class TuningConstants
     public static final boolean ELEVATOR_LEFT_OUTER_INTAKE_INVERT_OUTPUT = false;
     public static final boolean ELEVATOR_RIGHT_OUTER_INTAKE_INVERT_OUTPUT = false;
 
+    public static final double ELEVATOR_THROUGH_BEAM_UNBLOCKED_VOLTAGE_THRESHOLD = 3.0;
+
     // Elevator positions (in inches)
     public static final double ELEVATOR_INNER_CARRY_POSITION = 0;
     public static final double ELEVATOR_OUTER_CARRY_POSITION = 2.0;
@@ -140,7 +142,8 @@ public class TuningConstants
     public static final double ELEVATOR_OUTER_LOW_SCALE_POSITION = 2.0;
     public static final double ELEVATOR_INNER_HIGH_SCALE_POSITION = 0;
     public static final double ELEVATOR_OUTER_HIGH_SCALE_POSITION = 2.0;
-    public static final double ELEVATOR_MINIMUM_OUTER_INTAKE_USE_HEIGHT = 12.0;
+
+    public static final double ELEVATOR_MAXIMUM_OUTER_INTAKE_USE_HEIGHT = 12.0;
 
     // Elevator velocities
     public static final double ELEVATOR_MOVE_VELOCITY = 2.0; // inches per second
@@ -152,8 +155,8 @@ public class TuningConstants
     public static final double ELEVATOR_RIGHT_CARRIAGE_INTAKE_POWER = 0.5;
 
     // Elevator outtake powers
-    public static final double ELEVATOR_LEFT_OUTER_OUTTAKE_POWER = 0.1;
-    public static final double ELEVATOR_RIGHT_OUTER_OUTTAKE_POWER = 0.1;
-    public static final double ELEVATOR_LEFT_CARRIAGE_OUTTAKE_POWER = 0.2;
-    public static final double ELEVATOR_RIGHT_CARRIAGE_OUTTAKE_POWER = 0.2;
+    public static final double ELEVATOR_LEFT_OUTER_OUTTAKE_POWER = -0.1;
+    public static final double ELEVATOR_RIGHT_OUTER_OUTTAKE_POWER = -0.1;
+    public static final double ELEVATOR_LEFT_CARRIAGE_OUTTAKE_POWER = -0.2;
+    public static final double ELEVATOR_RIGHT_CARRIAGE_OUTTAKE_POWER = -0.2;
 }
