@@ -16,6 +16,7 @@ import org.usfirst.frc.team1318.robot.common.wpilib.ITalonSRX;
 import org.usfirst.frc.team1318.robot.common.wpilib.ITimer;
 import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXControlMode;
 import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXFeedbackDevice;
+import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXLimitSwitchStatus;
 import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXNeutralMode;
 import org.usfirst.frc.team1318.robot.driver.common.Driver;
 
@@ -39,21 +40,12 @@ public class ElevatorMechanismTest
         doReturn(0.0).when(innerElevatorMotor).getError();
         doReturn(0.0).when(innerElevatorMotor).getVelocity();
         doReturn(0).when(innerElevatorMotor).getPosition();
+        doReturn(new TalonSRXLimitSwitchStatus(false, false)).when(innerElevatorMotor).getLimitSwitchStatus();
         doReturn(0.0).when(outerElevatorMotor).getError();
         doReturn(0.0).when(outerElevatorMotor).getVelocity();
         doReturn(0).when(outerElevatorMotor).getPosition();
-        doReturn(0.0).when(leftCarriageIntakeMotor).getError();
-        doReturn(0.0).when(leftCarriageIntakeMotor).getVelocity();
-        doReturn(0).when(leftCarriageIntakeMotor).getPosition();
-        doReturn(0.0).when(rightCarriageIntakeMotor).getError();
-        doReturn(0.0).when(rightCarriageIntakeMotor).getVelocity();
-        doReturn(0).when(rightCarriageIntakeMotor).getPosition();
-        doReturn(0.0).when(leftOuterIntakeMotor).getError();
-        doReturn(0.0).when(leftOuterIntakeMotor).getVelocity();
-        doReturn(0).when(leftOuterIntakeMotor).getPosition();
-        doReturn(0.0).when(rightOuterIntakeMotor).getError();
-        doReturn(0.0).when(rightOuterIntakeMotor).getVelocity();
-        doReturn(0).when(rightOuterIntakeMotor).getPosition();
+        doReturn(new TalonSRXLimitSwitchStatus(false, false)).when(outerElevatorMotor).getLimitSwitchStatus();
+        doReturn(0.0).when(throughBeamSensor).getVoltage();
 
         ElevatorMechanism elevatorMechanism = new ElevatorMechanism(logger, testProvider, timer);
         elevatorMechanism.setDriver(driver);
@@ -97,14 +89,20 @@ public class ElevatorMechanismTest
             TuningConstants.ELEVATOR_POSITION_PID_OUTER_KF,
             0);
         verify(outerElevatorMotor).setControlMode(TalonSRXControlMode.Position);
+
         verify(leftCarriageIntakeMotor).setNeutralMode(eq(TalonSRXNeutralMode.Brake));
         verify(leftCarriageIntakeMotor).setInvertOutput(eq(false));
-        verify(leftCarriageIntakeMotor).setSensorType(TalonSRXFeedbackDevice.QuadEncoder);
         verify(leftCarriageIntakeMotor).setControlMode(TalonSRXControlMode.PercentOutput);
         verify(rightCarriageIntakeMotor).setNeutralMode(eq(TalonSRXNeutralMode.Brake));
         verify(rightCarriageIntakeMotor).setInvertOutput(eq(false));
-        verify(rightCarriageIntakeMotor).setSensorType(TalonSRXFeedbackDevice.QuadEncoder);
         verify(rightCarriageIntakeMotor).setControlMode(TalonSRXControlMode.PercentOutput);
+
+        verify(leftOuterIntakeMotor).setNeutralMode(eq(TalonSRXNeutralMode.Brake));
+        verify(leftOuterIntakeMotor).setInvertOutput(eq(false));
+        verify(leftOuterIntakeMotor).setControlMode(TalonSRXControlMode.PercentOutput);
+        verify(rightOuterIntakeMotor).setNeutralMode(eq(TalonSRXNeutralMode.Brake));
+        verify(rightOuterIntakeMotor).setInvertOutput(eq(false));
+        verify(rightOuterIntakeMotor).setControlMode(TalonSRXControlMode.PercentOutput);
 
         // from readSensors:
         verify(innerElevatorMotor).getError();

@@ -179,8 +179,6 @@ public class DriveTrainMechanismTest
         verify(rightMotor).setControlMode(eq(TalonSRXControlMode.Velocity));
 
         // from stop:
-        verify(leftMotor).setControlMode(eq(TalonSRXControlMode.PercentOutput));
-        verify(rightMotor).setControlMode(eq(TalonSRXControlMode.PercentOutput));
         verify(leftMotor).stop();
         verify(rightMotor).stop();
         verify(leftMotor).reset();
