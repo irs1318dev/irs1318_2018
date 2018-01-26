@@ -17,6 +17,8 @@ import org.usfirst.frc.team1318.robot.driver.ButtonMap;
 import org.usfirst.frc.team1318.robot.driver.common.IButtonMap;
 import org.usfirst.frc.team1318.robot.drivetrain.DriveTrainMechanism;
 import org.usfirst.frc.team1318.robot.elevator.ElevatorMechanism;
+import org.usfirst.frc.team1318.robot.general.PositionManager;
+import org.usfirst.frc.team1318.robot.general.PowerManager;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
@@ -38,8 +40,8 @@ public class RobotModule extends AbstractModule
     {
         List<IMechanism> mechanismList = new ArrayList<>();
         mechanismList.add(injector.getInstance(DriveTrainMechanism.class));
-        //mechanismList.add(injector.getInstance(PositionManager.class));
-        //mechanismList.add(injector.getInstance(PowerManager.class));
+        mechanismList.add(injector.getInstance(PositionManager.class));
+        mechanismList.add(injector.getInstance(PowerManager.class));
         //mechanismList.add(injector.getInstance(VisionManager.class));
         //mechanismList.add(injector.getInstance(CompressorMechanism.class));
         mechanismList.add(injector.getInstance(ElevatorMechanism.class));
