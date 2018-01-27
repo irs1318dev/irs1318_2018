@@ -59,8 +59,14 @@ public class AutonomousRoutineSelector
         boolean prefersSwitch = this.dipSwitchD.get();  // Prefers switch if fourth switch flipped, prefers scale if not
 
         String rawSideData = DriverStation.getInstance().getGameSpecificMessage();
-        boolean isSwitchSideLeft = (rawSideData.charAt(0) == 'L');
-        boolean isScaleSideLeft = (rawSideData.charAt(1) == 'L');
+
+        boolean isSwitchSideLeft = false;
+        boolean isScaleSideLeft = false;
+        if (rawSideData != null && rawSideData.length() >= 2)
+        {
+            isSwitchSideLeft = (rawSideData.charAt(0) == 'L');
+            isScaleSideLeft = (rawSideData.charAt(1) == 'L');
+        }
 
         // add next base2 number (1, 2, 4, 8, 16, etc.) here based on number of dipswitches and which is on...
         int positionSelection = 0;
@@ -93,6 +99,7 @@ public class AutonomousRoutineSelector
         }
 
         // print routine parameters to the smartdash
+        this.logger.logString(AutonomousRoutineSelector.LogName, "gameData", rawSideData);
         this.logger.logString(AutonomousRoutineSelector.LogName, "position", position.toString());
         this.logger.logBoolean(AutonomousRoutineSelector.LogName, "isOpportunistic", isOpportunistic);
         this.logger.logBoolean(AutonomousRoutineSelector.LogName, "prefersSwitch", prefersSwitch);
@@ -116,9 +123,9 @@ public class AutonomousRoutineSelector
      * 
      * @return special routine non-dependent on position
      */
-    private static IControlTask specialRoutineSelection(boolean switchThree, boolean switchFour)
+    private static IControlTask specialRoutineSelection(boolean switchC, boolean switchD)
     {
-        if (switchThree && switchFour)
+        if (switchC && switchD)
         {
             return CrossBaseLine();
         }
