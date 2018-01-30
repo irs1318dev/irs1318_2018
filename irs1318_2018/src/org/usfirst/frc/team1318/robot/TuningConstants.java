@@ -159,4 +159,8 @@ public class TuningConstants
     public static final double ELEVATOR_RIGHT_OUTER_OUTTAKE_POWER = -0.1;
     public static final double ELEVATOR_LEFT_CARRIAGE_OUTTAKE_POWER = -0.2;
     public static final double ELEVATOR_RIGHT_CARRIAGE_OUTTAKE_POWER = -0.2;
+
+    // Elevator intake correction powers
+    public static final double ELEVATOR_RIGHT_OUTER_INTAKE_CORRECTION_POWER = .3;
+    public static final double ELEVATOR_LEFT_OUTER_INTAKE_CORRECTION_POWER = 0;
 }

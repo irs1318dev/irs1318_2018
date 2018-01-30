@@ -24,10 +24,11 @@ public enum Operation
     ElevatorMoveUp,
     ElevatorMoveDown,
     ElevatorIntake,
+    ElevatorIntakeCorrection,
     ElevatorOuttake,
     ElevatorIntakeArmUp,
     ElevatorIntakeArmDown,
-    
+     
     // Climber operations
     ClimberRelease, 
     ClimberWinch, 
