@@ -45,7 +45,8 @@ public class ElevatorMechanism implements IMechanism
     private final ITalonSRX leftOuterIntakeMotor;
     private final ITalonSRX rightOuterIntakeMotor;
 
-    private final IAnalogInput throughBeamSensor;
+    private final IAnalogInput innerThroughBeamSensor;
+    private final IAnalogInput outerThroughBeamSensor;
 
     private final IDoubleSolenoid intakeExtender;
 
@@ -67,8 +68,11 @@ public class ElevatorMechanism implements IMechanism
     private double desiredInnerHeight;
     private double desiredOuterHeight;
 
-    private double throughBeamVoltage;
-    private boolean isThroughBeamBlocked;
+    private double innerThroughBeamVoltage;
+    private boolean isInnerThroughBeamBlocked;
+
+    private double outerThroughBeamVoltage;
+    private boolean isOuterThroughBeamBlocked;
 
     private double lastUpdateTime;
 
@@ -147,7 +151,8 @@ public class ElevatorMechanism implements IMechanism
         this.intakeExtender = provider.getDoubleSolenoid(ElectronicsConstants.ELEVATOR_INTAKE_ARM_CHANNEL_A,
             ElectronicsConstants.ELEVATOR_INTAKE_ARM_CHANNEL_B);
 
-        this.throughBeamSensor = provider.getAnalogInput(ElectronicsConstants.ELEVATOR_THROUGH_BEAM_SENSOR_CHANNEL);
+        this.innerThroughBeamSensor = provider.getAnalogInput(ElectronicsConstants.ELEVATOR_INNER_THROUGH_BEAM_SENSOR_CHANNEL);
+        this.outerThroughBeamSensor = provider.getAnalogInput(ElectronicsConstants.ELEVATOR_OUTER_THROUGH_BEAM_SENSOR_CHANNEL);
 
         this.innerElevatorVelocity = 0.0;
         this.innerElevatorError = 0.0;
@@ -272,8 +277,11 @@ public class ElevatorMechanism implements IMechanism
     @Override
     public void readSensors()
     {
-        this.throughBeamVoltage = this.throughBeamSensor.getVoltage();
-        this.isThroughBeamBlocked = this.throughBeamVoltage < TuningConstants.ELEVATOR_THROUGH_BEAM_UNBLOCKED_VOLTAGE_THRESHOLD;
+        this.innerThroughBeamVoltage = this.innerThroughBeamSensor.getVoltage();
+        this.isInnerThroughBeamBlocked = this.innerThroughBeamVoltage < TuningConstants.ELEVATOR_THROUGH_BEAM_UNBLOCKED_VOLTAGE_THRESHOLD;
+
+        this.outerThroughBeamVoltage = this.outerThroughBeamSensor.getVoltage();
+        this.isOuterThroughBeamBlocked = this.outerThroughBeamVoltage < TuningConstants.ELEVATOR_THROUGH_BEAM_UNBLOCKED_VOLTAGE_THRESHOLD;
 
         this.innerElevatorVelocity = this.innerElevatorMotor.getVelocity();
         this.innerElevatorError = this.innerElevatorMotor.getError();
@@ -305,8 +313,10 @@ public class ElevatorMechanism implements IMechanism
         this.logger.logNumber(ElevatorMechanism.LogName, "outerElevatorHeight", this.outerElevatorHeight);
         this.logger.logBoolean(ElevatorMechanism.LogName, "outerElevatorReverseLimitSwitch", this.outerElevatorReverseLimitSwitchStatus);
         this.logger.logBoolean(ElevatorMechanism.LogName, "outerElevatorForwardLimitSwitch", this.outerElevatorForwardLimitSwitchStatus);
-        this.logger.logNumber(ElevatorMechanism.LogName, "throughBeamSensorVoltage", this.throughBeamVoltage);
-        this.logger.logBoolean(ElevatorMechanism.LogName, "throughBeamBlocked", this.isThroughBeamBlocked);
+        this.logger.logNumber(ElevatorMechanism.LogName, "onnerThroughBeamSensorVoltage", this.innerThroughBeamVoltage);
+        this.logger.logBoolean(ElevatorMechanism.LogName, "innerThroughBeamBlocked", this.isInnerThroughBeamBlocked);
+        this.logger.logNumber(ElevatorMechanism.LogName, "outerThroughBeamSensorVoltage", this.outerThroughBeamVoltage);
+        this.logger.logBoolean(ElevatorMechanism.LogName, "outerThroughBeamBlocked", this.isOuterThroughBeamBlocked);
     }
 
     /**
