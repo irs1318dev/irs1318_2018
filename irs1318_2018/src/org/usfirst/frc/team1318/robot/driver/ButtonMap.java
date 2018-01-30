@@ -156,6 +156,20 @@ public class ButtonMap implements IButtonMap
                     UserInputDevice.Driver,
                     0, // POV up
                     ButtonType.Click));
+
+            // Operations for the climber
+            put(
+                Operation.ClimberRelease,
+                new DigitalOperationDescription(
+                    UserInputDevice.None,
+                    UserInputDeviceButton.NONE,
+                    ButtonType.Click));
+            put(
+                Operation.ClimberWinch,
+                new DigitalOperationDescription(
+                    UserInputDevice.None,
+                    UserInputDeviceButton.NONE,
+                    ButtonType.Toggle));
         }
     };
 

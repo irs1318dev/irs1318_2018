@@ -28,4 +28,8 @@ public enum Operation
     ElevatorIntakeArmUp,
     ElevatorIntakeArmDown,
     
+    // Climber operations
+    ClimberRelease, 
+    ClimberWinch, 
+    
 }
