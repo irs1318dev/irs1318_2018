@@ -50,6 +50,7 @@ public class ElectronicsConstants
     public static final int ELEVATOR_INTAKE_ARM_CHANNEL_B = -1;
     public static final int ELEVATOR_INNER_THROUGH_BEAM_SENSOR_CHANNEL = -1;
     public static final int ELEVATOR_OUTER_THROUGH_BEAM_SENSOR_CHANNEL = -1;
+    public static final int ELEVATOR_COLLECTED_INDICATOR_LIGHT_CHANNEL = -1;
 
     //================================================== Climber ==============================================================
     public static final int CLIMBER_WINCH_MOTOR_CHANNEL = -1;

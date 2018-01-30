@@ -10,6 +10,7 @@ import org.usfirst.frc.team1318.robot.common.IMechanism;
 import org.usfirst.frc.team1318.robot.common.wpilib.DoubleSolenoidValue;
 import org.usfirst.frc.team1318.robot.common.wpilib.IAnalogInput;
 import org.usfirst.frc.team1318.robot.common.wpilib.IDoubleSolenoid;
+import org.usfirst.frc.team1318.robot.common.wpilib.ISolenoid;
 import org.usfirst.frc.team1318.robot.common.wpilib.ITalonSRX;
 import org.usfirst.frc.team1318.robot.common.wpilib.ITimer;
 import org.usfirst.frc.team1318.robot.common.wpilib.IWpilibProvider;
@@ -49,6 +50,8 @@ public class ElevatorMechanism implements IMechanism
     private final IAnalogInput outerThroughBeamSensor;
 
     private final IDoubleSolenoid intakeExtender;
+
+    private final ISolenoid collectedIndicatorLight;
 
     private Driver driver;
 
@@ -153,6 +156,8 @@ public class ElevatorMechanism implements IMechanism
 
         this.innerThroughBeamSensor = provider.getAnalogInput(ElectronicsConstants.ELEVATOR_INNER_THROUGH_BEAM_SENSOR_CHANNEL);
         this.outerThroughBeamSensor = provider.getAnalogInput(ElectronicsConstants.ELEVATOR_OUTER_THROUGH_BEAM_SENSOR_CHANNEL);
+
+        this.collectedIndicatorLight = provider.getSolenoid(ElectronicsConstants.ELEVATOR_COLLECTED_INDICATOR_LIGHT_CHANNEL);
 
         this.innerElevatorVelocity = 0.0;
         this.innerElevatorError = 0.0;
@@ -259,6 +264,24 @@ public class ElevatorMechanism implements IMechanism
     public boolean getOuterReverseLimitSwitchStatus()
     {
         return this.outerElevatorReverseLimitSwitchStatus;
+    }
+
+    /**
+     * get the status from the inner through beam sensor
+     * @return a value indicating whether the inner through beam sensor is blocked 
+     */
+    public boolean getInnerThroughBeamStatus()
+    {
+        return this.isInnerThroughBeamBlocked;
+    }
+
+    /**
+     * get the status from the outer through beam sensor
+     * @return a value indicating whether the outer through beam sensor is blocked 
+     */
+    public boolean getOuterThroughBeamStatus()
+    {
+        return this.isOuterThroughBeamBlocked;
     }
 
     /**
@@ -428,6 +451,8 @@ public class ElevatorMechanism implements IMechanism
         this.leftCarriageIntakeMotor.set(leftCarriageIntakePower);
         this.rightCarriageIntakeMotor.set(rightCarriageIntakePower);
 
+        collectedIndicatorLight.set(this.isInnerThroughBeamBlocked);
+
         if (this.driver.getDigital(Operation.ElevatorIntakeArmUp))
         {
             this.intakeExtender.set(DoubleSolenoidValue.kReverse);
@@ -474,5 +499,8 @@ public class ElevatorMechanism implements IMechanism
 
         this.desiredInnerHeight = 0.0;
         this.desiredOuterHeight = 0.0;
+
+        this.isInnerThroughBeamBlocked = false;
+        this.isOuterThroughBeamBlocked = false;
     }
 }
