@@ -1,31 +1,28 @@
 package org.usfirst.frc.team1318.robot.driver.controltasks;
 
 import org.usfirst.frc.team1318.robot.TuningConstants;
+import org.usfirst.frc.team1318.robot.common.wpilib.ITimer;
 import org.usfirst.frc.team1318.robot.driver.Operation;
 import org.usfirst.frc.team1318.robot.driver.common.IControlTask;
 import org.usfirst.frc.team1318.robot.elevator.ElevatorMechanism;
 
-import edu.wpi.first.wpilibj.Timer;
-
 /**
- * Abstract class defining a task that moves the robot a certain distance using Positional PID.
+ * Class defining a task that intakes a power cube, rotating it if it gets stuck
  * 
  */
 public class IntakeAndCorrectionTask extends ControlTaskBase implements IControlTask
 {
+    private ITimer timer;
     private ElevatorMechanism elevator;
-    private final Timer timer;
+
     private Double startTime;
-    private Double intermediateTime;
 
     /**
-     * Initializes a new MoveDistanceTaskBase
-     * @param resetPositionalOnEnd
+     * Initializes a new IntakeAndCorrectionTask
      */
     public IntakeAndCorrectionTask()
     {
-        this.timer = new Timer();
-        this.startTime = this.timer.get();
+        this.startTime = null;
     }
 
     /**
@@ -34,7 +31,12 @@ public class IntakeAndCorrectionTask extends ControlTaskBase implements IControl
     @Override
     public void begin()
     {
+        this.timer = this.getInjector().getInstance(ITimer.class);
         this.elevator = this.getInjector().getInstance(ElevatorMechanism.class);
+
+        this.setDigitalOperationState(Operation.ElevatorIntake, true);
+        this.setDigitalOperationState(Operation.ElevatorIntakeCorrection, false);
+        this.setDigitalOperationState(Operation.ElevatorOuttake, false);
     }
 
     /**
@@ -45,33 +47,38 @@ public class IntakeAndCorrectionTask extends ControlTaskBase implements IControl
     {
         if (this.elevator.getOuterThroughBeamStatus() && !this.elevator.getInnerThroughBeamStatus())
         {
-            this.intermediateTime = this.timer.get() - this.startTime;
-            if (this.intermediateTime > TuningConstants.ELEVATOR_INTAKE_CORRECTION_TRIGGER_TIME_THRESHOLD)
+            double currentTime = this.timer.get();
+            if (this.startTime == null)
             {
-                if (this.intermediateTime
-                    - TuningConstants.ELEVATOR_INTAKE_CORRECTION_TRIGGER_TIME_THRESHOLD < TuningConstants.ELEVATOR_INTAKE_CORRECTION_OPERATION_TIME_THRESHOLD)
+                this.startTime = currentTime;
+            }
+
+            double waitTime = currentTime - this.startTime;
+            if (waitTime > TuningConstants.ELEVATOR_INTAKE_CORRECTION_TRIGGER_TIME_THRESHOLD)
+            {
+                double correctTime = waitTime - TuningConstants.ELEVATOR_INTAKE_CORRECTION_TRIGGER_TIME_THRESHOLD;
+                if (correctTime < TuningConstants.ELEVATOR_INTAKE_CORRECTION_OPERATION_TIME_THRESHOLD)
                 {
                     this.setDigitalOperationState(Operation.ElevatorIntake, false);
                     this.setDigitalOperationState(Operation.ElevatorIntakeCorrection, true);
+                    this.setDigitalOperationState(Operation.ElevatorOuttake, false);
+
+                    return;
                 }
                 else
                 {
-                    this.intermediateTime = 0.0;
-                    this.startTime = timer.get();
+                    this.startTime = null;
                 }
-            }
-            else
-            {
-                this.setDigitalOperationState(Operation.ElevatorIntakeCorrection, false);
-                this.setDigitalOperationState(Operation.ElevatorIntake, true);
             }
         }
         else
         {
-            this.setDigitalOperationState(Operation.ElevatorIntakeCorrection, false);
-            this.setDigitalOperationState(Operation.ElevatorIntake, true);
+            this.startTime = null;
         }
 
+        this.setDigitalOperationState(Operation.ElevatorIntake, true);
+        this.setDigitalOperationState(Operation.ElevatorIntakeCorrection, false);
+        this.setDigitalOperationState(Operation.ElevatorOuttake, false);
     }
 
     /**
@@ -80,7 +87,9 @@ public class IntakeAndCorrectionTask extends ControlTaskBase implements IControl
     @Override
     public void stop()
     {
-
+        this.setDigitalOperationState(Operation.ElevatorIntake, false);
+        this.setDigitalOperationState(Operation.ElevatorIntakeCorrection, false);
+        this.setDigitalOperationState(Operation.ElevatorOuttake, false);
     }
 
     /**
@@ -89,7 +98,9 @@ public class IntakeAndCorrectionTask extends ControlTaskBase implements IControl
     @Override
     public void end()
     {
-
+        this.setDigitalOperationState(Operation.ElevatorIntake, false);
+        this.setDigitalOperationState(Operation.ElevatorIntakeCorrection, false);
+        this.setDigitalOperationState(Operation.ElevatorOuttake, false);
     }
 
     /**

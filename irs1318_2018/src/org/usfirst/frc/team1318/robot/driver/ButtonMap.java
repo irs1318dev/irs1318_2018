@@ -240,7 +240,13 @@ public class ButtonMap implements IButtonMap
                     UserInputDevice.Driver,
                     UserInputDeviceButton.JOYSTICK_STICK_BOTTOM_LEFT_BUTTON,
                     ButtonType.Simple,
-                    () -> new IntakeAndCorrectionTask()));
+                    () -> new IntakeAndCorrectionTask(),
+                    new Operation[]
+                    {
+                        Operation.ElevatorIntake,
+                        Operation.ElevatorIntakeCorrection,
+                        Operation.ElevatorOuttake,
+                    }));
         }
     };
 
