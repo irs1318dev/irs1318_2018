@@ -151,7 +151,7 @@ public class TuningConstants
     // Elevator intake powers
     public static final double ELEVATOR_LEFT_OUTER_INTAKE_POWER = 0.2;
     public static final double ELEVATOR_RIGHT_OUTER_INTAKE_POWER = 0.2;
-    public static final double ELEVATOR_LEFT_CARRIAGE_INTAKE_POWER = 0.7;
+    public static final double ELEVATOR_LEFT_CARRIAGE_INTAKE_POWER = 0.5;
     public static final double ELEVATOR_RIGHT_CARRIAGE_INTAKE_POWER = 0.5;
 
     // Elevator outtake powers
@@ -167,4 +167,8 @@ public class TuningConstants
     // Elevator intake correction time thresholds (in seconds)
     public static final double ELEVATOR_INTAKE_CORRECTION_TRIGGER_TIME_THRESHOLD = 1;
     public static final double ELEVATOR_INTAKE_CORRECTION_OPERATION_TIME_THRESHOLD = 1;
+
+    //================================================== Climber ==============================================================
+
+    public static final double CLIMBER_WINCH_DEAD_ZONE = .1;
 }

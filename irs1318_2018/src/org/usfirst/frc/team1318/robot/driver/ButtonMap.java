@@ -173,10 +173,11 @@ public class ButtonMap implements IButtonMap
                     ButtonType.Click));
             put(
                 Operation.ClimberWinch,
-                new DigitalOperationDescription(
-                    UserInputDevice.None,
-                    UserInputDeviceButton.NONE,
-                    ButtonType.Toggle));
+                new AnalogOperationDescription(
+                    UserInputDevice.Driver,
+                    AnalogAxis.Throttle,
+                    ElectronicsConstants.INVERT_THROTTLE_AXIS,
+                    TuningConstants.CLIMBER_WINCH_DEAD_ZONE));
         }
     };
 
