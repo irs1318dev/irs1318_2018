@@ -163,4 +163,8 @@ public class TuningConstants
     // Elevator intake correction powers
     public static final double ELEVATOR_RIGHT_OUTER_INTAKE_CORRECTION_POWER = .3;
     public static final double ELEVATOR_LEFT_OUTER_INTAKE_CORRECTION_POWER = 0;
+
+    // Elevator intake correction time thresholds (in seconds)
+    public static final double ELEVATOR_INTAKE_CORRECTION_TRIGGER_TIME_THRESHOLD = 1;
+    public static final double ELEVATOR_INTAKE_CORRECTION_OPERATION_TIME_THRESHOLD = 1;
 }
