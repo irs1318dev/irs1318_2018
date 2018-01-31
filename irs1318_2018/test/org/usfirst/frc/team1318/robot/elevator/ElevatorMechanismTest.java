@@ -28,13 +28,14 @@ public class ElevatorMechanismTest
         IDashboardLogger logger = mock(IDashboardLogger.class);
         ITimer timer = mock(ITimer.class);
         TestWpilibProvider testProvider = new TestWpilibProvider();
-        ITalonSRX innerElevatorMotor = testProvider.getTalonSRX(ElectronicsConstants.ELEVATOR_INNER_MOTOR_CHANNEL);
-        ITalonSRX outerElevatorMotor = testProvider.getTalonSRX(ElectronicsConstants.ELEVATOR_OUTER_MOTOR_CHANNEL);
-        ITalonSRX leftCarriageIntakeMotor = testProvider.getTalonSRX(ElectronicsConstants.ELEVATOR_LEFT_CARRIAGE_INTAKE_MOTOR_CHANNEL);
-        ITalonSRX rightCarriageIntakeMotor = testProvider.getTalonSRX(ElectronicsConstants.ELEVATOR_RIGHT_CARRIAGE_INTAKE_MOTOR_CHANNEL);
-        ITalonSRX leftOuterIntakeMotor = testProvider.getTalonSRX(ElectronicsConstants.ELEVATOR_LEFT_OUTER_INTAKE_MOTOR_CHANNEL);
-        ITalonSRX rightOuterIntakeMotor = testProvider.getTalonSRX(ElectronicsConstants.ELEVATOR_RIGHT_OUTER_INTAKE_MOTOR_CHANNEL);
-        IAnalogInput throughBeamSensor = testProvider.getAnalogInput(ElectronicsConstants.ELEVATOR_THROUGH_BEAM_SENSOR_CHANNEL);
+        ITalonSRX innerElevatorMotor = testProvider.getTalonSRX(ElectronicsConstants.ELEVATOR_INNER_MOTOR_CAN_ID);
+        ITalonSRX outerElevatorMotor = testProvider.getTalonSRX(ElectronicsConstants.ELEVATOR_OUTER_MOTOR_CAN_ID);
+        ITalonSRX leftCarriageIntakeMotor = testProvider.getTalonSRX(ElectronicsConstants.ELEVATOR_LEFT_CARRIAGE_INTAKE_MOTOR_CAN_ID);
+        ITalonSRX rightCarriageIntakeMotor = testProvider.getTalonSRX(ElectronicsConstants.ELEVATOR_RIGHT_CARRIAGE_INTAKE_MOTOR_CAN_ID);
+        ITalonSRX leftOuterIntakeMotor = testProvider.getTalonSRX(ElectronicsConstants.ELEVATOR_LEFT_OUTER_INTAKE_MOTOR_CAN_ID);
+        ITalonSRX rightOuterIntakeMotor = testProvider.getTalonSRX(ElectronicsConstants.ELEVATOR_RIGHT_OUTER_INTAKE_MOTOR_CAN_ID);
+        IAnalogInput innerThroughBeamSensor = testProvider.getAnalogInput(ElectronicsConstants.ELEVATOR_INNER_THROUGH_BEAM_SENSOR_ANALOG_CHANNEL);
+        IAnalogInput outerThroughBeamSensor = testProvider.getAnalogInput(ElectronicsConstants.ELEVATOR_OUTER_THROUGH_BEAM_SENSOR_ANALOG_CHANNEL);
         Driver driver = mock(Driver.class);
 
         doReturn(0.0).when(innerElevatorMotor).getError();
@@ -45,7 +46,8 @@ public class ElevatorMechanismTest
         doReturn(0.0).when(outerElevatorMotor).getVelocity();
         doReturn(0).when(outerElevatorMotor).getPosition();
         doReturn(new TalonSRXLimitSwitchStatus(false, false)).when(outerElevatorMotor).getLimitSwitchStatus();
-        doReturn(0.0).when(throughBeamSensor).getVoltage();
+        doReturn(0.0).when(innerThroughBeamSensor).getVoltage();
+        doReturn(0.0).when(outerThroughBeamSensor).getVoltage();
 
         ElevatorMechanism elevatorMechanism = new ElevatorMechanism(logger, testProvider, timer);
         elevatorMechanism.setDriver(driver);
@@ -113,7 +115,8 @@ public class ElevatorMechanismTest
         verify(outerElevatorMotor).getVelocity();
         verify(outerElevatorMotor).getPosition();
         verify(outerElevatorMotor).getLimitSwitchStatus();
-        verify(throughBeamSensor).getVoltage();
+        verify(innerThroughBeamSensor).getVoltage();
+        verify(outerThroughBeamSensor).getVoltage();
 
         // from update:
         verify(innerElevatorMotor).set(eq(0.0));
@@ -129,6 +132,8 @@ public class ElevatorMechanismTest
         verifyNoMoreInteractions(rightCarriageIntakeMotor);
         verifyNoMoreInteractions(leftOuterIntakeMotor);
         verifyNoMoreInteractions(rightOuterIntakeMotor);
+        verifyNoMoreInteractions(innerThroughBeamSensor);
+        verifyNoMoreInteractions(outerThroughBeamSensor);
     }
 
     @Test

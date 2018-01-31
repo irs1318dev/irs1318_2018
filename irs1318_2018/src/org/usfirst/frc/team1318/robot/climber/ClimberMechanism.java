@@ -5,8 +5,6 @@ import javax.inject.Singleton;
 import org.usfirst.frc.team1318.robot.ElectronicsConstants;
 import org.usfirst.frc.team1318.robot.common.IDashboardLogger;
 import org.usfirst.frc.team1318.robot.common.IMechanism;
-import org.usfirst.frc.team1318.robot.common.wpilib.DoubleSolenoidValue;
-import org.usfirst.frc.team1318.robot.common.wpilib.IDoubleSolenoid;
 import org.usfirst.frc.team1318.robot.common.wpilib.IMotor;
 import org.usfirst.frc.team1318.robot.common.wpilib.IWpilibProvider;
 import org.usfirst.frc.team1318.robot.driver.common.Driver;
@@ -26,11 +24,7 @@ public class ClimberMechanism implements IMechanism
 
     private final IDashboardLogger logger;
 
-    private final IMotor telescopingArm;
     private final IMotor winch;
-
-    private final IDoubleSolenoid stower;
-    private final IDoubleSolenoid leaner;
 
     private Driver driver;
 
@@ -45,13 +39,7 @@ public class ClimberMechanism implements IMechanism
         IWpilibProvider provider)
     {
         this.logger = logger;
-        this.telescopingArm = provider.getTalon(ElectronicsConstants.CLIMBER_TELESCOPING_ARM_MOTOR_CHANNEL);
-        this.winch = provider.getTalon(ElectronicsConstants.CLIMBER_WINCH_MOTOR_CHANNEL);
-
-        this.stower = provider.getDoubleSolenoid(ElectronicsConstants.CLIMBER_STOWER_CHANNEL_A,
-            ElectronicsConstants.CLIMBER_STOWER_CHANNEL_B);
-        this.leaner = provider.getDoubleSolenoid(ElectronicsConstants.CLIMBER_LEANER_CHANNEL_A,
-            ElectronicsConstants.CLIMBER_LEANER_CHANNEL_B);
+        this.winch = provider.getTalon(ElectronicsConstants.CLIMBER_WINCH_MOTOR_PWM_CHANNEL);
     }
 
     /**
@@ -78,7 +66,6 @@ public class ClimberMechanism implements IMechanism
     @Override
     public void update()
     {
-
     }
 
     /**
@@ -87,10 +74,6 @@ public class ClimberMechanism implements IMechanism
     @Override
     public void stop()
     {
-        this.telescopingArm.set(0);
-        this.winch.set(0);
-
-        this.stower.set(DoubleSolenoidValue.kOff);
-        this.leaner.set(DoubleSolenoidValue.kOff);
+        this.winch.set(0.0);
     }
 }
