@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.Timer;
  * Abstract class defining a task that moves the robot a certain distance using Positional PID.
  * 
  */
-public abstract class IntakeCorrectionTask extends ControlTaskBase implements IControlTask
+public class IntakeAndCorrectionTask extends ControlTaskBase implements IControlTask
 {
     private ElevatorMechanism elevator;
     private final Timer timer;
@@ -22,7 +22,7 @@ public abstract class IntakeCorrectionTask extends ControlTaskBase implements IC
      * Initializes a new MoveDistanceTaskBase
      * @param resetPositionalOnEnd
      */
-    protected IntakeCorrectionTask()
+    public IntakeAndCorrectionTask()
     {
         this.timer = new Timer();
         this.startTime = this.timer.get();

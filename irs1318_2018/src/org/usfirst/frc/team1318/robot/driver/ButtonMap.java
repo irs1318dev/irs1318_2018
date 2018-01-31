@@ -16,6 +16,7 @@ import org.usfirst.frc.team1318.robot.driver.common.descriptions.DigitalOperatio
 import org.usfirst.frc.team1318.robot.driver.common.descriptions.MacroOperationDescription;
 import org.usfirst.frc.team1318.robot.driver.common.descriptions.OperationDescription;
 import org.usfirst.frc.team1318.robot.driver.common.descriptions.UserInputDevice;
+import org.usfirst.frc.team1318.robot.driver.controltasks.IntakeAndCorrectionTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.PIDBrakeTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.VisionAdvanceAndCenterTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.VisionCenteringTask;
@@ -135,8 +136,8 @@ public class ButtonMap implements IButtonMap
             put(
                 Operation.ElevatorIntake,
                 new DigitalOperationDescription(
-                    UserInputDevice.Driver,
-                    UserInputDeviceButton.JOYSTICK_STICK_BOTTOM_LEFT_BUTTON,
+                    UserInputDevice.None,
+                    UserInputDeviceButton.NONE,
                     ButtonType.Simple));
             put(
                 Operation.ElevatorIntakeCorrection,
@@ -231,6 +232,15 @@ public class ButtonMap implements IButtonMap
                         Operation.DriveTrainTurn,
                         Operation.DriveTrainMoveForward,
                     }));
+
+            // Intake and correction macro
+            put(
+                MacroOperation.IntakeAndCorrection,
+                new MacroOperationDescription(
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_STICK_BOTTOM_LEFT_BUTTON,
+                    ButtonType.Simple,
+                    () -> new IntakeAndCorrectionTask()));
         }
     };
 

@@ -6,4 +6,5 @@ public enum MacroOperation
     PIDBrake,
     VisionCenter,
     VisionCenterAndAdvance,
+    IntakeAndCorrection,
 }
