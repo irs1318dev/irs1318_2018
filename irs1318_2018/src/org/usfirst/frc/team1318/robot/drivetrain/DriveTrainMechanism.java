@@ -171,7 +171,7 @@ public class DriveTrainMechanism implements IMechanism
      * get the ticks from the right encoder
      * @return a value indicating the number of ticks we are at
      */
-    public int getRightTicks()
+    public int getRightPosition()
     {
         return this.rightPosition;
     }

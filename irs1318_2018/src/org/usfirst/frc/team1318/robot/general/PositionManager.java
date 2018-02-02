@@ -99,7 +99,7 @@ public class PositionManager implements IMechanism
         if (this.driveTrainMechanism != null)
         {
             leftDistance = this.driveTrainMechanism.getLeftPosition() * HardwareConstants.DRIVETRAIN_LEFT_PULSE_DISTANCE;
-            rightDistance = this.driveTrainMechanism.getRightTicks() * HardwareConstants.DRIVETRAIN_RIGHT_PULSE_DISTANCE;
+            rightDistance = this.driveTrainMechanism.getRightPosition() * HardwareConstants.DRIVETRAIN_RIGHT_PULSE_DISTANCE;
         }
 
         // calculate the angle (in radians) based on the total distance traveled
