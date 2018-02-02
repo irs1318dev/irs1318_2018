@@ -234,5 +234,6 @@ public class PositionManager implements IMechanism
         this.prevRightDistance = 0.0;
 
         this.navx.reset();
+        this.navx.resetDisplacement();
     }
 }
