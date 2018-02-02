@@ -33,13 +33,12 @@ public class PositionManager implements IMechanism
     // Position coordinates
     private double odometryX;
     private double odometryY;
-
     private double navxX;
     private double navxY;
+    private double navxZ;
 
     // Orientation
     private double odometryAngle;
-
     private double navxAngle;
 
     // previous data (from which we will calculate changes)
@@ -62,12 +61,11 @@ public class PositionManager implements IMechanism
 
         this.odometryX = 0.0;
         this.odometryY = 0.0;
-
         this.navxX = 0.0;
         this.navxY = 0.0;
+        this.navxZ = 0.0;
 
         this.odometryAngle = 0.0;
-
         this.navxAngle = 0.0;
 
         this.prevLeftDistance = 0.0;
@@ -123,13 +121,19 @@ public class PositionManager implements IMechanism
         this.prevLeftDistance = leftDistance;
         this.prevRightDistance = rightDistance;
 
+        this.navxAngle = this.navx.getAngle();
+        this.navxX = this.navx.getDisplacementX() * 100.0;
+        this.navxY = this.navx.getDisplacementY() * 100.0;
+        this.navxZ = this.navx.getDisplacementZ() * 100.0;
+
         // log the current position and orientation
-        this.logger.logNumber(PositionManager.LogName, "odom_angle", this.getOdometryAngle());
-        this.logger.logNumber(PositionManager.LogName, "odom_x", this.getOdometryX());
-        this.logger.logNumber(PositionManager.LogName, "odom_y", this.getOdometryY());
-        this.logger.logNumber(PositionManager.LogName, "navx_angle", this.getNavxAngle());
-        this.logger.logNumber(PositionManager.LogName, "navx_x", this.getNavxX());
-        this.logger.logNumber(PositionManager.LogName, "navx_y", this.getNavxY());
+        this.logger.logNumber(PositionManager.LogName, "odom_angle", this.odometryAngle);
+        this.logger.logNumber(PositionManager.LogName, "odom_x", this.odometryX);
+        this.logger.logNumber(PositionManager.LogName, "odom_y", this.odometryY);
+        this.logger.logNumber(PositionManager.LogName, "navx_angle", this.navxAngle);
+        this.logger.logNumber(PositionManager.LogName, "navx_x", this.navxX);
+        this.logger.logNumber(PositionManager.LogName, "navx_y", this.navxY);
+        this.logger.logNumber(PositionManager.LogName, "navx_z", this.navxZ);
     }
 
     /**
@@ -138,7 +142,6 @@ public class PositionManager implements IMechanism
     @Override
     public void update()
     {
-
     }
 
     /**
@@ -183,7 +186,7 @@ public class PositionManager implements IMechanism
      */
     public double getNavxAngle()
     {
-        return this.navx.getAngle();
+        return this.navxAngle;
     }
 
     /**
@@ -192,7 +195,7 @@ public class PositionManager implements IMechanism
      */
     public double getNavxX()
     {
-        return this.navx.getDisplacementX() * 100.0;
+        return this.navxX;
     }
 
     /**
@@ -201,7 +204,16 @@ public class PositionManager implements IMechanism
      */
     public double getNavxY()
     {
-        return this.navx.getDisplacementY() * 100.0;
+        return this.navxY;
+    }
+
+    /**
+     * Retrieve the current z position
+     * @return the current z position
+     */
+    public double getNavxZ()
+    {
+        return this.navxZ;
     }
 
     /**
@@ -211,10 +223,16 @@ public class PositionManager implements IMechanism
     {
         this.odometryX = 0.0;
         this.odometryY = 0.0;
+        this.navxX = 0.0;
+        this.navxY = 0.0;
+        this.navxZ = 0.0;
 
         this.odometryAngle = 0.0;
+        this.navxAngle = 0.0;
 
         this.prevLeftDistance = 0.0;
         this.prevRightDistance = 0.0;
+
+        this.navx.reset();
     }
 }
