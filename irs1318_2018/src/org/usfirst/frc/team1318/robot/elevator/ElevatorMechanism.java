@@ -94,6 +94,7 @@ public class ElevatorMechanism implements IMechanism
         this.innerElevatorMotor.setInvertOutput(TuningConstants.ELEVATOR_INNER_INVERT_OUTPUT);
         this.innerElevatorMotor.setInvertSensor(TuningConstants.ELEVATOR_INNER_INVERT_SENSOR);
         this.innerElevatorMotor.setSensorType(TalonSRXFeedbackDevice.QuadEncoder);
+        this.innerElevatorMotor.reset();
         //        this.innerElevatorMotor.setForwardLimitSwitch(
         //            TuningConstants.ELEVATOR_INNER_FORWARD_LIMIT_SWITCH_ENABLED,
         //            TuningConstants.ELEVATOR_INNER_FORWARD_LIMIT_SWITCH_NORMALLY_OPEN);
@@ -114,6 +115,7 @@ public class ElevatorMechanism implements IMechanism
         //        this.outerElevatorMotor.setInvertOutput(TuningConstants.ELEVATOR_OUTER_INVERT_OUTPUT);
         //        this.outerElevatorMotor.setInvertSensor(TuningConstants.ELEVATOR_OUTER_INVERT_SENSOR);
         //        this.outerElevatorMotor.setSensorType(TalonSRXFeedbackDevice.QuadEncoder);
+        //        this.outerElevatorMotor.reset();
         //        this.outerElevatorMotor.setForwardLimitSwitch(
         //            TuningConstants.ELEVATOR_OUTER_FORWARD_LIMIT_SWITCH_ENABLED,
         //            TuningConstants.ELEVATOR_OUTER_FORWARD_LIMIT_SWITCH_NORMALLY_OPEN);
