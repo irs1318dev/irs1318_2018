@@ -99,7 +99,7 @@ public class TuningConstants
     //================================================== Elevator ==============================================================
 
     // Position PID (inner)
-    public static final double ELEVATOR_POSITION_PID_INNER_KP = 0.0;
+    public static final double ELEVATOR_POSITION_PID_INNER_KP = 0.3;
     public static final double ELEVATOR_POSITION_PID_INNER_KI = 0.0;
     public static final double ELEVATOR_POSITION_PID_INNER_KD = 0.0;
     public static final double ELEVATOR_POSITION_PID_INNER_KF = 0.0;
@@ -122,7 +122,7 @@ public class TuningConstants
 
     // Elevator motor/sensor orientations
     public static final boolean ELEVATOR_INNER_INVERT_OUTPUT = true;
-    public static final boolean ELEVATOR_INNER_INVERT_SENSOR = true;
+    public static final boolean ELEVATOR_INNER_INVERT_SENSOR = false;
     public static final boolean ELEVATOR_OUTER_INVERT_OUTPUT = false;
     public static final boolean ELEVATOR_OUTER_INVERT_SENSOR = false;
 
@@ -134,14 +134,14 @@ public class TuningConstants
     public static final double ELEVATOR_THROUGH_BEAM_UNBLOCKED_VOLTAGE_THRESHOLD = 3.0;
 
     // Elevator positions (in inches)
-    public static final double ELEVATOR_INNER_CARRY_POSITION = 0;
-    public static final double ELEVATOR_OUTER_CARRY_POSITION = 2.0;
-    public static final double ELEVATOR_INNER_SWITCH_POSITION = 0;
-    public static final double ELEVATOR_OUTER_SWITCH_POSITION = 2.0;
-    public static final double ELEVATOR_INNER_LOW_SCALE_POSITION = 0;
-    public static final double ELEVATOR_OUTER_LOW_SCALE_POSITION = 2.0;
-    public static final double ELEVATOR_INNER_HIGH_SCALE_POSITION = 0;
-    public static final double ELEVATOR_OUTER_HIGH_SCALE_POSITION = 2.0;
+    public static final double ELEVATOR_INNER_CARRY_POSITION = 0.0;
+    public static final double ELEVATOR_OUTER_CARRY_POSITION = 0.0;
+    public static final double ELEVATOR_INNER_SWITCH_POSITION = 18.0;
+    public static final double ELEVATOR_OUTER_SWITCH_POSITION = 0.0;
+    public static final double ELEVATOR_INNER_LOW_SCALE_POSITION = 24.0;
+    public static final double ELEVATOR_OUTER_LOW_SCALE_POSITION = 0.0;
+    public static final double ELEVATOR_INNER_HIGH_SCALE_POSITION = 32.0;
+    public static final double ELEVATOR_OUTER_HIGH_SCALE_POSITION = 0.0;
 
     public static final double ELEVATOR_MAXIMUM_OUTER_INTAKE_USE_HEIGHT = 12.0;
 
