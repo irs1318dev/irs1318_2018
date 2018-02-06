@@ -39,7 +39,7 @@ public class ClimberMechanism implements IMechanism
         IWpilibProvider provider)
     {
         this.logger = logger;
-        this.winch = provider.getTalon(ElectronicsConstants.CLIMBER_WINCH_MOTOR_PWM_CHANNEL);
+        this.winch = provider.getTalon(ElectronicsConstants.CLIMBER_WINCH_MOTOR_CAN_ID);
     }
 
     /**
