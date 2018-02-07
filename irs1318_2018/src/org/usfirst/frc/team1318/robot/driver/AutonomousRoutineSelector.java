@@ -149,7 +149,7 @@ public class AutonomousRoutineSelector
         switch (position)
         {
             case Center:
-                return PlaceCubeOnSwitchFromMiddle();
+                return PlaceCubeOnSwitchFromMiddle(isSwitchSideLeft);
 
             case Left:
                 if (isSwitchSideLeft && isScaleSideLeft)
@@ -260,7 +260,7 @@ public class AutonomousRoutineSelector
             new TurnTimedTask(startingLeft ? 70.0 : -70.0, 1.5),
             new DriveDistanceTimedTask(49.4, 2),
             AutonomousRoutineSelector.DepositCube());
-    }asdasd
+    }
 
     private static IControlTask PlaceCubeOnOppositeSideSwitch(boolean startingLeft)
     {
