@@ -201,11 +201,11 @@ public class AutonomousRoutineSelector
             case Center:
                 if (prefersSwitch)
                 {
-                    return PlaceCubeOnSwitchFromMiddle();
+                    return PlaceCubeOnSwitchFromMiddle(isSwitchSideLeft);
                 }
                 else
                 {
-                    return PlaceCubeOnScaleFromMiddle();
+                    return PlaceCubeOnScaleFromMiddle(isScaleSideLeft);
                 }
 
             case Left:
@@ -260,27 +260,43 @@ public class AutonomousRoutineSelector
             new TurnTimedTask(startingLeft ? 70.0 : -70.0, 1.5),
             new DriveDistanceTimedTask(49.4, 2),
             AutonomousRoutineSelector.DepositCube());
-    }
+    }asdasd
 
     private static IControlTask PlaceCubeOnOppositeSideSwitch(boolean startingLeft)
     {
-        // TODO: function completion
-        return new WaitTask(0);
+        //general distance: 30 inches/sec
+        //general turn speed: 45 degrees/sec
+        return SequentialTask.Sequence(
+            new DriveDistanceTimedTask(205.0, 7.0),
+            new TurnTimedTask(startingLeft ? 90.0 : -90.0, 2.0),
+            new DriveDistanceTimedTask(229.6, 7.5),
+            new TurnTimedTask(startingLeft ? 90.0 : -90.0, 2.0),
+            new DriveDistanceTimedTask(10.1, 0.5),
+            AutonomousRoutineSelector.DepositCube());
+
+        //return new WaitTask(0);
     }
 
     private static IControlTask PlaceCubeOnOppositeSideScale(boolean startingLeft)
     {
-        // TODO: function completion
-        return new WaitTask(0);
+        return SequentialTask.Sequence(
+            new DriveDistanceTimedTask(205.0, 7.0),
+            new TurnTimedTask(startingLeft ? 90.0 : -90.0, 2.0),
+            new DriveDistanceTimedTask(229.6, 7.5),
+            new TurnTimedTask(startingLeft ? -90.0 : 90.0, 2.0),
+            new DriveDistanceTimedTask(42.6, 1.5),
+            new TurnTimedTask(startingLeft ? -135.0 : 135.0, 3.0),
+            AutonomousRoutineSelector.DepositCube());
+        //return new WaitTask(0);
     }
 
-    private static IControlTask PlaceCubeOnSwitchFromMiddle()
+    private static IControlTask PlaceCubeOnSwitchFromMiddle(boolean switchIsLeft)
     {
         // TODO: function completion
         return new WaitTask(0);
     }
 
-    private static IControlTask PlaceCubeOnScaleFromMiddle()
+    private static IControlTask PlaceCubeOnScaleFromMiddle(boolean scaleIsLeft)
     {
         // TODO: function completion
         return new WaitTask(0);
