@@ -183,37 +183,35 @@ public class MacroOperationState extends OperationState
                 this.task.initialize(this.operationStateMap, this.injector);
                 this.task.begin();
             }
-            else
+
+            boolean shouldEnd = this.task.hasCompleted();
+            boolean shouldCancel = !shouldEnd && this.task.shouldCancel();
+            if (shouldEnd || shouldCancel)
             {
-                boolean shouldEnd = this.task.hasCompleted();
-                boolean shouldCancel = this.task.shouldCancel();
-                if (shouldEnd || shouldCancel)
+                if (shouldEnd)
                 {
-                    if (shouldEnd)
-                    {
-                        this.task.end();
-                    }
-                    else
-                    {
-                        this.task.stop();
-                    }
-
-                    this.task = null;
-                    this.button.clearState();
-
-                    MacroOperationDescription description = (MacroOperationDescription)this.getDescription();
-                    if (description.shouldClearInterrupt())
-                    {
-                        for (Operation operation : this.getAffectedOperations())
-                        {
-                            this.operationStateMap.get(operation).setIsInterrupted(false);
-                        }
-                    }
+                    this.task.end();
                 }
                 else
                 {
-                    this.task.update();
+                    this.task.stop();
                 }
+
+                this.task = null;
+                this.button.clearState();
+
+                MacroOperationDescription description = (MacroOperationDescription)this.getDescription();
+                if (description.shouldClearInterrupt())
+                {
+                    for (Operation operation : this.getAffectedOperations())
+                    {
+                        this.operationStateMap.get(operation).setIsInterrupted(false);
+                    }
+                }
+            }
+            else
+            {
+                this.task.update();
             }
         }
         else if (this.task != null)

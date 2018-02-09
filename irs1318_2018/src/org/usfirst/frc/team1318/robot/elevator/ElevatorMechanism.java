@@ -11,7 +11,6 @@ import org.usfirst.frc.team1318.robot.common.wpilib.ITalonSRX;
 import org.usfirst.frc.team1318.robot.common.wpilib.ITimer;
 import org.usfirst.frc.team1318.robot.common.wpilib.IWpilibProvider;
 import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXControlMode;
-import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXFeedbackDevice;
 import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXNeutralMode;
 import org.usfirst.frc.team1318.robot.driver.Operation;
 import org.usfirst.frc.team1318.robot.driver.common.Driver;
@@ -34,7 +33,7 @@ public class ElevatorMechanism implements IMechanism
 
     private final IDashboardLogger logger;
 
-    private final ITalonSRX innerElevatorMotor;
+    //    private final ITalonSRX innerElevatorMotor;
     //    private final ITalonSRX outerElevatorMotor;
     private final ITalonSRX leftCarriageIntakeMotor;
     private final ITalonSRX rightCarriageIntakeMotor;
@@ -89,26 +88,26 @@ public class ElevatorMechanism implements IMechanism
         this.logger = logger;
         this.timer = timer;
 
-        this.innerElevatorMotor = provider.getTalonSRX(ElectronicsConstants.ELEVATOR_INNER_MOTOR_CAN_ID);
-        this.innerElevatorMotor.setNeutralMode(TalonSRXNeutralMode.Brake);
-        this.innerElevatorMotor.setInvertOutput(TuningConstants.ELEVATOR_INNER_INVERT_OUTPUT);
-        this.innerElevatorMotor.setInvertSensor(TuningConstants.ELEVATOR_INNER_INVERT_SENSOR);
-        this.innerElevatorMotor.setSensorType(TalonSRXFeedbackDevice.QuadEncoder);
-        this.innerElevatorMotor.reset();
+        //        this.innerElevatorMotor = provider.getTalonSRX(ElectronicsConstants.ELEVATOR_INNER_MOTOR_CAN_ID);
+        //        this.innerElevatorMotor.setNeutralMode(TalonSRXNeutralMode.Brake);
+        //        this.innerElevatorMotor.setInvertOutput(TuningConstants.ELEVATOR_INNER_INVERT_OUTPUT);
+        //        this.innerElevatorMotor.setInvertSensor(TuningConstants.ELEVATOR_INNER_INVERT_SENSOR);
+        //        this.innerElevatorMotor.setSensorType(TalonSRXFeedbackDevice.QuadEncoder);
+        //        this.innerElevatorMotor.reset();
         //        this.innerElevatorMotor.setForwardLimitSwitch(
         //            TuningConstants.ELEVATOR_INNER_FORWARD_LIMIT_SWITCH_ENABLED,
         //            TuningConstants.ELEVATOR_INNER_FORWARD_LIMIT_SWITCH_NORMALLY_OPEN);
         //        this.innerElevatorMotor.setReverseLimitSwitch(
         //            TuningConstants.ELEVATOR_INNER_REVERSE_LIMIT_SWITCH_ENABLED,
         //            TuningConstants.ELEVATOR_INNER_REVERSE_LIMIT_SWITCH_NORMALLY_OPEN);
-        this.innerElevatorMotor.setPIDF(
-            TuningConstants.ELEVATOR_POSITION_PID_INNER_KP,
-            TuningConstants.ELEVATOR_POSITION_PID_INNER_KI,
-            TuningConstants.ELEVATOR_POSITION_PID_INNER_KD,
-            TuningConstants.ELEVATOR_POSITION_PID_INNER_KF,
-            ElevatorMechanism.pidSlotId);
-        this.innerElevatorMotor.setSelectedSlot(ElevatorMechanism.pidSlotId);
-        this.innerElevatorMotor.setControlMode(TalonSRXControlMode.Position);
+        //        this.innerElevatorMotor.setPIDF(
+        //            TuningConstants.ELEVATOR_POSITION_PID_INNER_KP,
+        //            TuningConstants.ELEVATOR_POSITION_PID_INNER_KI,
+        //            TuningConstants.ELEVATOR_POSITION_PID_INNER_KD,
+        //            TuningConstants.ELEVATOR_POSITION_PID_INNER_KF,
+        //            ElevatorMechanism.pidSlotId);
+        //        this.innerElevatorMotor.setSelectedSlot(ElevatorMechanism.pidSlotId);
+        //        this.innerElevatorMotor.setControlMode(TalonSRXControlMode.Position);
 
         //        this.outerElevatorMotor = provider.getTalonSRX(ElectronicsConstants.ELEVATOR_OUTER_MOTOR_CAN_ID);
         //        this.outerElevatorMotor.setNeutralMode(TalonSRXNeutralMode.Brake);
@@ -168,6 +167,11 @@ public class ElevatorMechanism implements IMechanism
         this.outerElevatorHeight = 0.0;
         this.outerElevatorForwardLimitSwitchStatus = false;
         this.outerElevatorReverseLimitSwitchStatus = false;
+
+        this.innerThroughBeamVoltage = 0.0;
+        this.isInnerThroughBeamBlocked = false;
+        this.outerThroughBeamVoltage = 0.0;
+        this.isOuterThroughBeamBlocked = false;
 
         this.desiredInnerHeight = 0.0;
         this.desiredOuterHeight = 0.0;
@@ -297,16 +301,16 @@ public class ElevatorMechanism implements IMechanism
     @Override
     public void readSensors()
     {
-        this.innerThroughBeamVoltage = 0.0; //this.innerThroughBeamSensor.getVoltage();
-        this.isInnerThroughBeamBlocked = this.innerThroughBeamVoltage < TuningConstants.ELEVATOR_THROUGH_BEAM_UNBLOCKED_VOLTAGE_THRESHOLD;
+        //        this.innerThroughBeamVoltage = this.innerThroughBeamSensor.getVoltage();
+        //        this.isInnerThroughBeamBlocked = this.innerThroughBeamVoltage < TuningConstants.ELEVATOR_THROUGH_BEAM_UNBLOCKED_VOLTAGE_THRESHOLD;
 
-        this.outerThroughBeamVoltage = 0.0; //this.outerThroughBeamSensor.getVoltage();
-        this.isOuterThroughBeamBlocked = this.outerThroughBeamVoltage < TuningConstants.ELEVATOR_THROUGH_BEAM_UNBLOCKED_VOLTAGE_THRESHOLD;
+        //        this.outerThroughBeamVoltage = this.outerThroughBeamSensor.getVoltage();
+        //        this.isOuterThroughBeamBlocked = this.outerThroughBeamVoltage < TuningConstants.ELEVATOR_THROUGH_BEAM_UNBLOCKED_VOLTAGE_THRESHOLD;
 
-        this.innerElevatorVelocity = this.innerElevatorMotor.getVelocity();
-        this.innerElevatorError = this.innerElevatorMotor.getError();
-        this.innerElevatorPosition = this.innerElevatorMotor.getPosition();
-        this.innerElevatorHeight = this.innerElevatorPosition * HardwareConstants.ELEVATOR_INNER_PULSE_DISTANCE;
+        //        this.innerElevatorVelocity = this.innerElevatorMotor.getVelocity();
+        //        this.innerElevatorError = this.innerElevatorMotor.getError();
+        //        this.innerElevatorPosition = this.innerElevatorMotor.getPosition();
+        //        this.innerElevatorHeight = this.innerElevatorPosition * HardwareConstants.ELEVATOR_INNER_PULSE_DISTANCE;
 
         //        TalonSRXLimitSwitchStatus innerLimitSwitchStatus = this.innerElevatorMotor.getLimitSwitchStatus();
         //        this.innerElevatorForwardLimitSwitchStatus = innerLimitSwitchStatus.isForwardClosed;
@@ -348,10 +352,10 @@ public class ElevatorMechanism implements IMechanism
         double currentTime = this.timer.get();
         double deltaTime = currentTime - this.lastUpdateTime;
 
-        if (this.innerElevatorReverseLimitSwitchStatus)
-        {
-            this.innerElevatorMotor.reset();
-        }
+        //        if (this.innerElevatorReverseLimitSwitchStatus)
+        //        {
+        //            this.innerElevatorMotor.reset();
+        //        }
 
         //        if (this.outerElevatorReverseLimitSwitchStatus)
         //        {
@@ -410,7 +414,7 @@ public class ElevatorMechanism implements IMechanism
             }
         }
 
-        this.innerElevatorMotor.set(this.desiredInnerHeight / HardwareConstants.ELEVATOR_INNER_PULSE_DISTANCE);
+        //        this.innerElevatorMotor.set(this.desiredInnerHeight / HardwareConstants.ELEVATOR_INNER_PULSE_DISTANCE);
         //        this.outerElevatorMotor.set(this.desiredOuterHeight / HardwareConstants.ELEVATOR_INNER_PULSE_DISTANCE);
 
         double leftOuterIntakePower = 0.0;
@@ -475,10 +479,10 @@ public class ElevatorMechanism implements IMechanism
     @Override
     public void stop()
     {
-        this.innerElevatorMotor.stop();
+        //        this.innerElevatorMotor.stop();
         //        this.outerElevatorMotor.stop();
 
-        this.innerElevatorMotor.reset();
+        //        this.innerElevatorMotor.reset();
         //        this.outerElevatorMotor.reset();
 
         this.leftCarriageIntakeMotor.stop();

@@ -136,8 +136,8 @@ public class ButtonMap implements IButtonMap
             put(
                 Operation.ElevatorIntake,
                 new DigitalOperationDescription(
-                    UserInputDevice.None,
-                    UserInputDeviceButton.NONE,
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_STICK_BOTTOM_LEFT_BUTTON,
                     ButtonType.Simple));
             put(
                 Operation.ElevatorIntakeCorrection,
@@ -238,8 +238,8 @@ public class ButtonMap implements IButtonMap
             put(
                 MacroOperation.IntakeAndCorrection,
                 new MacroOperationDescription(
-                    UserInputDevice.Driver,
-                    UserInputDeviceButton.JOYSTICK_STICK_BOTTOM_LEFT_BUTTON,
+                    UserInputDevice.None,
+                    UserInputDeviceButton.NONE,
                     ButtonType.Simple,
                     () -> new IntakeAndCorrectionTask(),
                     new Operation[]
