@@ -6,7 +6,9 @@ import org.usfirst.frc.team1318.robot.ElectronicsConstants;
 import org.usfirst.frc.team1318.robot.common.IDashboardLogger;
 import org.usfirst.frc.team1318.robot.common.IMechanism;
 import org.usfirst.frc.team1318.robot.common.wpilib.IMotor;
+import org.usfirst.frc.team1318.robot.common.wpilib.IServo;
 import org.usfirst.frc.team1318.robot.common.wpilib.IWpilibProvider;
+import org.usfirst.frc.team1318.robot.driver.Operation;
 import org.usfirst.frc.team1318.robot.driver.common.Driver;
 
 import com.google.inject.Inject;
@@ -24,9 +26,13 @@ public class ClimberMechanism implements IMechanism
 
     private final IDashboardLogger logger;
 
+    private final IServo releaser;
+
     private final IMotor winch;
 
     private Driver driver;
+
+    private boolean winchEnabled;
 
     /**
      * Initializes a new DriveTrainMechanism
@@ -40,6 +46,8 @@ public class ClimberMechanism implements IMechanism
     {
         this.logger = logger;
         this.winch = provider.getTalon(ElectronicsConstants.CLIMBER_WINCH_MOTOR_CAN_ID);
+        this.releaser = provider.getServo(ElectronicsConstants.CLIMBER_RELEASER_SERVO_CAN_ID);
+        this.winchEnabled = false;
     }
 
     /**
@@ -66,6 +74,37 @@ public class ClimberMechanism implements IMechanism
     @Override
     public void update()
     {
+        if (driver.getDigital(Operation.ClimberEnableWinch))
+        {
+            this.winchEnabled = true;
+        }
+        else if (driver.getDigital(Operation.ClimberDisableWinch))
+        {
+            this.winchEnabled = false;
+        }
+
+        if (driver.getDigital(Operation.ClimberRelease))
+        {
+            this.releaser.set(1.0);
+        }
+        else
+        {
+            this.releaser.set(0);
+        }
+
+        if (this.winchEnabled)
+        {
+            double winchSpeed = driver.getAnalog(Operation.ClimberWinch);
+            if (winchSpeed > 0)
+            {
+                this.winch.set(winchSpeed);
+            }
+            else
+            {
+                this.winch.set(0);
+            }
+
+        }
     }
 
     /**

@@ -32,5 +32,7 @@ public enum Operation
     // Climber operations
     ClimberRelease, 
     ClimberWinch, 
+    ClimberEnableWinch,
+    ClimberDisableWinch, 
     
 }

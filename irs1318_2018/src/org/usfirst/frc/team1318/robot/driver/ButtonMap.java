@@ -172,6 +172,18 @@ public class ButtonMap implements IButtonMap
                     UserInputDeviceButton.NONE,
                     ButtonType.Click));
             put(
+                Operation.ClimberEnableWinch,
+                new DigitalOperationDescription(
+                    UserInputDevice.None,
+                    UserInputDeviceButton.NONE,
+                    ButtonType.Click));
+            put(
+                Operation.ClimberDisableWinch,
+                new DigitalOperationDescription(
+                    UserInputDevice.None,
+                    UserInputDeviceButton.NONE,
+                    ButtonType.Click));
+            put(
                 Operation.ClimberWinch,
                 new AnalogOperationDescription(
                     UserInputDevice.Driver,
