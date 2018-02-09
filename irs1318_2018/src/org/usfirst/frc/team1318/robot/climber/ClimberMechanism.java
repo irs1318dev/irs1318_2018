@@ -46,7 +46,7 @@ public class ClimberMechanism implements IMechanism
     {
         this.logger = logger;
         this.winch = provider.getTalon(ElectronicsConstants.CLIMBER_WINCH_MOTOR_CAN_ID);
-        this.releaser = provider.getServo(ElectronicsConstants.CLIMBER_RELEASER_SERVO_CAN_ID);
+        this.releaser = provider.getServo(ElectronicsConstants.CLIMBER_RELEASER_SERVO_PWM_CHANNEL);
         this.winchEnabled = false;
     }
 
