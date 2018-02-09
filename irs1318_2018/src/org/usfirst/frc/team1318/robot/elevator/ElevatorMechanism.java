@@ -232,6 +232,15 @@ public class ElevatorMechanism implements IMechanism
     }
 
     /**
+     * get the total height of both elevators 
+     * @return a height in inches
+     */
+    public double getTotalHeight()
+    {
+        return this.innerElevatorHeight + this.outerElevatorHeight;
+    }
+
+    /**
      * get the status from the inner elevator limit switch
      * @return a value indicating whether the limit switch is pressed
      */

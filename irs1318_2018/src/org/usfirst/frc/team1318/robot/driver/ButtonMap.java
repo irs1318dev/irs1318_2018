@@ -98,6 +98,12 @@ public class ButtonMap implements IButtonMap
 
             // Operations for the elevator
             put(
+                Operation.ElevatorBottomPosition,
+                new DigitalOperationDescription(
+                    UserInputDevice.None,
+                    UserInputDeviceButton.NONE,
+                    ButtonType.Click));
+            put(
                 Operation.ElevatorCarryPosition,
                 new DigitalOperationDescription(
                     UserInputDevice.Driver,
@@ -120,6 +126,12 @@ public class ButtonMap implements IButtonMap
                 new DigitalOperationDescription(
                     UserInputDevice.Driver,
                     UserInputDeviceButton.JOYSTICK_BASE_TOP_RIGHT_BUTTON,
+                    ButtonType.Click));
+            put(
+                Operation.ElevatorTopPosition,
+                new DigitalOperationDescription(
+                    UserInputDevice.None,
+                    UserInputDeviceButton.NONE,
                     ButtonType.Click));
             put(
                 Operation.ElevatorMoveUp,

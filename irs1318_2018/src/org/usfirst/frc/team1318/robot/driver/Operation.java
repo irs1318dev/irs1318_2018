@@ -17,10 +17,12 @@ public enum Operation
     DriveTrainSwapFrontOrientation,
     
     // Elevator operations
+    ElevatorBottomPosition, 
     ElevatorCarryPosition,
     ElevatorSwitchPosition,
     ElevatorLowScalePosition,
     ElevatorHighScalePosition, 
+    ElevatorTopPosition, 
     ElevatorMoveUp,
     ElevatorMoveDown,
     ElevatorIntake,
