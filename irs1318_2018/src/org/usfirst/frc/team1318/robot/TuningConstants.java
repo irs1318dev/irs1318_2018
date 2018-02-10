@@ -171,7 +171,7 @@ public class TuningConstants
     public static final double ELEVATOR_INTAKE_CORRECTION_OPERATION_TIME_THRESHOLD = 1;
 
     public static final double ELEVATOR_CLIMBING_MOVEMENT_DISTANCE_THRESHOLD = 500.0;
-    public static final double ELEVATOR_CLIMBING_MOVEMENT_TIME_THRESHOLD = 0.5;
+    public static final double ELEVATOR_CLIMBING_MOVEMENT_TIME_THRESHOLD = 4.0;
 
     //================================================== Climber ==============================================================
 

@@ -9,6 +9,7 @@ import org.usfirst.frc.team1318.robot.driver.controltasks.ConcurrentTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.DriveDistancePositionTimedTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.DriveDistanceTimedTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.ElevatorMovementTask;
+import org.usfirst.frc.team1318.robot.driver.controltasks.OuttakeTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.SequentialTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.TurnTimedTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.WaitTask;
@@ -302,9 +303,9 @@ public class AutonomousRoutineSelector
 
     private static IControlTask DepositCube(boolean isScale)
     {
-        // TODO: add a elevator outtake task to the end of this...
         return SequentialTask.Sequence(
-            new ElevatorMovementTask(false, isScale ? Operation.ElevatorHighScalePosition : Operation.ElevatorSwitchPosition));
+            new ElevatorMovementTask(4.0, isScale ? Operation.ElevatorHighScalePosition : Operation.ElevatorSwitchPosition),
+            new OuttakeTask(2.0));
     }
 
     private static IControlTask CrossBaseLine()
@@ -316,8 +317,7 @@ public class AutonomousRoutineSelector
 
     private static IControlTask InitialSetUp()
     {
-        // TODO: elevator and intake setup from starting configuration
-        return SequentialTask.Sequence();
+        return new ElevatorMovementTask(0.25, Operation.ElevatorCarryPosition);
     }
 }
 

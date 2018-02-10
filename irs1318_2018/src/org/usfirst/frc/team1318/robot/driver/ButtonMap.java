@@ -289,9 +289,9 @@ public class ButtonMap implements IButtonMap
                     UserInputDeviceButton.NONE,
                     ButtonType.Click,
                     () -> SequentialTask.Sequence(
-                        new ElevatorMovementTask(false, Operation.ElevatorClimbPosition),
-                        new ReleaseServoTimedTask(1),
-                        new ElevatorMovementTask(true, Operation.ElevatorCarryPosition),
+                        new ElevatorMovementTask(5.0, Operation.ElevatorClimbPosition),
+                        new ReleaseServoTimedTask(1.5),
+                        new ElevatorMovementTask(1.0, Operation.ElevatorCarryPosition),
                         new EnableWinchTimedTask(.2)),
                     new Operation[]
                     {

@@ -26,10 +26,19 @@ public class ElevatorMovementTask extends TimedTask implements IControlTask
     private final boolean completeWithTime; // Either wait for movement completion or operate for a certain period of time
     private final Operation desiredElevatorPositionOperation;
 
-    public ElevatorMovementTask(boolean completeWithTime, Operation desiredElevatorPositionOperation)
+    public ElevatorMovementTask(Operation desiredElevatorPositionOperation)
     {
         super(TuningConstants.ELEVATOR_CLIMBING_MOVEMENT_TIME_THRESHOLD);
-        this.completeWithTime = completeWithTime;
+
+        this.completeWithTime = false;
+        this.desiredElevatorPositionOperation = desiredElevatorPositionOperation;
+    }
+
+    public ElevatorMovementTask(double duration, Operation desiredElevatorPositionOperation)
+    {
+        super(duration);
+
+        this.completeWithTime = true;
         this.desiredElevatorPositionOperation = desiredElevatorPositionOperation;
     }
 
