@@ -150,9 +150,9 @@ public class ButtonMap implements IButtonMap
                     }));
 
             IControlTask[] climbTasks = {
-                new ElevatorMovementTask(true, false),
-                new ReleaseServoTimedTask(1),
                 new ElevatorMovementTask(false, true),
+                new ReleaseServoTimedTask(1),
+                new ElevatorMovementTask(true, false),
                 new EnableWinchTimedTask(.2) };
 
             put(
