@@ -105,7 +105,7 @@ public class TuningConstants
     public static final double ELEVATOR_POSITION_PID_INNER_KF = 0.0;
 
     // Position PID (outer)
-    public static final double ELEVATOR_POSITION_PID_OUTER_KP = 0.0;
+    public static final double ELEVATOR_POSITION_PID_OUTER_KP = 0.3;
     public static final double ELEVATOR_POSITION_PID_OUTER_KI = 0.0;
     public static final double ELEVATOR_POSITION_PID_OUTER_KD = 0.0;
     public static final double ELEVATOR_POSITION_PID_OUTER_KF = 0.0;
