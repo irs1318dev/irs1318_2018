@@ -49,8 +49,8 @@ public class ElectronicsConstants
     public static final int ELEVATOR_RIGHT_CARRIAGE_INTAKE_MOTOR_CAN_ID = 8;
     public static final int ELEVATOR_LEFT_OUTER_INTAKE_MOTOR_CAN_ID = 9;
     public static final int ELEVATOR_RIGHT_OUTER_INTAKE_MOTOR_CAN_ID = 10;
-    public static final int ELEVATOR_INTAKE_ARM_PCM_CHANNEL_A = -1;
-    public static final int ELEVATOR_INTAKE_ARM_PCM_CHANNEL_B = -1;
+    public static final int ELEVATOR_INTAKE_ARM_PCM_CHANNEL_A = 1;
+    public static final int ELEVATOR_INTAKE_ARM_PCM_CHANNEL_B = 6;
     public static final int ELEVATOR_INNER_THROUGH_BEAM_SENSOR_ANALOG_CHANNEL = 0;
     public static final int ELEVATOR_OUTER_THROUGH_BEAM_SENSOR_ANALOG_CHANNEL = 1;
     public static final int ELEVATOR_COLLECTED_INDICATOR_LIGHT_PCM_CHANNEL = -1;

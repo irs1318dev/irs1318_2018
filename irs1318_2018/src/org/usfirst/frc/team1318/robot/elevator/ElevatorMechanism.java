@@ -8,8 +8,6 @@ import org.usfirst.frc.team1318.robot.TuningConstants;
 import org.usfirst.frc.team1318.robot.common.Helpers;
 import org.usfirst.frc.team1318.robot.common.IDashboardLogger;
 import org.usfirst.frc.team1318.robot.common.IMechanism;
-import org.usfirst.frc.team1318.robot.common.wpilib.DoubleSolenoidValue;
-import org.usfirst.frc.team1318.robot.common.wpilib.IDoubleSolenoid;
 import org.usfirst.frc.team1318.robot.common.wpilib.ITalonSRX;
 import org.usfirst.frc.team1318.robot.common.wpilib.ITimer;
 import org.usfirst.frc.team1318.robot.common.wpilib.IWpilibProvider;
@@ -48,7 +46,7 @@ public class ElevatorMechanism implements IMechanism
     //    private final IAnalogInput innerThroughBeamSensor;
     //    private final IAnalogInput outerThroughBeamSensor;
 
-    private final IDoubleSolenoid intakeExtender;
+    //    private final IDoubleSolenoid intakeExtender;
 
     //    private final ISolenoid collectedIndicatorLight;
 
@@ -152,8 +150,7 @@ public class ElevatorMechanism implements IMechanism
         this.rightOuterIntakeMotor.setInvertOutput(TuningConstants.ELEVATOR_RIGHT_OUTER_INTAKE_INVERT_OUTPUT);
         this.rightOuterIntakeMotor.setControlMode(TalonSRXControlMode.PercentOutput);
 
-        this.intakeExtender = provider.getDoubleSolenoid(ElectronicsConstants.ELEVATOR_INTAKE_ARM_PCM_CHANNEL_A,
-            ElectronicsConstants.ELEVATOR_INTAKE_ARM_PCM_CHANNEL_B);
+        //        this.intakeExtender = provider.getDoubleSolenoid(ElectronicsConstants.ELEVATOR_INTAKE_ARM_PCM_CHANNEL_A, ElectronicsConstants.ELEVATOR_INTAKE_ARM_PCM_CHANNEL_B);
 
         //        this.innerThroughBeamSensor = provider.getAnalogInput(ElectronicsConstants.ELEVATOR_INNER_THROUGH_BEAM_SENSOR_ANALOG_CHANNEL);
         //        this.outerThroughBeamSensor = provider.getAnalogInput(ElectronicsConstants.ELEVATOR_OUTER_THROUGH_BEAM_SENSOR_ANALOG_CHANNEL);
@@ -502,14 +499,14 @@ public class ElevatorMechanism implements IMechanism
 
         //        this.collectedIndicatorLight.set(this.isInnerThroughBeamBlocked);
 
-        if (this.driver.getDigital(Operation.ElevatorIntakeArmUp))
-        {
-            this.intakeExtender.set(DoubleSolenoidValue.kReverse);
-        }
-        else if (this.driver.getDigital(Operation.ElevatorIntakeArmDown))
-        {
-            this.intakeExtender.set(DoubleSolenoidValue.kForward);
-        }
+        //        if (this.driver.getDigital(Operation.ElevatorIntakeArmUp))
+        //        {
+        //            this.intakeExtender.set(DoubleSolenoidValue.kReverse);
+        //        }
+        //        else if (this.driver.getDigital(Operation.ElevatorIntakeArmDown))
+        //        {
+        //            this.intakeExtender.set(DoubleSolenoidValue.kForward);
+        //        }
 
         this.lastUpdateTime = currentTime;
     }
@@ -531,7 +528,7 @@ public class ElevatorMechanism implements IMechanism
         this.leftOuterIntakeMotor.stop();
         this.rightOuterIntakeMotor.stop();
 
-        this.intakeExtender.set(DoubleSolenoidValue.kOff);
+        //        this.intakeExtender.set(DoubleSolenoidValue.kOff);
         //        this.collectedIndicatorLight.set(false);
 
         this.innerElevatorVelocity = 0.0;
