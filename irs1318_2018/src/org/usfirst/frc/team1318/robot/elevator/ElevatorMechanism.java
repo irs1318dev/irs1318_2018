@@ -426,6 +426,9 @@ public class ElevatorMechanism implements IMechanism
         //        this.innerElevatorMotor.set(this.desiredInnerHeight / HardwareConstants.ELEVATOR_INNER_PULSE_DISTANCE);
         //        this.outerElevatorMotor.set(this.desiredOuterHeight / HardwareConstants.ELEVATOR_INNER_PULSE_DISTANCE);
 
+        this.logger.logNumber(ElevatorMechanism.LogName, "desiredInnerHeight", this.desiredInnerHeight);
+        this.logger.logNumber(ElevatorMechanism.LogName, "desiredOuterHeight", this.desiredOuterHeight);
+
         double leftOuterIntakePower = 0.0;
         double rightOuterIntakePower = 0.0;
         double leftCarriageIntakePower = 0.0;
