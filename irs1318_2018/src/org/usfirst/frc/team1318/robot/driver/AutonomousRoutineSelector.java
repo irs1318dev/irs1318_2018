@@ -250,7 +250,7 @@ public class AutonomousRoutineSelector
             new DriveDistanceTimedTask(147.75, 5.0),
             new TurnTimedTask(startingLeft ? 90.0 : -90.0, 1.5),
             new DriveDistanceTimedTask(11.5, 0.5),
-            AutonomousRoutineSelector.DepositCube());
+            AutonomousRoutineSelector.DepositCube(false));
     }
 
     private static IControlTask PlaceCubeOnSameSideScale(boolean startingLeft)
@@ -259,7 +259,7 @@ public class AutonomousRoutineSelector
             new DriveDistanceTimedTask(267.75, 9.0),
             new TurnTimedTask(startingLeft ? 70.0 : -70.0, 1.5),
             new DriveDistanceTimedTask(49.4, 2),
-            AutonomousRoutineSelector.DepositCube());
+            AutonomousRoutineSelector.DepositCube(true));
     }
 
     private static IControlTask PlaceCubeOnOppositeSideSwitch(boolean startingLeft)
@@ -272,9 +272,7 @@ public class AutonomousRoutineSelector
             new DriveDistanceTimedTask(229.6, 7.5),
             new TurnTimedTask(startingLeft ? 90.0 : -90.0, 2.0),
             new DriveDistanceTimedTask(10.1, 0.5),
-            AutonomousRoutineSelector.DepositCube());
-
-        //return new WaitTask(0);
+            AutonomousRoutineSelector.DepositCube(false));
     }
 
     private static IControlTask PlaceCubeOnOppositeSideScale(boolean startingLeft)
@@ -286,8 +284,7 @@ public class AutonomousRoutineSelector
             new TurnTimedTask(startingLeft ? -90.0 : 90.0, 2.0),
             new DriveDistanceTimedTask(42.6, 1.5),
             new TurnTimedTask(startingLeft ? -135.0 : 135.0, 3.0),
-            AutonomousRoutineSelector.DepositCube());
-        //return new WaitTask(0);
+            AutonomousRoutineSelector.DepositCube(true));
     }
 
     private static IControlTask PlaceCubeOnSwitchFromMiddle(boolean switchIsLeft)
@@ -302,7 +299,7 @@ public class AutonomousRoutineSelector
         return new WaitTask(0);
     }
 
-    private static IControlTask DepositCube()
+    private static IControlTask DepositCube(boolean isScale)
     {
         // TODO: function completion
         return new WaitTask(0);
