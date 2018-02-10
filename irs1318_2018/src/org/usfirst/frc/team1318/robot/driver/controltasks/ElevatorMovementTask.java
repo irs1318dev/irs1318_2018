@@ -9,21 +9,20 @@ import org.usfirst.frc.team1318.robot.elevator.ElevatorMechanism;
  * Class defining a task that intakes a power cube, rotating it if it gets stuck
  * 
  */
-public class ElevatorMovementTask extends ControlTaskBase implements IControlTask
+public class ElevatorMovementTask extends TimedTask implements IControlTask
 {
     private ElevatorMechanism elevator;
 
-    private boolean completeInRange; // Either wait for movement completion or complete task once within range
+    private boolean completeWithTime; // Either wait for movement completion or operate for a certain period of time
     private boolean moveUpToClimb;
-
-    private double destinationLocation;
 
     /**
      * Initializes a new IntakeAndCorrectionTask
      */
-    public ElevatorMovementTask(boolean completeInRange, boolean moveUpToClimb)
+    public ElevatorMovementTask(boolean completeWithTime, boolean moveUpToClimb)
     {
-        this.completeInRange = completeInRange;
+        super(TuningConstants.ELEVATOR_CLIMBING_MOVEMENT_TIME_THRESHOLD);
+        this.completeWithTime = completeWithTime;
         this.moveUpToClimb = moveUpToClimb;
     }
 
@@ -36,10 +35,12 @@ public class ElevatorMovementTask extends ControlTaskBase implements IControlTas
         if (this.moveUpToClimb)
         {
             this.setDigitalOperationState(Operation.ElevatorClimbPosition, true);
+            this.setDigitalOperationState(Operation.ElevatorBottomPosition, false);
         }
         else
         {
             this.setDigitalOperationState(Operation.ElevatorBottomPosition, true);
+            this.setDigitalOperationState(Operation.ElevatorClimbPosition, false);
         }
     }
 
@@ -89,14 +90,14 @@ public class ElevatorMovementTask extends ControlTaskBase implements IControlTas
     @Override
     public boolean hasCompleted()
     {
-        double distanceToDestination = Math.abs(this.elevator.getTotalHeight() - this.destinationLocation);
-
-        if (this.completeInRange && distanceToDestination < TuningConstants.ELEVATOR_CLIMBING_MOVEMENT_DISTANCE_THRESHOLD)
+        if (completeWithTime && super.hasCompleted())
         {
             return true;
         }
 
-        if (distanceToDestination == 0)
+        double totalError = elevator.getTotalError();
+
+        if (totalError < TuningConstants.ELEVATOR_CLIMBING_MOVEMENT_DISTANCE_THRESHOLD)
         {
             return true;
         }
