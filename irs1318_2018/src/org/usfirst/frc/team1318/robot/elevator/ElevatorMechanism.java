@@ -371,7 +371,12 @@ public class ElevatorMechanism implements IMechanism
         //            this.outerElevatorMotor.reset();
         //        }
 
-        if (this.driver.getDigital(Operation.ElevatorCarryPosition))
+        if (this.driver.getDigital(Operation.ElevatorBottomPosition))
+        {
+            this.desiredInnerHeight = 0;
+            this.desiredOuterHeight = 0;
+        }
+        else if (this.driver.getDigital(Operation.ElevatorCarryPosition))
         {
             this.desiredInnerHeight = TuningConstants.ELEVATOR_INNER_CARRY_POSITION;
             this.desiredOuterHeight = TuningConstants.ELEVATOR_OUTER_CARRY_POSITION;
@@ -390,6 +395,16 @@ public class ElevatorMechanism implements IMechanism
         {
             this.desiredInnerHeight = TuningConstants.ELEVATOR_INNER_HIGH_SCALE_POSITION;
             this.desiredOuterHeight = TuningConstants.ELEVATOR_OUTER_HIGH_SCALE_POSITION;
+        }
+        else if (this.driver.getDigital(Operation.ElevatorClimbPosition))
+        {
+            this.desiredInnerHeight = TuningConstants.ELEVATOR_INNER_CLIMB_POSITION;
+            this.desiredOuterHeight = TuningConstants.ELEVATOR_OUTER_CLIMB_POSITION;
+        }
+        else if (this.driver.getDigital(Operation.ElevatorTopPosition))
+        {
+            this.desiredInnerHeight = HardwareConstants.ELEVATOR_INNER_MAX_HEIGHT;
+            this.desiredOuterHeight = HardwareConstants.ELEVATOR_OUTER_MAX_HEIGHT;
         }
 
         if (this.driver.getDigital(Operation.ElevatorMoveUp))

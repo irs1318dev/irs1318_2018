@@ -137,11 +137,13 @@ public class TuningConstants
     public static final double ELEVATOR_INNER_CARRY_POSITION = 0.0;
     public static final double ELEVATOR_OUTER_CARRY_POSITION = 0.0;
     public static final double ELEVATOR_INNER_SWITCH_POSITION = 18.0;
-    public static final double ELEVATOR_OUTER_SWITCH_POSITION = 0.0;
+    public static final double ELEVATOR_OUTER_SWITCH_POSITION = 18.0;
     public static final double ELEVATOR_INNER_LOW_SCALE_POSITION = 24.0;
-    public static final double ELEVATOR_OUTER_LOW_SCALE_POSITION = 0.0;
+    public static final double ELEVATOR_OUTER_LOW_SCALE_POSITION = 24.0;
     public static final double ELEVATOR_INNER_HIGH_SCALE_POSITION = 32.0;
-    public static final double ELEVATOR_OUTER_HIGH_SCALE_POSITION = 0.0;
+    public static final double ELEVATOR_OUTER_HIGH_SCALE_POSITION = 32.0;
+    public static final double ELEVATOR_INNER_CLIMB_POSITION = 36.0;
+    public static final double ELEVATOR_OUTER_CLIMB_POSITION = 20.0;
 
     public static final double ELEVATOR_MAXIMUM_OUTER_INTAKE_USE_HEIGHT = 12.0;
 
@@ -167,6 +169,8 @@ public class TuningConstants
     // Elevator intake correction time thresholds (in seconds)
     public static final double ELEVATOR_INTAKE_CORRECTION_TRIGGER_TIME_THRESHOLD = 1;
     public static final double ELEVATOR_INTAKE_CORRECTION_OPERATION_TIME_THRESHOLD = 1;
+
+    public static final double ELEVATOR_CLIMBING_MOVEMENT_DISTANCE_THRESHOLD = 10;
 
     //================================================== Climber ==============================================================
 

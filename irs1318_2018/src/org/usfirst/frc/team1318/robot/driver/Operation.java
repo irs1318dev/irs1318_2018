@@ -22,6 +22,7 @@ public enum Operation
     ElevatorSwitchPosition,
     ElevatorLowScalePosition,
     ElevatorHighScalePosition, 
+    ElevatorClimbPosition, 
     ElevatorTopPosition, 
     ElevatorMoveUp,
     ElevatorMoveDown,

@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1318.robot.driver.controltasks;
 
+import org.usfirst.frc.team1318.robot.TuningConstants;
 import org.usfirst.frc.team1318.robot.driver.Operation;
 import org.usfirst.frc.team1318.robot.driver.common.IControlTask;
 import org.usfirst.frc.team1318.robot.elevator.ElevatorMechanism;
@@ -20,7 +21,7 @@ public class ElevatorMovementTask extends ControlTaskBase implements IControlTas
     /**
      * Initializes a new IntakeAndCorrectionTask
      */
-    public ElevatorMovementTask(boolean completeInRange, boolean moveToHighestPosition)
+    public ElevatorMovementTask(boolean completeInRange, boolean moveUpToClimb)
     {
         this.completeInRange = completeInRange;
         this.moveUpToClimb = moveUpToClimb;
@@ -34,7 +35,7 @@ public class ElevatorMovementTask extends ControlTaskBase implements IControlTas
     {
         if (this.moveUpToClimb)
         {
-            this.setDigitalOperationState(Operation.ElevatorTopPosition, true);
+            this.setDigitalOperationState(Operation.ElevatorClimbPosition, true);
         }
         else
         {
@@ -57,6 +58,8 @@ public class ElevatorMovementTask extends ControlTaskBase implements IControlTas
     @Override
     public void stop()
     {
+        this.setDigitalOperationState(Operation.ElevatorClimbPosition, false);
+        this.setDigitalOperationState(Operation.ElevatorBottomPosition, false);
     }
 
     /**
@@ -65,6 +68,8 @@ public class ElevatorMovementTask extends ControlTaskBase implements IControlTas
     @Override
     public void end()
     {
+        this.setDigitalOperationState(Operation.ElevatorClimbPosition, false);
+        this.setDigitalOperationState(Operation.ElevatorBottomPosition, false);
     }
 
     /**
@@ -84,7 +89,18 @@ public class ElevatorMovementTask extends ControlTaskBase implements IControlTas
     @Override
     public boolean hasCompleted()
     {
-        //TODO: Complete this method
+        double distanceToDestination = Math.abs(this.elevator.getTotalHeight() - this.destinationLocation);
+
+        if (this.completeInRange && distanceToDestination < TuningConstants.ELEVATOR_CLIMBING_MOVEMENT_DISTANCE_THRESHOLD)
+        {
+            return true;
+        }
+
+        if (distanceToDestination == 0)
+        {
+            return true;
+        }
+
         return false;
     }
 }

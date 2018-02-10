@@ -2,10 +2,10 @@ package org.usfirst.frc.team1318.robot.driver.controltasks;
 
 import org.usfirst.frc.team1318.robot.driver.Operation;
 
-public class ReleaseServoTimedTask extends TimedTask
+public class EnableWinchTimedTask extends TimedTask
 {
 
-    public ReleaseServoTimedTask(double duration)
+    public EnableWinchTimedTask(double duration)
     {
         super(duration);
     }
@@ -14,7 +14,7 @@ public class ReleaseServoTimedTask extends TimedTask
     public void begin()
     {
         super.begin();
-        this.setDigitalOperationState(Operation.ClimberRelease, true);
+        this.setDigitalOperationState(Operation.ClimberEnableWinch, true);
     }
 
     @Override
@@ -26,12 +26,12 @@ public class ReleaseServoTimedTask extends TimedTask
     @Override
     public void end()
     {
-        this.setDigitalOperationState(Operation.ClimberRelease, false);
+        this.setDigitalOperationState(Operation.ClimberEnableWinch, false);
     }
 
     @Override
     public void stop()
     {
-        this.setDigitalOperationState(Operation.ClimberRelease, false);
+        this.setDigitalOperationState(Operation.ClimberEnableWinch, false);
     }
 }

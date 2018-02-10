@@ -33,7 +33,7 @@ public class HardwareConstants
     //================================================== Elevator ==============================================================
 
     public static final double ELEVATOR_INNER_MAX_HEIGHT = 36.0; // max height of the elevator
-    public static final double ELEVATOR_OUTER_MAX_HEIGHT = 0.0; // max height of the elevator
+    public static final double ELEVATOR_OUTER_MAX_HEIGHT = 36.0; // max height of the elevator
 
     public static final double ELEVATOR_INNER_ENCODER_PULSES_PER_REVOLUTION = 4096.0;
     public static final double ELEVATOR_INNER_ROTATION_TRAVEL = 4.75; // the amount of travel in the chain per rotation of the encoder (in inches)

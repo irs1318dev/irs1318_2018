@@ -6,5 +6,10 @@ public enum MacroOperation
     PIDBrake,
     VisionCenter,
     VisionCenterAndAdvance,
+    
+    // Elevator operations:
     IntakeAndCorrection,
+    
+    // Climber operations:
+    Climb,
 }
