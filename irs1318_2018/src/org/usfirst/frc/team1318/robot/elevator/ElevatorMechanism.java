@@ -235,9 +235,9 @@ public class ElevatorMechanism implements IMechanism
      * get the total height of both elevators 
      * @return a height in inches
      */
-    public double getTotalHeight()
+    public double getTotalError()
     {
-        return this.innerElevatorHeight + this.outerElevatorHeight;
+        return this.innerElevatorError + this.outerElevatorError;
     }
 
     /**
