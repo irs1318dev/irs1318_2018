@@ -151,10 +151,10 @@ public class TuningConstants
     public static final double ELEVATOR_MOVE_VELOCITY = 2.0; // inches per second
 
     // Elevator intake powers
-    public static final double ELEVATOR_LEFT_OUTER_INTAKE_POWER = 0.8;
-    public static final double ELEVATOR_RIGHT_OUTER_INTAKE_POWER = 0.8;
+    public static final double ELEVATOR_LEFT_OUTER_INTAKE_POWER = 0.6;
+    public static final double ELEVATOR_RIGHT_OUTER_INTAKE_POWER = 0.9;
     public static final double ELEVATOR_LEFT_CARRIAGE_INTAKE_POWER = 0.7;
-    public static final double ELEVATOR_RIGHT_CARRIAGE_INTAKE_POWER = 0.5;
+    public static final double ELEVATOR_RIGHT_CARRIAGE_INTAKE_POWER = 0.7;
 
     // Elevator outtake powers
     public static final double ELEVATOR_LEFT_OUTER_OUTTAKE_POWER = -0.3;
