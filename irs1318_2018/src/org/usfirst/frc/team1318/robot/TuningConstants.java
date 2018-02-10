@@ -148,7 +148,7 @@ public class TuningConstants
     public static final double ELEVATOR_MAXIMUM_OUTER_INTAKE_USE_HEIGHT = 12.0;
 
     // Elevator velocities
-    public static final double ELEVATOR_MOVE_VELOCITY = 2.0; // inches per second
+    public static final double ELEVATOR_MOVE_VELOCITY = 4.0; // inches per second
 
     // Elevator intake powers
     public static final double ELEVATOR_LEFT_OUTER_INTAKE_POWER = 0.6;
@@ -170,8 +170,8 @@ public class TuningConstants
     public static final double ELEVATOR_INTAKE_CORRECTION_TRIGGER_TIME_THRESHOLD = 1;
     public static final double ELEVATOR_INTAKE_CORRECTION_OPERATION_TIME_THRESHOLD = 1;
 
-    public static final double ELEVATOR_CLIMBING_MOVEMENT_DISTANCE_THRESHOLD = 10;
-    public static final double ELEVATOR_CLIMBING_MOVEMENT_TIME_THRESHOLD = 1.5;
+    public static final double ELEVATOR_CLIMBING_MOVEMENT_DISTANCE_THRESHOLD = 500.0;
+    public static final double ELEVATOR_CLIMBING_MOVEMENT_TIME_THRESHOLD = 0.5;
 
     //================================================== Climber ==============================================================
 

@@ -11,5 +11,5 @@ public enum MacroOperation
     IntakeAndCorrection,
     
     // Climber operations:
-    Climb,
+    HookClimber,
 }

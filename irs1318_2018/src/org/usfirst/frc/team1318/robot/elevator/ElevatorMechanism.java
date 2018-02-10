@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 import org.usfirst.frc.team1318.robot.ElectronicsConstants;
 import org.usfirst.frc.team1318.robot.HardwareConstants;
 import org.usfirst.frc.team1318.robot.TuningConstants;
+import org.usfirst.frc.team1318.robot.common.Helpers;
 import org.usfirst.frc.team1318.robot.common.IDashboardLogger;
 import org.usfirst.frc.team1318.robot.common.IMechanism;
 import org.usfirst.frc.team1318.robot.common.wpilib.ITalonSRX;
@@ -372,10 +373,10 @@ public class ElevatorMechanism implements IMechanism
         //        {
         //            this.outerElevatorMotor.reset();
         //        }
+
         boolean shouldIntake = this.driver.getDigital(Operation.ElevatorIntake);
         boolean shouldIntakeCorrection = this.driver.getDigital(Operation.ElevatorIntakeCorrection);
         boolean shouldOuttake = this.driver.getDigital(Operation.ElevatorOuttake);
-
         if (this.driver.getDigital(Operation.ElevatorBottomPosition) || shouldIntake || shouldIntakeCorrection)
         {
             this.desiredInnerHeight = 0;
@@ -421,7 +422,6 @@ public class ElevatorMechanism implements IMechanism
         {
             double deltaPosition = deltaTime * TuningConstants.ELEVATOR_MOVE_VELOCITY;
             double remainingInnerHeight = HardwareConstants.ELEVATOR_INNER_MAX_HEIGHT - this.desiredInnerHeight;
-
             if (deltaPosition > remainingInnerHeight)
             {
                 this.desiredInnerHeight = HardwareConstants.ELEVATOR_INNER_MAX_HEIGHT;
@@ -436,10 +436,9 @@ public class ElevatorMechanism implements IMechanism
         {
             double deltaPosition = deltaTime * TuningConstants.ELEVATOR_MOVE_VELOCITY;
             double remainingOuterHeight = this.desiredOuterHeight;
-
             if (deltaPosition > remainingOuterHeight)
             {
-                this.desiredOuterHeight = 0;
+                this.desiredOuterHeight = 0.0;
                 this.desiredInnerHeight -= (deltaPosition - remainingOuterHeight);
             }
             else
@@ -448,17 +447,20 @@ public class ElevatorMechanism implements IMechanism
             }
         }
 
-        this.innerElevatorMotor.set(this.desiredInnerHeight / HardwareConstants.ELEVATOR_INNER_PULSE_DISTANCE);
-        //        this.outerElevatorMotor.set(this.desiredOuterHeight / HardwareConstants.ELEVATOR_INNER_PULSE_DISTANCE);
+        // Ensure that our desired inner and outer heights are within the permitted ranges:
+        this.desiredInnerHeight = Helpers.EnforceRange(this.desiredInnerHeight, 0.0, HardwareConstants.ELEVATOR_INNER_MAX_HEIGHT);
+        this.desiredOuterHeight = Helpers.EnforceRange(this.desiredOuterHeight, 0.0, HardwareConstants.ELEVATOR_OUTER_MAX_HEIGHT);
 
         this.logger.logNumber(ElevatorMechanism.LogName, "desiredInnerHeight", this.desiredInnerHeight);
         this.logger.logNumber(ElevatorMechanism.LogName, "desiredOuterHeight", this.desiredOuterHeight);
+
+        this.innerElevatorMotor.set(this.desiredInnerHeight / HardwareConstants.ELEVATOR_INNER_PULSE_DISTANCE);
+        //        this.outerElevatorMotor.set(this.desiredOuterHeight / HardwareConstants.ELEVATOR_INNER_PULSE_DISTANCE);
 
         double leftOuterIntakePower = 0.0;
         double rightOuterIntakePower = 0.0;
         double leftCarriageIntakePower = 0.0;
         double rightCarriageIntakePower = 0.0;
-
         if (shouldIntake)
         {
             leftOuterIntakePower = TuningConstants.ELEVATOR_LEFT_OUTER_INTAKE_POWER;

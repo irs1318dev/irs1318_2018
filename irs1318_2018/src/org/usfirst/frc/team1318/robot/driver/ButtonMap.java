@@ -18,6 +18,7 @@ import org.usfirst.frc.team1318.robot.driver.common.descriptions.OperationDescri
 import org.usfirst.frc.team1318.robot.driver.common.descriptions.UserInputDevice;
 import org.usfirst.frc.team1318.robot.driver.controltasks.ElevatorMovementTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.EnableWinchTimedTask;
+import org.usfirst.frc.team1318.robot.driver.controltasks.IntakeAndCorrectionTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.PIDBrakeTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.ReleaseServoTimedTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.SequentialTask;
@@ -268,21 +269,39 @@ public class ButtonMap implements IButtonMap
                     }));
 
             put(
-                MacroOperation.Climb,
+                MacroOperation.IntakeAndCorrection,
+                new MacroOperationDescription(
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.NONE,
+                    ButtonType.Simple,
+                    () -> new IntakeAndCorrectionTask(),
+                    new Operation[]
+                    {
+                        Operation.ElevatorIntake,
+                        Operation.ElevatorIntakeCorrection,
+                        Operation.ElevatorOuttake,
+                    }));
+
+            put(
+                MacroOperation.HookClimber,
                 new MacroOperationDescription(
                     UserInputDevice.Driver,
                     UserInputDeviceButton.NONE,
                     ButtonType.Click,
                     () -> SequentialTask.Sequence(
-                        new ElevatorMovementTask(false, true),
+                        new ElevatorMovementTask(false, Operation.ElevatorClimbPosition),
                         new ReleaseServoTimedTask(1),
-                        new ElevatorMovementTask(true, false),
+                        new ElevatorMovementTask(true, Operation.ElevatorCarryPosition),
                         new EnableWinchTimedTask(.2)),
                     new Operation[]
                     {
-                        Operation.ElevatorClimbPosition,
                         Operation.ElevatorBottomPosition,
-                        Operation.ClimberWinch,
+                        Operation.ElevatorCarryPosition,
+                        Operation.ElevatorSwitchPosition,
+                        Operation.ElevatorLowScalePosition,
+                        Operation.ElevatorHighScalePosition,
+                        Operation.ElevatorClimbPosition,
+                        Operation.ElevatorTopPosition,
                         Operation.ClimberEnableWinch,
                         Operation.ClimberDisableWinch,
                         Operation.ClimberRelease,

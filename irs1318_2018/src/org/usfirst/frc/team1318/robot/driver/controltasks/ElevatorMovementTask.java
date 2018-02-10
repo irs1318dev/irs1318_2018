@@ -11,19 +11,26 @@ import org.usfirst.frc.team1318.robot.elevator.ElevatorMechanism;
  */
 public class ElevatorMovementTask extends TimedTask implements IControlTask
 {
+    private static final Operation[] AllElevatorPositionOperations = new Operation[] {
+        Operation.ElevatorBottomPosition,
+        Operation.ElevatorCarryPosition,
+        Operation.ElevatorSwitchPosition,
+        Operation.ElevatorLowScalePosition,
+        Operation.ElevatorHighScalePosition,
+        Operation.ElevatorClimbPosition,
+        Operation.ElevatorTopPosition,
+    };
+
     private ElevatorMechanism elevator;
 
-    private boolean completeWithTime; // Either wait for movement completion or operate for a certain period of time
-    private boolean moveUpToClimb;
+    private final boolean completeWithTime; // Either wait for movement completion or operate for a certain period of time
+    private final Operation desiredElevatorPositionOperation;
 
-    /**
-     * Initializes a new IntakeAndCorrectionTask
-     */
-    public ElevatorMovementTask(boolean completeWithTime, boolean moveUpToClimb)
+    public ElevatorMovementTask(boolean completeWithTime, Operation desiredElevatorPositionOperation)
     {
         super(TuningConstants.ELEVATOR_CLIMBING_MOVEMENT_TIME_THRESHOLD);
         this.completeWithTime = completeWithTime;
-        this.moveUpToClimb = moveUpToClimb;
+        this.desiredElevatorPositionOperation = desiredElevatorPositionOperation;
     }
 
     /**
@@ -32,15 +39,9 @@ public class ElevatorMovementTask extends TimedTask implements IControlTask
     @Override
     public void begin()
     {
-        if (this.moveUpToClimb)
+        for (Operation op : ElevatorMovementTask.AllElevatorPositionOperations)
         {
-            this.setDigitalOperationState(Operation.ElevatorClimbPosition, true);
-            this.setDigitalOperationState(Operation.ElevatorBottomPosition, false);
-        }
-        else
-        {
-            this.setDigitalOperationState(Operation.ElevatorBottomPosition, true);
-            this.setDigitalOperationState(Operation.ElevatorClimbPosition, false);
+            this.setDigitalOperationState(op, op != this.desiredElevatorPositionOperation);
         }
     }
 
@@ -50,7 +51,6 @@ public class ElevatorMovementTask extends TimedTask implements IControlTask
     @Override
     public void update()
     {
-
     }
 
     /**
@@ -59,8 +59,10 @@ public class ElevatorMovementTask extends TimedTask implements IControlTask
     @Override
     public void stop()
     {
-        this.setDigitalOperationState(Operation.ElevatorClimbPosition, false);
-        this.setDigitalOperationState(Operation.ElevatorBottomPosition, false);
+        for (Operation op : ElevatorMovementTask.AllElevatorPositionOperations)
+        {
+            this.setDigitalOperationState(op, false);
+        }
     }
 
     /**
@@ -69,8 +71,10 @@ public class ElevatorMovementTask extends TimedTask implements IControlTask
     @Override
     public void end()
     {
-        this.setDigitalOperationState(Operation.ElevatorClimbPosition, false);
-        this.setDigitalOperationState(Operation.ElevatorBottomPosition, false);
+        for (Operation op : ElevatorMovementTask.AllElevatorPositionOperations)
+        {
+            this.setDigitalOperationState(op, false);
+        }
     }
 
     /**
@@ -90,13 +94,12 @@ public class ElevatorMovementTask extends TimedTask implements IControlTask
     @Override
     public boolean hasCompleted()
     {
-        if (completeWithTime && super.hasCompleted())
+        if (this.completeWithTime && super.hasCompleted())
         {
             return true;
         }
 
-        double totalError = elevator.getTotalError();
-
+        double totalError = this.elevator.getTotalError();
         if (totalError < TuningConstants.ELEVATOR_CLIMBING_MOVEMENT_DISTANCE_THRESHOLD)
         {
             return true;
