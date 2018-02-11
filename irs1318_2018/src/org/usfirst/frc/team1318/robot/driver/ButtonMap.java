@@ -36,8 +36,8 @@ public class ButtonMap implements IButtonMap
             put(
                 Operation.EnableVision,
                 new DigitalOperationDescription(
-                    UserInputDevice.None,
-                    UserInputDeviceButton.JOYSTICK_STICK_TOP_RIGHT_BUTTON,
+                    UserInputDevice.Driver,
+                    90, // POV 
                     ButtonType.Toggle));
 
             // Operations for the drive train

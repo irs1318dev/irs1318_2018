@@ -20,6 +20,7 @@ import org.usfirst.frc.team1318.robot.drivetrain.DriveTrainMechanism;
 import org.usfirst.frc.team1318.robot.elevator.ElevatorMechanism;
 import org.usfirst.frc.team1318.robot.general.PositionManager;
 import org.usfirst.frc.team1318.robot.general.PowerManager;
+import org.usfirst.frc.team1318.robot.vision.VisionManager;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
@@ -46,7 +47,7 @@ public class RobotModule extends AbstractModule
         mechanismList.add(injector.getInstance(CompressorMechanism.class));
         mechanismList.add(injector.getInstance(ElevatorMechanism.class));
         //mechanismList.add(injector.getInstance(ClimberMechanism.class));
-        //mechanismList.add(injector.getInstance(VisionManager.class));
+        mechanismList.add(injector.getInstance(VisionManager.class));
         return new MechanismManager(mechanismList);
     }
 

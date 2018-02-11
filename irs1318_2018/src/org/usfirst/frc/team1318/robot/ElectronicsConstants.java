@@ -25,14 +25,14 @@ public class ElectronicsConstants
 
     //================================================== Auto ==============================================================
 
-    public static final int AUTO_DIP_SWITCH_A_DIGITAL_CHANNEL = -1;
-    public static final int AUTO_DIP_SWITCH_B_DIGITAL_CHANNEL = -1;
-    public static final int AUTO_DIP_SWITCH_C_DIGITAL_CHANNEL = -1;
-    public static final int AUTO_DIP_SWITCH_D_DIGITAL_CHANNEL = -1;
+    public static final int AUTO_DIP_SWITCH_A_DIGITAL_CHANNEL = 0;
+    public static final int AUTO_DIP_SWITCH_B_DIGITAL_CHANNEL = 1;
+    public static final int AUTO_DIP_SWITCH_C_DIGITAL_CHANNEL = 2;
+    public static final int AUTO_DIP_SWITCH_D_DIGITAL_CHANNEL = 3;
 
     //================================================== Vision ==============================================================
 
-    public static final int VISION_RING_LIGHT_PCM_CHANNEL = -1;
+    public static final int VISION_RING_LIGHT_PCM_CHANNEL = 7; // Module A
 
     //================================================== DriveTrain ==============================================================
 
@@ -49,11 +49,11 @@ public class ElectronicsConstants
     public static final int ELEVATOR_RIGHT_CARRIAGE_INTAKE_MOTOR_CAN_ID = 8;
     public static final int ELEVATOR_LEFT_OUTER_INTAKE_MOTOR_CAN_ID = 9;
     public static final int ELEVATOR_RIGHT_OUTER_INTAKE_MOTOR_CAN_ID = 10;
-    public static final int ELEVATOR_INTAKE_ARM_PCM_CHANNEL_A = 1;
-    public static final int ELEVATOR_INTAKE_ARM_PCM_CHANNEL_B = 6;
+    public static final int ELEVATOR_INTAKE_ARM_PCM_CHANNEL_A = 1; // Module A
+    public static final int ELEVATOR_INTAKE_ARM_PCM_CHANNEL_B = 6; // Module A
     public static final int ELEVATOR_INNER_THROUGH_BEAM_SENSOR_ANALOG_CHANNEL = 0;
     public static final int ELEVATOR_OUTER_THROUGH_BEAM_SENSOR_ANALOG_CHANNEL = 1;
-    public static final int ELEVATOR_COLLECTED_INDICATOR_LIGHT_PCM_CHANNEL = -1;
+    public static final int ELEVATOR_COLLECTED_INDICATOR_LIGHT_PCM_CHANNEL = 0; // Module A
 
     //================================================== Climber ==============================================================
 
