@@ -69,14 +69,15 @@ public class ElevatorMechanism implements IMechanism
     private boolean outerElevatorForwardLimitSwitchStatus;
     private boolean outerElevatorReverseLimitSwitchStatus;
 
-    private double desiredInnerHeight;
-    private double desiredOuterHeight;
-
     private double innerThroughBeamVoltage;
     private boolean isInnerThroughBeamBlocked;
 
     private double outerThroughBeamVoltage;
     private boolean isOuterThroughBeamBlocked;
+
+    private double desiredInnerHeight;
+    private double desiredOuterHeight;
+    private boolean shouldHold;
 
     private double lastUpdateTime;
 
@@ -186,6 +187,7 @@ public class ElevatorMechanism implements IMechanism
 
         this.desiredInnerHeight = 0.0;
         this.desiredOuterHeight = 0.0;
+        this.shouldHold = false;
     }
 
     /**
@@ -385,6 +387,15 @@ public class ElevatorMechanism implements IMechanism
         boolean shouldIntake = this.driver.getDigital(Operation.ElevatorIntake);
         boolean shouldIntakeCorrection = this.driver.getDigital(Operation.ElevatorIntakeCorrection);
         boolean shouldOuttake = this.driver.getDigital(Operation.ElevatorOuttake);
+        if (this.isInnerThroughBeamBlocked && !shouldOuttake)
+        {
+            this.shouldHold = true;
+        }
+        else if (shouldOuttake)
+        {
+            this.shouldHold = false;
+        }
+
         if (this.driver.getDigital(Operation.ElevatorBottomPosition) || shouldIntake || shouldIntakeCorrection)
         {
             this.desiredInnerHeight = 0;
@@ -467,8 +478,8 @@ public class ElevatorMechanism implements IMechanism
 
         double leftOuterIntakePower = 0.0;
         double rightOuterIntakePower = 0.0;
-        double leftCarriageIntakePower = 0.1;
-        double rightCarriageIntakePower = 0.1;
+        double leftCarriageIntakePower = 0.0;
+        double rightCarriageIntakePower = 0.0;
         if (shouldIntake)
         {
             leftOuterIntakePower = TuningConstants.ELEVATOR_LEFT_OUTER_INTAKE_POWER;
@@ -489,6 +500,11 @@ public class ElevatorMechanism implements IMechanism
             rightOuterIntakePower = TuningConstants.ELEVATOR_RIGHT_OUTER_OUTTAKE_POWER;
             leftCarriageIntakePower = TuningConstants.ELEVATOR_LEFT_CARRIAGE_OUTTAKE_POWER;
             rightCarriageIntakePower = TuningConstants.ELEVATOR_RIGHT_CARRIAGE_OUTTAKE_POWER;
+        }
+        else if (this.shouldHold)
+        {
+            leftCarriageIntakePower = TuningConstants.ELEVATOR_LEFT_CARRIAGE_HOLD_POWER;
+            rightCarriageIntakePower = TuningConstants.ELEVATOR_RIGHT_CARRIAGE_HOLD_POWER;
         }
 
         // Use outer intakes only if carriage is below a certain height
@@ -538,7 +554,7 @@ public class ElevatorMechanism implements IMechanism
         this.rightOuterIntakeMotor.stop();
 
         this.intakeExtender.set(DoubleSolenoidValue.kOff);
-        //        this.collectedIndicatorLight.set(false);
+        this.collectedIndicatorLight.set(false);
 
         this.innerElevatorVelocity = 0.0;
         this.innerElevatorError = 0.0;

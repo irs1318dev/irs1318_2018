@@ -37,7 +37,7 @@ public class ButtonMap implements IButtonMap
                 Operation.EnableVision,
                 new DigitalOperationDescription(
                     UserInputDevice.Driver,
-                    90, // POV 
+                    UserInputDeviceButton.NONE,
                     ButtonType.Toggle));
 
             // Operations for the drive train
