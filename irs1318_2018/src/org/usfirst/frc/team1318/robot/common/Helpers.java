@@ -15,4 +15,10 @@ public class Helpers
 
         return value;
     }
+
+    public static boolean WithinDelta(double actualValue, double expectedValue, double acceptableDelta)
+    {
+        double actualDelta = expectedValue - actualValue;
+        return Math.abs(actualDelta) <= acceptableDelta;
+    }
 }

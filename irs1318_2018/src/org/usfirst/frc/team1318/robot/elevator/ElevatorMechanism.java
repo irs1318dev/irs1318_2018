@@ -431,7 +431,8 @@ public class ElevatorMechanism implements IMechanism
             this.desiredInnerHeight = HardwareConstants.ELEVATOR_INNER_MAX_HEIGHT;
             this.desiredOuterHeight = HardwareConstants.ELEVATOR_OUTER_MAX_HEIGHT;
         }
-        else if (this.desiredInnerHeight + this.desiredOuterHeight == 0.0)
+        else if (this.desiredInnerHeight < TuningConstants.ELEVATOR_INNER_CARRY_POSITION
+            || this.desiredOuterHeight < TuningConstants.ELEVATOR_OUTER_CARRY_POSITION)
         {
             this.desiredInnerHeight = TuningConstants.ELEVATOR_INNER_CARRY_POSITION;
             this.desiredOuterHeight = TuningConstants.ELEVATOR_OUTER_CARRY_POSITION;
@@ -473,8 +474,19 @@ public class ElevatorMechanism implements IMechanism
         this.logger.logNumber(ElevatorMechanism.LogName, "desiredInnerHeight", this.desiredInnerHeight);
         this.logger.logNumber(ElevatorMechanism.LogName, "desiredOuterHeight", this.desiredOuterHeight);
 
-        this.innerElevatorMotor.set(this.desiredInnerHeight / HardwareConstants.ELEVATOR_INNER_PULSE_DISTANCE);
-        this.outerElevatorMotor.set(this.desiredOuterHeight / HardwareConstants.ELEVATOR_INNER_PULSE_DISTANCE);
+        if (this.desiredInnerHeight == TuningConstants.ELEVATOR_INNER_CARRY_POSITION
+            && this.desiredOuterHeight == TuningConstants.ELEVATOR_OUTER_CARRY_POSITION
+            && Helpers.WithinDelta(this.innerElevatorHeight, this.desiredInnerHeight, TuningConstants.ELEVATOR_CARRY_POSITION_DELTA)
+            && Helpers.WithinDelta(this.outerElevatorHeight, this.desiredOuterHeight, TuningConstants.ELEVATOR_CARRY_POSITION_DELTA))
+        {
+            this.innerElevatorMotor.stop();
+            this.outerElevatorMotor.stop();
+        }
+        else
+        {
+            this.innerElevatorMotor.set(this.desiredInnerHeight / HardwareConstants.ELEVATOR_INNER_PULSE_DISTANCE);
+            this.outerElevatorMotor.set(this.desiredOuterHeight / HardwareConstants.ELEVATOR_INNER_PULSE_DISTANCE);
+        }
 
         double leftOuterIntakePower = 0.0;
         double rightOuterIntakePower = 0.0;

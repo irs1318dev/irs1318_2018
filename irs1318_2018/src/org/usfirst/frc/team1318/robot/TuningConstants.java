@@ -135,7 +135,7 @@ public class TuningConstants
 
     // Elevator positions (in inches)
     public static final double ELEVATOR_INNER_CARRY_POSITION = 0.0;
-    public static final double ELEVATOR_OUTER_CARRY_POSITION = 2.0;
+    public static final double ELEVATOR_OUTER_CARRY_POSITION = 3.5;
     public static final double ELEVATOR_INNER_SWITCH_POSITION = 12.0;
     public static final double ELEVATOR_OUTER_SWITCH_POSITION = 24.0;
     public static final double ELEVATOR_INNER_LOW_SCALE_POSITION = 24.0;
@@ -145,6 +145,7 @@ public class TuningConstants
     public static final double ELEVATOR_INNER_CLIMB_POSITION = 36.0;
     public static final double ELEVATOR_OUTER_CLIMB_POSITION = 20.0;
 
+    public static final double ELEVATOR_CARRY_POSITION_DELTA = 0.75;
     public static final double ELEVATOR_MAXIMUM_OUTER_INTAKE_USE_HEIGHT = 12.0;
 
     // Elevator velocities
