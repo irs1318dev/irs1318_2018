@@ -145,7 +145,8 @@ public class TuningConstants
     public static final double ELEVATOR_INNER_CLIMB_POSITION = 36.0;
     public static final double ELEVATOR_OUTER_CLIMB_POSITION = 20.0;
 
-    public static final double ELEVATOR_CARRY_POSITION_DELTA = 0.75;
+    public static final boolean ELEVATOR_USE_CARRY_POSITION_SHELF = true;
+    public static final double ELEVATOR_CARRY_POSITION_SHELF_DELTA = 0.75;
     public static final double ELEVATOR_MAXIMUM_OUTER_INTAKE_USE_HEIGHT = 12.0;
 
     // Elevator velocities
