@@ -32,6 +32,7 @@ public class ClimberMechanism implements IMechanism
     private Driver driver;
 
     private boolean winchEnabled;
+    private boolean hookReleased;
 
     /**
      * Initializes a new DriveTrainMechanism
@@ -51,6 +52,7 @@ public class ClimberMechanism implements IMechanism
         this.releaser = provider.getServo(ElectronicsConstants.CLIMBER_RELEASER_SERVO_PWM_CHANNEL);
 
         this.winchEnabled = false;
+        this.hookReleased = false;
     }
 
     /**
@@ -77,16 +79,21 @@ public class ClimberMechanism implements IMechanism
     @Override
     public void update()
     {
-        if (driver.getDigital(Operation.ClimberEnableWinch))
+        if (this.driver.getDigital(Operation.ClimberEnableWinch))
         {
             this.winchEnabled = true;
         }
-        else if (driver.getDigital(Operation.ClimberDisableWinch))
+        else if (this.driver.getDigital(Operation.ClimberDisableWinch))
         {
             this.winchEnabled = false;
         }
 
-        if (driver.getDigital(Operation.ClimberRelease))
+        if (this.driver.getDigital(Operation.ClimberRelease))
+        {
+            this.hookReleased = true;
+        }
+
+        if (this.hookReleased)
         {
             this.releaser.set(1.0);
         }
@@ -104,9 +111,8 @@ public class ClimberMechanism implements IMechanism
             }
             else
             {
-                this.winch.set(0);
+                this.winch.set(0.0);
             }
-
         }
     }
 
