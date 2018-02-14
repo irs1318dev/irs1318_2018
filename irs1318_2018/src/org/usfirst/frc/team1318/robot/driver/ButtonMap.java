@@ -19,11 +19,13 @@ import org.usfirst.frc.team1318.robot.driver.common.descriptions.UserInputDevice
 import org.usfirst.frc.team1318.robot.driver.controltasks.ElevatorMovementTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.EnableWinchTimedTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.IntakeAndCorrectionTask;
+import org.usfirst.frc.team1318.robot.driver.controltasks.OuttakeTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.PIDBrakeTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.ReleaseServoTimedTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.SequentialTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.VisionAdvanceAndCenterTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.VisionCenteringTask;
+import org.usfirst.frc.team1318.robot.driver.controltasks.WaitForeverTask;
 
 @Singleton
 public class ButtonMap implements IButtonMap
@@ -158,14 +160,14 @@ public class ButtonMap implements IButtonMap
             put(
                 Operation.ElevatorIntake,
                 new DigitalOperationDescription(
-                    UserInputDevice.Driver,
-                    UserInputDeviceButton.JOYSTICK_STICK_BOTTOM_LEFT_BUTTON,
+                    UserInputDevice.None,
+                    UserInputDeviceButton.NONE,
                     ButtonType.Simple));
             put(
                 Operation.ElevatorIntakeCorrection,
                 new DigitalOperationDescription(
-                    UserInputDevice.None,
-                    UserInputDeviceButton.NONE,
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_STICK_TOP_RIGHT_BUTTON,
                     ButtonType.Simple));
             put(
                 Operation.ElevatorOuttake,
@@ -272,7 +274,7 @@ public class ButtonMap implements IButtonMap
                 MacroOperation.IntakeAndCorrection,
                 new MacroOperationDescription(
                     UserInputDevice.Driver,
-                    UserInputDeviceButton.NONE,
+                    UserInputDeviceButton.JOYSTICK_STICK_BOTTOM_LEFT_BUTTON,
                     ButtonType.Simple,
                     () -> new IntakeAndCorrectionTask(),
                     new Operation[]
@@ -281,7 +283,22 @@ public class ButtonMap implements IButtonMap
                         Operation.ElevatorIntakeCorrection,
                         Operation.ElevatorOuttake,
                     }));
-
+            put(
+                MacroOperation.ReIntake,
+                new MacroOperationDescription(
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_STICK_BOTTOM_RIGHT_BUTTON,
+                    ButtonType.Simple,
+                    () -> SequentialTask.Sequence(
+                        new OuttakeTask(0.2),
+                        new IntakeAndCorrectionTask(),
+                        new WaitForeverTask()),
+                    new Operation[]
+                    {
+                        Operation.ElevatorIntake,
+                        Operation.ElevatorIntakeCorrection,
+                        Operation.ElevatorOuttake,
+                    }));
             put(
                 MacroOperation.HookClimber,
                 new MacroOperationDescription(

@@ -154,10 +154,10 @@ public class TuningConstants
     public static final double ELEVATOR_LEFT_CARRIAGE_HOLD_POWER = 0.15;
     public static final double ELEVATOR_RIGHT_CARRIAGE_HOLD_POWER = 0.1;
 
-    public static final double ELEVATOR_LEFT_OUTER_INTAKE_POWER = 0.6;
-    public static final double ELEVATOR_RIGHT_OUTER_INTAKE_POWER = 0.9;
-    public static final double ELEVATOR_LEFT_CARRIAGE_INTAKE_POWER = 0.7;
-    public static final double ELEVATOR_RIGHT_CARRIAGE_INTAKE_POWER = 0.7;
+    public static final double ELEVATOR_LEFT_OUTER_INTAKE_POWER = 1.0;
+    public static final double ELEVATOR_RIGHT_OUTER_INTAKE_POWER = 0.8;
+    public static final double ELEVATOR_LEFT_CARRIAGE_INTAKE_POWER = 1.0;
+    public static final double ELEVATOR_RIGHT_CARRIAGE_INTAKE_POWER = 1.0;
 
     // Elevator outtake powers
     public static final double ELEVATOR_LEFT_OUTER_OUTTAKE_POWER = -0.3;
@@ -166,12 +166,14 @@ public class TuningConstants
     public static final double ELEVATOR_RIGHT_CARRIAGE_OUTTAKE_POWER = -0.5;
 
     // Elevator intake correction powers
-    public static final double ELEVATOR_RIGHT_OUTER_INTAKE_CORRECTION_POWER = .3;
-    public static final double ELEVATOR_LEFT_OUTER_INTAKE_CORRECTION_POWER = 0;
+    public static final double ELEVATOR_LEFT_OUTER_INTAKE_CORRECTION_POWER = 0.2;
+    public static final double ELEVATOR_RIGHT_OUTER_INTAKE_CORRECTION_POWER = 0.6;
+    public static final double ELEVATOR_LEFT_CARRIAGE_INTAKE_CORRECTION_POWER = 0.2;
+    public static final double ELEVATOR_RIGHT_CARRIAGE_INTAKE_CORRECTION_POWER = 0.6;
 
     // Elevator intake correction time thresholds (in seconds)
-    public static final double ELEVATOR_INTAKE_CORRECTION_TRIGGER_TIME_THRESHOLD = 1;
-    public static final double ELEVATOR_INTAKE_CORRECTION_OPERATION_TIME_THRESHOLD = 1;
+    public static final double ELEVATOR_INTAKE_CORRECTION_TRIGGER_TIME_THRESHOLD = 1.0;
+    public static final double ELEVATOR_INTAKE_CORRECTION_OPERATION_TIME_THRESHOLD = 1.0;
 
     public static final double ELEVATOR_CLIMBING_MOVEMENT_DISTANCE_THRESHOLD = 500.0;
     public static final double ELEVATOR_CLIMBING_MOVEMENT_TIME_THRESHOLD = 4.0;

@@ -5,8 +5,8 @@ import javax.inject.Singleton;
 import org.usfirst.frc.team1318.robot.ElectronicsConstants;
 import org.usfirst.frc.team1318.robot.common.IDashboardLogger;
 import org.usfirst.frc.team1318.robot.common.IMechanism;
-import org.usfirst.frc.team1318.robot.common.wpilib.IMotor;
 import org.usfirst.frc.team1318.robot.common.wpilib.IServo;
+import org.usfirst.frc.team1318.robot.common.wpilib.IVictorSPX;
 import org.usfirst.frc.team1318.robot.common.wpilib.IWpilibProvider;
 import org.usfirst.frc.team1318.robot.driver.Operation;
 import org.usfirst.frc.team1318.robot.driver.common.Driver;
@@ -27,8 +27,7 @@ public class ClimberMechanism implements IMechanism
     private final IDashboardLogger logger;
 
     private final IServo releaser;
-
-    private final IMotor winch;
+    private final IVictorSPX winch;
 
     private Driver driver;
 
@@ -45,8 +44,12 @@ public class ClimberMechanism implements IMechanism
         IWpilibProvider provider)
     {
         this.logger = logger;
-        this.winch = provider.getTalon(ElectronicsConstants.CLIMBER_WINCH_MOTOR_CAN_ID);
+
+        this.winch = provider.getVictorSPX(ElectronicsConstants.CLIMBER_WINCH_MOTOR_CAN_ID);
+        this.winch.setInvertOutput(true);
+
         this.releaser = provider.getServo(ElectronicsConstants.CLIMBER_RELEASER_SERVO_PWM_CHANNEL);
+
         this.winchEnabled = false;
     }
 

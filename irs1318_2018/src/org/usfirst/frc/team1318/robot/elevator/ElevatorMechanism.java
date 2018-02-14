@@ -491,8 +491,8 @@ public class ElevatorMechanism implements IMechanism
         {
             leftOuterIntakePower = TuningConstants.ELEVATOR_LEFT_OUTER_INTAKE_CORRECTION_POWER;
             rightOuterIntakePower = TuningConstants.ELEVATOR_RIGHT_OUTER_INTAKE_CORRECTION_POWER;
-            leftCarriageIntakePower = TuningConstants.ELEVATOR_LEFT_CARRIAGE_INTAKE_POWER;
-            rightCarriageIntakePower = TuningConstants.ELEVATOR_RIGHT_CARRIAGE_INTAKE_POWER;
+            leftCarriageIntakePower = TuningConstants.ELEVATOR_LEFT_CARRIAGE_INTAKE_CORRECTION_POWER;
+            rightCarriageIntakePower = TuningConstants.ELEVATOR_RIGHT_CARRIAGE_INTAKE_CORRECTION_POWER;
         }
         else if (shouldOuttake)
         {
@@ -544,9 +544,6 @@ public class ElevatorMechanism implements IMechanism
     {
         this.innerElevatorMotor.stop();
         this.outerElevatorMotor.stop();
-
-        this.innerElevatorMotor.reset();
-        this.outerElevatorMotor.reset();
 
         this.leftCarriageIntakeMotor.stop();
         this.rightCarriageIntakeMotor.stop();
