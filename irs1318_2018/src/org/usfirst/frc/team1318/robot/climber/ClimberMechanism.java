@@ -93,13 +93,16 @@ public class ClimberMechanism implements IMechanism
             this.hookReleased = true;
         }
 
+        this.logger.logBoolean(ClimberMechanism.LogName, "winchEnabled", this.winchEnabled);
+        this.logger.logBoolean(ClimberMechanism.LogName, "hookReleased", this.hookReleased);
+
         if (this.hookReleased)
         {
             this.releaser.set(1.0);
         }
         else
         {
-            this.releaser.set(0);
+            this.releaser.set(0.0);
         }
 
         if (this.winchEnabled)
