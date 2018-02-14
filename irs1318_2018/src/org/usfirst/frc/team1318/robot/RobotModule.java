@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.inject.Singleton;
 
+import org.usfirst.frc.team1318.robot.climber.ClimberMechanism;
 import org.usfirst.frc.team1318.robot.common.IDashboardLogger;
 import org.usfirst.frc.team1318.robot.common.IMechanism;
 import org.usfirst.frc.team1318.robot.common.MechanismManager;
@@ -46,7 +47,7 @@ public class RobotModule extends AbstractModule
         mechanismList.add(injector.getInstance(PowerManager.class));
         mechanismList.add(injector.getInstance(CompressorMechanism.class));
         mechanismList.add(injector.getInstance(ElevatorMechanism.class));
-        //mechanismList.add(injector.getInstance(ClimberMechanism.class));
+        mechanismList.add(injector.getInstance(ClimberMechanism.class));
         mechanismList.add(injector.getInstance(VisionManager.class));
         return new MechanismManager(mechanismList);
     }
