@@ -50,7 +50,7 @@ public class ElevatorMechanism implements IMechanism
     private final IAnalogInput innerThroughBeamSensor;
     //    private final IAnalogInput outerThroughBeamSensor;
 
-    private final IDoubleSolenoid intakeExtender;
+    private final IDoubleSolenoid intakeArmExtender;
 
     private final ISolenoid collectedIndicatorLight;
 
@@ -78,6 +78,7 @@ public class ElevatorMechanism implements IMechanism
     private double desiredInnerHeight;
     private double desiredOuterHeight;
     private boolean shouldHold;
+    private boolean isIntakeArmDown;
 
     private double lastUpdateTime;
 
@@ -155,7 +156,7 @@ public class ElevatorMechanism implements IMechanism
         this.rightOuterIntakeMotor.setInvertOutput(TuningConstants.ELEVATOR_RIGHT_OUTER_INTAKE_INVERT_OUTPUT);
         this.rightOuterIntakeMotor.setControlMode(TalonSRXControlMode.PercentOutput);
 
-        this.intakeExtender = provider.getDoubleSolenoid(
+        this.intakeArmExtender = provider.getDoubleSolenoid(
             ElectronicsConstants.PCM_A_MODULE,
             ElectronicsConstants.ELEVATOR_INTAKE_ARM_PCM_CHANNEL_A,
             ElectronicsConstants.ELEVATOR_INTAKE_ARM_PCM_CHANNEL_B);
@@ -188,6 +189,7 @@ public class ElevatorMechanism implements IMechanism
         this.desiredInnerHeight = 0.0;
         this.desiredOuterHeight = 0.0;
         this.shouldHold = false;
+        this.isIntakeArmDown = false;
     }
 
     /**
@@ -374,6 +376,8 @@ public class ElevatorMechanism implements IMechanism
         double currentTime = this.timer.get();
         double deltaTime = currentTime - this.lastUpdateTime;
 
+        double currentTotalHeight = this.innerElevatorHeight + this.outerElevatorHeight;
+
         //        if (this.innerElevatorReverseLimitSwitchStatus)
         //        {
         //            this.innerElevatorMotor.reset();
@@ -384,10 +388,12 @@ public class ElevatorMechanism implements IMechanism
         //            this.outerElevatorMotor.reset();
         //        }
 
+        boolean moveArmUp = this.driver.getDigital(Operation.ElevatorIntakeArmUp);
+        boolean moveArmDown = this.driver.getDigital(Operation.ElevatorIntakeArmDown);
         boolean shouldIntake = this.driver.getDigital(Operation.ElevatorIntake);
         boolean shouldIntakeCorrection = this.driver.getDigital(Operation.ElevatorIntakeCorrection);
         boolean shouldOuttake = this.driver.getDigital(Operation.ElevatorOuttake);
-        if (this.isInnerThroughBeamBlocked && !shouldOuttake)
+        if (this.isInnerThroughBeamBlocked && (shouldIntake || shouldIntakeCorrection))
         {
             this.shouldHold = true;
         }
@@ -396,80 +402,104 @@ public class ElevatorMechanism implements IMechanism
             this.shouldHold = false;
         }
 
+        double newDesiredInnerHeight = this.desiredInnerHeight;
+        double newDesiredOuterHeight = this.desiredOuterHeight;
         if (this.driver.getDigital(Operation.ElevatorBottomPosition) || shouldIntake || shouldIntakeCorrection)
         {
-            this.desiredInnerHeight = 0;
-            this.desiredOuterHeight = 0;
+            newDesiredInnerHeight = 0;
+            newDesiredOuterHeight = 0;
         }
         else if (this.driver.getDigital(Operation.ElevatorCarryPosition))
         {
-            this.desiredInnerHeight = TuningConstants.ELEVATOR_INNER_CARRY_POSITION;
-            this.desiredOuterHeight = TuningConstants.ELEVATOR_OUTER_CARRY_POSITION;
+            newDesiredInnerHeight = TuningConstants.ELEVATOR_INNER_CARRY_POSITION;
+            newDesiredOuterHeight = TuningConstants.ELEVATOR_OUTER_CARRY_POSITION;
         }
         else if (this.driver.getDigital(Operation.ElevatorSwitchPosition))
         {
-            this.desiredInnerHeight = TuningConstants.ELEVATOR_INNER_SWITCH_POSITION;
-            this.desiredOuterHeight = TuningConstants.ELEVATOR_OUTER_SWITCH_POSITION;
+            newDesiredInnerHeight = TuningConstants.ELEVATOR_INNER_SWITCH_POSITION;
+            newDesiredOuterHeight = TuningConstants.ELEVATOR_OUTER_SWITCH_POSITION;
         }
         else if (this.driver.getDigital(Operation.ElevatorLowScalePosition))
         {
-            this.desiredInnerHeight = TuningConstants.ELEVATOR_INNER_LOW_SCALE_POSITION;
-            this.desiredOuterHeight = TuningConstants.ELEVATOR_OUTER_LOW_SCALE_POSITION;
+            newDesiredInnerHeight = TuningConstants.ELEVATOR_INNER_LOW_SCALE_POSITION;
+            newDesiredOuterHeight = TuningConstants.ELEVATOR_OUTER_LOW_SCALE_POSITION;
         }
         else if (this.driver.getDigital(Operation.ElevatorHighScalePosition))
         {
-            this.desiredInnerHeight = TuningConstants.ELEVATOR_INNER_HIGH_SCALE_POSITION;
-            this.desiredOuterHeight = TuningConstants.ELEVATOR_OUTER_HIGH_SCALE_POSITION;
+            newDesiredInnerHeight = TuningConstants.ELEVATOR_INNER_HIGH_SCALE_POSITION;
+            newDesiredOuterHeight = TuningConstants.ELEVATOR_OUTER_HIGH_SCALE_POSITION;
         }
         else if (this.driver.getDigital(Operation.ElevatorClimbPosition))
         {
-            this.desiredInnerHeight = TuningConstants.ELEVATOR_INNER_CLIMB_POSITION;
-            this.desiredOuterHeight = TuningConstants.ELEVATOR_OUTER_CLIMB_POSITION;
+            newDesiredInnerHeight = TuningConstants.ELEVATOR_INNER_CLIMB_POSITION;
+            newDesiredOuterHeight = TuningConstants.ELEVATOR_OUTER_CLIMB_POSITION;
         }
         else if (this.driver.getDigital(Operation.ElevatorTopPosition))
         {
-            this.desiredInnerHeight = HardwareConstants.ELEVATOR_INNER_MAX_HEIGHT;
-            this.desiredOuterHeight = HardwareConstants.ELEVATOR_OUTER_MAX_HEIGHT;
+            newDesiredInnerHeight = HardwareConstants.ELEVATOR_INNER_MAX_HEIGHT;
+            newDesiredOuterHeight = HardwareConstants.ELEVATOR_OUTER_MAX_HEIGHT;
         }
         else if (this.desiredInnerHeight < TuningConstants.ELEVATOR_INNER_CARRY_POSITION
             || this.desiredOuterHeight < TuningConstants.ELEVATOR_OUTER_CARRY_POSITION)
         {
-            this.desiredInnerHeight = TuningConstants.ELEVATOR_INNER_CARRY_POSITION;
-            this.desiredOuterHeight = TuningConstants.ELEVATOR_OUTER_CARRY_POSITION;
+            newDesiredInnerHeight = TuningConstants.ELEVATOR_INNER_CARRY_POSITION;
+            newDesiredOuterHeight = TuningConstants.ELEVATOR_OUTER_CARRY_POSITION;
         }
 
         if (this.driver.getDigital(Operation.ElevatorMoveUp))
         {
             double deltaPosition = deltaTime * TuningConstants.ELEVATOR_MOVE_VELOCITY;
-            double remainingInnerHeight = HardwareConstants.ELEVATOR_INNER_MAX_HEIGHT - this.desiredInnerHeight;
+            double remainingInnerHeight = HardwareConstants.ELEVATOR_INNER_MAX_HEIGHT - newDesiredInnerHeight;
             if (deltaPosition > remainingInnerHeight)
             {
-                this.desiredInnerHeight = HardwareConstants.ELEVATOR_INNER_MAX_HEIGHT;
-                this.desiredOuterHeight += (deltaPosition - remainingInnerHeight);
+                newDesiredInnerHeight = HardwareConstants.ELEVATOR_INNER_MAX_HEIGHT;
+                newDesiredOuterHeight += (deltaPosition - remainingInnerHeight);
             }
             else
             {
-                this.desiredInnerHeight += deltaPosition;
+                newDesiredInnerHeight += deltaPosition;
             }
         }
         else if (this.driver.getDigital(Operation.ElevatorMoveDown))
         {
             double deltaPosition = deltaTime * TuningConstants.ELEVATOR_MOVE_VELOCITY;
-            double remainingOuterHeight = this.desiredOuterHeight;
+            double remainingOuterHeight = newDesiredOuterHeight;
             if (deltaPosition > remainingOuterHeight)
             {
-                this.desiredOuterHeight = 0.0;
-                this.desiredInnerHeight -= (deltaPosition - remainingOuterHeight);
+                newDesiredOuterHeight = 0.0;
+                newDesiredInnerHeight -= (deltaPosition - remainingOuterHeight);
             }
             else
             {
-                this.desiredOuterHeight -= deltaPosition;
+                newDesiredOuterHeight -= deltaPosition;
             }
         }
 
-        // Ensure that our desired inner and outer heights are within the permitted ranges:
-        this.desiredInnerHeight = Helpers.EnforceRange(this.desiredInnerHeight, 0.0, HardwareConstants.ELEVATOR_INNER_MAX_HEIGHT);
-        this.desiredOuterHeight = Helpers.EnforceRange(this.desiredOuterHeight, 0.0, HardwareConstants.ELEVATOR_OUTER_MAX_HEIGHT);
+        // only move to the selected new height if the intake arm is down (or we are putting it down)
+        //  or if the new position is not within the restricted range and we won't move through the restricted range
+        double newDesiredTotalHeight = newDesiredInnerHeight + newDesiredOuterHeight;
+        boolean isBelowRestrictedRange = currentTotalHeight <= TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MIN;
+        boolean isAboveRestrictedRange = currentTotalHeight >= TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MAX;
+        boolean isWithinRestrictedRange = Helpers.WithinRange(
+            currentTotalHeight,
+            TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MIN,
+            TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MAX);
+        boolean desiresBelowRestrictedRange = newDesiredTotalHeight <= TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MIN;
+        boolean desiresAboveRestrictedRange = newDesiredTotalHeight >= TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MAX;
+        boolean desiresWithinRestrictedRange = Helpers.WithinRange(
+            newDesiredTotalHeight,
+            TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MIN,
+            TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MAX);
+
+        if (((this.isIntakeArmDown && !moveArmUp) || moveArmDown)
+            || (!desiresWithinRestrictedRange
+                && ((isBelowRestrictedRange && desiresBelowRestrictedRange)
+                    || (isAboveRestrictedRange && desiresAboveRestrictedRange))))
+        {
+            // Ensure that our desired inner and outer heights are within the permitted ranges:
+            this.desiredInnerHeight = Helpers.EnforceRange(this.desiredInnerHeight, 0.0, HardwareConstants.ELEVATOR_INNER_MAX_HEIGHT);
+            this.desiredOuterHeight = Helpers.EnforceRange(newDesiredOuterHeight, 0.0, HardwareConstants.ELEVATOR_OUTER_MAX_HEIGHT);
+        }
 
         this.logger.logNumber(ElevatorMechanism.LogName, "desiredInnerHeight", this.desiredInnerHeight);
         this.logger.logNumber(ElevatorMechanism.LogName, "desiredOuterHeight", this.desiredOuterHeight);
@@ -520,8 +550,9 @@ public class ElevatorMechanism implements IMechanism
             rightCarriageIntakePower = TuningConstants.ELEVATOR_RIGHT_CARRIAGE_HOLD_POWER;
         }
 
-        // Use outer intakes only if carriage is below a certain height
-        if (this.innerElevatorHeight + this.outerElevatorHeight <= TuningConstants.ELEVATOR_MAXIMUM_OUTER_INTAKE_USE_HEIGHT)
+        // Use outer intakes only if carriage is below a certain height and the intake arm is down
+        if (this.isIntakeArmDown
+            && currentTotalHeight <= TuningConstants.ELEVATOR_MAXIMUM_OUTER_INTAKE_USE_HEIGHT)
         {
             this.leftOuterIntakeMotor.set(leftOuterIntakePower);
             this.rightOuterIntakeMotor.set(rightOuterIntakePower);
@@ -537,13 +568,16 @@ public class ElevatorMechanism implements IMechanism
 
         this.collectedIndicatorLight.set(this.isInnerThroughBeamBlocked);
 
-        if (this.driver.getDigital(Operation.ElevatorIntakeArmUp))
+        // block moving arm up/down if the carriage is within the restricted range
+        if (moveArmDown)
         {
-            this.intakeExtender.set(DoubleSolenoidValue.kReverse);
+            this.isIntakeArmDown = true;
+            this.intakeArmExtender.set(DoubleSolenoidValue.kForward);
         }
-        else if (this.driver.getDigital(Operation.ElevatorIntakeArmDown))
+        else if (moveArmUp && !isWithinRestrictedRange && !desiresWithinRestrictedRange)
         {
-            this.intakeExtender.set(DoubleSolenoidValue.kForward);
+            this.isIntakeArmDown = false;
+            this.intakeArmExtender.set(DoubleSolenoidValue.kReverse);
         }
 
         this.lastUpdateTime = currentTime;
@@ -563,7 +597,7 @@ public class ElevatorMechanism implements IMechanism
         this.leftOuterIntakeMotor.stop();
         this.rightOuterIntakeMotor.stop();
 
-        this.intakeExtender.set(DoubleSolenoidValue.kOff);
+        this.intakeArmExtender.set(DoubleSolenoidValue.kOff);
         this.collectedIndicatorLight.set(false);
 
         this.innerElevatorVelocity = 0.0;

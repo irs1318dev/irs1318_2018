@@ -16,9 +16,13 @@ public class Helpers
         return value;
     }
 
+    public static boolean WithinRange(double value, double minValue, double maxValue)
+    {
+        return value >= minValue && value <= maxValue;
+    }
+
     public static boolean WithinDelta(double actualValue, double expectedValue, double acceptableDelta)
     {
-        double actualDelta = expectedValue - actualValue;
-        return Math.abs(actualDelta) <= acceptableDelta;
+        return Helpers.WithinRange(actualValue, expectedValue - acceptableDelta, expectedValue + acceptableDelta);
     }
 }
