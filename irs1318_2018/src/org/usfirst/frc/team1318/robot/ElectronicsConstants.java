@@ -58,5 +58,6 @@ public class ElectronicsConstants
     //================================================== Climber ==============================================================
 
     public static final int CLIMBER_WINCH_MOTOR_CAN_ID = 15; // Victor SPX
+    public static final int CLIMBER_WINCH_FOLLOWER_CAN_ID = 16; // Victor SPX
     public static final int CLIMBER_RELEASER_SERVO_PWM_CHANNEL = 0;
 }
