@@ -160,14 +160,14 @@ public class ButtonMap implements IButtonMap
             put(
                 Operation.ElevatorIntake,
                 new DigitalOperationDescription(
-                    UserInputDevice.None,
-                    UserInputDeviceButton.NONE,
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_STICK_BOTTOM_LEFT_BUTTON,
                     ButtonType.Simple));
             put(
                 Operation.ElevatorIntakeCorrection,
                 new DigitalOperationDescription(
-                    UserInputDevice.Driver,
-                    UserInputDeviceButton.JOYSTICK_STICK_TOP_RIGHT_BUTTON,
+                    UserInputDevice.None,
+                    UserInputDeviceButton.NONE,
                     ButtonType.Simple));
             put(
                 Operation.ElevatorOuttake,
@@ -192,13 +192,13 @@ public class ButtonMap implements IButtonMap
             put(
                 Operation.ClimberRelease,
                 new DigitalOperationDescription(
-                    UserInputDevice.Driver,
+                    UserInputDevice.None,
                     270, // POV left
                     ButtonType.Click));
             put(
                 Operation.ClimberEnableWinch,
                 new DigitalOperationDescription(
-                    UserInputDevice.Driver,
+                    UserInputDevice.None,
                     270, // POV left
                     ButtonType.Click));
             put(
@@ -274,7 +274,7 @@ public class ButtonMap implements IButtonMap
                 MacroOperation.IntakeAndCorrection,
                 new MacroOperationDescription(
                     UserInputDevice.Driver,
-                    UserInputDeviceButton.JOYSTICK_STICK_BOTTOM_LEFT_BUTTON,
+                    UserInputDeviceButton.NONE, //JOYSTICK_STICK_BOTTOM_LEFT_BUTTON,
                     ButtonType.Simple,
                     () -> new IntakeAndCorrectionTask(),
                     new Operation[]
@@ -290,7 +290,7 @@ public class ButtonMap implements IButtonMap
                     UserInputDeviceButton.JOYSTICK_STICK_BOTTOM_RIGHT_BUTTON,
                     ButtonType.Simple,
                     () -> SequentialTask.Sequence(
-                        new OuttakeTask(0.2),
+                        new OuttakeTask(0.1),
                         new IntakeAndCorrectionTask(),
                         new WaitForeverTask()),
                     new Operation[]
@@ -303,7 +303,7 @@ public class ButtonMap implements IButtonMap
                 MacroOperation.HookClimber,
                 new MacroOperationDescription(
                     UserInputDevice.Driver,
-                    UserInputDeviceButton.NONE,
+                    UserInputDeviceButton.JOYSTICK_STICK_TOP_RIGHT_BUTTON,
                     ButtonType.Click,
                     () -> SequentialTask.Sequence(
                         new ElevatorMovementTask(5.0, Operation.ElevatorClimbPosition),

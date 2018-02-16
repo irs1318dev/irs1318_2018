@@ -497,7 +497,7 @@ public class ElevatorMechanism implements IMechanism
                     || (isAboveRestrictedRange && desiresAboveRestrictedRange))))
         {
             // Ensure that our desired inner and outer heights are within the permitted ranges:
-            this.desiredInnerHeight = Helpers.EnforceRange(this.desiredInnerHeight, 0.0, HardwareConstants.ELEVATOR_INNER_MAX_HEIGHT);
+            this.desiredInnerHeight = Helpers.EnforceRange(newDesiredInnerHeight, 0.0, HardwareConstants.ELEVATOR_INNER_MAX_HEIGHT);
             this.desiredOuterHeight = Helpers.EnforceRange(newDesiredOuterHeight, 0.0, HardwareConstants.ELEVATOR_OUTER_MAX_HEIGHT);
         }
 
