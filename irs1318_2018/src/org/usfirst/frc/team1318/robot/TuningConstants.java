@@ -148,8 +148,11 @@ public class TuningConstants
     public static final boolean ELEVATOR_USE_CARRY_POSITION_SHELF = false;
     public static final double ELEVATOR_CARRY_POSITION_SHELF_DELTA = 0.75;
 
+    // Height below which we won't run the outer intake wheels
     public static final double ELEVATOR_MAXIMUM_OUTER_INTAKE_USE_HEIGHT = 12.0;
-    public static final double ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MIN = 2.0; // range where we disallow raising/lowering intake arm
+
+    // Range of carriage locations where we disallow raising/lowering intake arm
+    public static final double ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MIN = 2.0;
     public static final double ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MAX = 30.0;
 
     // Elevator velocities
