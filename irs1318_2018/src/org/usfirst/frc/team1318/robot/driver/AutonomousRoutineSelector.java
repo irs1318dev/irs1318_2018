@@ -293,7 +293,7 @@ public class AutonomousRoutineSelector
                 new DriveDistanceTimedTask(229.6, 7.5),
                 new TurnTimedTask(startingLeft ? -90.0 : 90.0, 2.0),
                 new DriveDistanceTimedTask(42.6, 1.5),
-                new TurnTimedTask(startingLeft ? -135.0 : 135.0, 3.0),
+                new TurnTimedTask(startingLeft ? -45.0 : 45.0, 3.0),
                 AutonomousRoutineSelector.DepositCube(true)));
     }
 
