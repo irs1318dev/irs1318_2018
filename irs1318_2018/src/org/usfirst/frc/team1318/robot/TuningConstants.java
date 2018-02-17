@@ -139,8 +139,8 @@ public class TuningConstants
     public static final boolean ELEVATOR_OUTER_INVERT_OUTPUT = false;
     public static final boolean ELEVATOR_OUTER_INVERT_SENSOR = false;
 
-    public static final boolean ELEVATOR_LEFT_CARRIAGE_INTAKE_INVERT_OUTPUT = true;
-    public static final boolean ELEVATOR_RIGHT_CARRIAGE_INTAKE_INVERT_OUTPUT = false;
+    public static final boolean ELEVATOR_TOP_CARRIAGE_INTAKE_INVERT_OUTPUT = true;
+    public static final boolean ELEVATOR_BOTTOM_CARRIAGE_INTAKE_INVERT_OUTPUT = false;
     public static final boolean ELEVATOR_LEFT_OUTER_INTAKE_INVERT_OUTPUT = false;
     public static final boolean ELEVATOR_RIGHT_OUTER_INTAKE_INVERT_OUTPUT = true;
 
@@ -172,25 +172,23 @@ public class TuningConstants
     public static final double ELEVATOR_MOVE_VELOCITY = 4.0; // inches per second
 
     // Elevator intake powers
-    public static final double ELEVATOR_LEFT_CARRIAGE_HOLD_POWER = 0.15;
-    public static final double ELEVATOR_RIGHT_CARRIAGE_HOLD_POWER = 0.1;
+    public static final double ELEVATOR_TOP_CARRIAGE_HOLD_POWER = 0.15;
+    public static final double ELEVATOR_BOTTOM_CARRIAGE_HOLD_POWER = 0.1;
 
     public static final double ELEVATOR_LEFT_OUTER_INTAKE_POWER = 1.0;
     public static final double ELEVATOR_RIGHT_OUTER_INTAKE_POWER = 0.8;
-    public static final double ELEVATOR_LEFT_CARRIAGE_INTAKE_POWER = 1.0;
-    public static final double ELEVATOR_RIGHT_CARRIAGE_INTAKE_POWER = 1.0;
+    public static final double ELEVATOR_TOP_CARRIAGE_INTAKE_POWER = 1.0;
+    public static final double ELEVATOR_BOTTOM_CARRIAGE_INTAKE_POWER = 1.0;
 
     // Elevator outtake powers
     public static final double ELEVATOR_LEFT_OUTER_OUTTAKE_POWER = -0.3;
     public static final double ELEVATOR_RIGHT_OUTER_OUTTAKE_POWER = -0.3;
-    public static final double ELEVATOR_LEFT_CARRIAGE_OUTTAKE_POWER = -0.7;
-    public static final double ELEVATOR_RIGHT_CARRIAGE_OUTTAKE_POWER = -0.7;
+    public static final double ELEVATOR_TOP_CARRIAGE_OUTTAKE_POWER = -0.7;
+    public static final double ELEVATOR_BOTTOM_CARRIAGE_OUTTAKE_POWER = -0.7;
 
     // Elevator intake correction powers
     public static final double ELEVATOR_LEFT_OUTER_INTAKE_CORRECTION_POWER = 0.2;
     public static final double ELEVATOR_RIGHT_OUTER_INTAKE_CORRECTION_POWER = 0.6;
-    public static final double ELEVATOR_LEFT_CARRIAGE_INTAKE_CORRECTION_POWER = 0.2;
-    public static final double ELEVATOR_RIGHT_CARRIAGE_INTAKE_CORRECTION_POWER = 0.6;
 
     // Elevator intake correction time thresholds (in seconds)
     public static final double ELEVATOR_INTAKE_CORRECTION_TRIGGER_TIME_THRESHOLD = 1.0;

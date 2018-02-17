@@ -30,8 +30,8 @@ public class ElevatorMechanismTest
         TestWpilibProvider testProvider = new TestWpilibProvider();
         ITalonSRX innerElevatorMotor = testProvider.getTalonSRX(ElectronicsConstants.ELEVATOR_INNER_MOTOR_CAN_ID);
         ITalonSRX outerElevatorMotor = testProvider.getTalonSRX(ElectronicsConstants.ELEVATOR_OUTER_MOTOR_CAN_ID);
-        ITalonSRX leftCarriageIntakeMotor = testProvider.getTalonSRX(ElectronicsConstants.ELEVATOR_LEFT_CARRIAGE_INTAKE_MOTOR_CAN_ID);
-        ITalonSRX rightCarriageIntakeMotor = testProvider.getTalonSRX(ElectronicsConstants.ELEVATOR_RIGHT_CARRIAGE_INTAKE_MOTOR_CAN_ID);
+        ITalonSRX leftCarriageIntakeMotor = testProvider.getTalonSRX(ElectronicsConstants.ELEVATOR_TOP_CARRIAGE_INTAKE_MOTOR_CAN_ID);
+        ITalonSRX rightCarriageIntakeMotor = testProvider.getTalonSRX(ElectronicsConstants.ELEVATOR_BOTTOM_CARRIAGE_INTAKE_MOTOR_CAN_ID);
         ITalonSRX leftOuterIntakeMotor = testProvider.getTalonSRX(ElectronicsConstants.ELEVATOR_LEFT_OUTER_INTAKE_MOTOR_CAN_ID);
         ITalonSRX rightOuterIntakeMotor = testProvider.getTalonSRX(ElectronicsConstants.ELEVATOR_RIGHT_OUTER_INTAKE_MOTOR_CAN_ID);
         IAnalogInput innerThroughBeamSensor = testProvider.getAnalogInput(ElectronicsConstants.ELEVATOR_INNER_THROUGH_BEAM_SENSOR_ANALOG_CHANNEL);

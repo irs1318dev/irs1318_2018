@@ -42,8 +42,8 @@ public class ElevatorMechanism implements IMechanism
 
     private final ITalonSRX innerElevatorMotor;
     private final ITalonSRX outerElevatorMotor;
-    private final ITalonSRX leftCarriageIntakeMotor;
-    private final ITalonSRX rightCarriageIntakeMotor;
+    private final ITalonSRX topCarriageIntakeMotor;
+    private final ITalonSRX bottomCarriageIntakeMotor;
     private final ITalonSRX leftOuterIntakeMotor;
     private final ITalonSRX rightOuterIntakeMotor;
 
@@ -139,14 +139,14 @@ public class ElevatorMechanism implements IMechanism
         this.outerElevatorMotor.setSelectedSlot(ElevatorMechanism.pidSlotId);
         this.outerElevatorMotor.setControlMode(TalonSRXControlMode.Position);
 
-        this.leftCarriageIntakeMotor = provider.getTalonSRX(ElectronicsConstants.ELEVATOR_LEFT_CARRIAGE_INTAKE_MOTOR_CAN_ID);
-        this.leftCarriageIntakeMotor.setNeutralMode(TalonSRXNeutralMode.Brake);
-        this.leftCarriageIntakeMotor.setInvertOutput(TuningConstants.ELEVATOR_LEFT_CARRIAGE_INTAKE_INVERT_OUTPUT);
-        this.leftCarriageIntakeMotor.setControlMode(TalonSRXControlMode.PercentOutput);
-        this.rightCarriageIntakeMotor = provider.getTalonSRX(ElectronicsConstants.ELEVATOR_RIGHT_CARRIAGE_INTAKE_MOTOR_CAN_ID);
-        this.rightCarriageIntakeMotor.setNeutralMode(TalonSRXNeutralMode.Brake);
-        this.rightCarriageIntakeMotor.setInvertOutput(TuningConstants.ELEVATOR_RIGHT_CARRIAGE_INTAKE_INVERT_OUTPUT);
-        this.rightCarriageIntakeMotor.setControlMode(TalonSRXControlMode.PercentOutput);
+        this.topCarriageIntakeMotor = provider.getTalonSRX(ElectronicsConstants.ELEVATOR_TOP_CARRIAGE_INTAKE_MOTOR_CAN_ID);
+        this.topCarriageIntakeMotor.setNeutralMode(TalonSRXNeutralMode.Brake);
+        this.topCarriageIntakeMotor.setInvertOutput(TuningConstants.ELEVATOR_TOP_CARRIAGE_INTAKE_INVERT_OUTPUT);
+        this.topCarriageIntakeMotor.setControlMode(TalonSRXControlMode.PercentOutput);
+        this.bottomCarriageIntakeMotor = provider.getTalonSRX(ElectronicsConstants.ELEVATOR_BOTTOM_CARRIAGE_INTAKE_MOTOR_CAN_ID);
+        this.bottomCarriageIntakeMotor.setNeutralMode(TalonSRXNeutralMode.Brake);
+        this.bottomCarriageIntakeMotor.setInvertOutput(TuningConstants.ELEVATOR_BOTTOM_CARRIAGE_INTAKE_INVERT_OUTPUT);
+        this.bottomCarriageIntakeMotor.setControlMode(TalonSRXControlMode.PercentOutput);
         this.leftOuterIntakeMotor = provider.getTalonSRX(ElectronicsConstants.ELEVATOR_LEFT_OUTER_INTAKE_MOTOR_CAN_ID);
         this.leftOuterIntakeMotor.setNeutralMode(TalonSRXNeutralMode.Brake);
         this.leftOuterIntakeMotor.setInvertOutput(TuningConstants.ELEVATOR_LEFT_OUTER_INTAKE_INVERT_OUTPUT);
@@ -527,27 +527,27 @@ public class ElevatorMechanism implements IMechanism
         {
             leftOuterIntakePower = TuningConstants.ELEVATOR_LEFT_OUTER_INTAKE_POWER;
             rightOuterIntakePower = TuningConstants.ELEVATOR_RIGHT_OUTER_INTAKE_POWER;
-            leftCarriageIntakePower = TuningConstants.ELEVATOR_LEFT_CARRIAGE_INTAKE_POWER;
-            rightCarriageIntakePower = TuningConstants.ELEVATOR_RIGHT_CARRIAGE_INTAKE_POWER;
+            leftCarriageIntakePower = TuningConstants.ELEVATOR_TOP_CARRIAGE_INTAKE_POWER;
+            rightCarriageIntakePower = TuningConstants.ELEVATOR_BOTTOM_CARRIAGE_INTAKE_POWER;
         }
         else if (shouldIntakeCorrection)
         {
             leftOuterIntakePower = TuningConstants.ELEVATOR_LEFT_OUTER_INTAKE_CORRECTION_POWER;
             rightOuterIntakePower = TuningConstants.ELEVATOR_RIGHT_OUTER_INTAKE_CORRECTION_POWER;
-            leftCarriageIntakePower = TuningConstants.ELEVATOR_LEFT_CARRIAGE_INTAKE_CORRECTION_POWER;
-            rightCarriageIntakePower = TuningConstants.ELEVATOR_RIGHT_CARRIAGE_INTAKE_CORRECTION_POWER;
+            leftCarriageIntakePower = TuningConstants.ELEVATOR_TOP_CARRIAGE_INTAKE_POWER;
+            rightCarriageIntakePower = TuningConstants.ELEVATOR_BOTTOM_CARRIAGE_INTAKE_POWER;
         }
         else if (shouldOuttake)
         {
             leftOuterIntakePower = TuningConstants.ELEVATOR_LEFT_OUTER_OUTTAKE_POWER;
             rightOuterIntakePower = TuningConstants.ELEVATOR_RIGHT_OUTER_OUTTAKE_POWER;
-            leftCarriageIntakePower = TuningConstants.ELEVATOR_LEFT_CARRIAGE_OUTTAKE_POWER;
-            rightCarriageIntakePower = TuningConstants.ELEVATOR_RIGHT_CARRIAGE_OUTTAKE_POWER;
+            leftCarriageIntakePower = TuningConstants.ELEVATOR_TOP_CARRIAGE_OUTTAKE_POWER;
+            rightCarriageIntakePower = TuningConstants.ELEVATOR_BOTTOM_CARRIAGE_OUTTAKE_POWER;
         }
         else if (this.shouldHold)
         {
-            leftCarriageIntakePower = TuningConstants.ELEVATOR_LEFT_CARRIAGE_HOLD_POWER;
-            rightCarriageIntakePower = TuningConstants.ELEVATOR_RIGHT_CARRIAGE_HOLD_POWER;
+            leftCarriageIntakePower = TuningConstants.ELEVATOR_TOP_CARRIAGE_HOLD_POWER;
+            rightCarriageIntakePower = TuningConstants.ELEVATOR_BOTTOM_CARRIAGE_HOLD_POWER;
         }
 
         // Use outer intakes only if carriage is below a certain height and the intake arm is down
@@ -563,8 +563,8 @@ public class ElevatorMechanism implements IMechanism
             this.rightOuterIntakeMotor.set(0);
         }
 
-        this.leftCarriageIntakeMotor.set(leftCarriageIntakePower);
-        this.rightCarriageIntakeMotor.set(rightCarriageIntakePower);
+        this.topCarriageIntakeMotor.set(leftCarriageIntakePower);
+        this.bottomCarriageIntakeMotor.set(rightCarriageIntakePower);
 
         this.collectedIndicatorLight.set(this.isInnerThroughBeamBlocked);
 
@@ -592,8 +592,8 @@ public class ElevatorMechanism implements IMechanism
         this.innerElevatorMotor.stop();
         this.outerElevatorMotor.stop();
 
-        this.leftCarriageIntakeMotor.stop();
-        this.rightCarriageIntakeMotor.stop();
+        this.topCarriageIntakeMotor.stop();
+        this.bottomCarriageIntakeMotor.stop();
         this.leftOuterIntakeMotor.stop();
         this.rightOuterIntakeMotor.stop();
 

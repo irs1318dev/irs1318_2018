@@ -45,8 +45,8 @@ public class ElectronicsConstants
 
     public static final int ELEVATOR_INNER_MOTOR_CAN_ID = 5;
     public static final int ELEVATOR_OUTER_MOTOR_CAN_ID = 6;
-    public static final int ELEVATOR_LEFT_CARRIAGE_INTAKE_MOTOR_CAN_ID = 7;
-    public static final int ELEVATOR_RIGHT_CARRIAGE_INTAKE_MOTOR_CAN_ID = 8;
+    public static final int ELEVATOR_TOP_CARRIAGE_INTAKE_MOTOR_CAN_ID = 7;
+    public static final int ELEVATOR_BOTTOM_CARRIAGE_INTAKE_MOTOR_CAN_ID = 8;
     public static final int ELEVATOR_LEFT_OUTER_INTAKE_MOTOR_CAN_ID = 9;
     public static final int ELEVATOR_RIGHT_OUTER_INTAKE_MOTOR_CAN_ID = 10;
     public static final int ELEVATOR_INTAKE_ARM_PCM_CHANNEL_A = 6; // Module A
