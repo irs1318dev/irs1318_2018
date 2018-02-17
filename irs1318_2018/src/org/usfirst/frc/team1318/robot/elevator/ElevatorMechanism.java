@@ -504,11 +504,9 @@ public class ElevatorMechanism implements IMechanism
         this.logger.logNumber(ElevatorMechanism.LogName, "desiredInnerHeight", this.desiredInnerHeight);
         this.logger.logNumber(ElevatorMechanism.LogName, "desiredOuterHeight", this.desiredOuterHeight);
 
-        if (TuningConstants.ELEVATOR_USE_CARRY_POSITION_SHELF
-            && this.desiredInnerHeight == TuningConstants.ELEVATOR_INNER_CARRY_POSITION
-            && this.desiredOuterHeight == TuningConstants.ELEVATOR_OUTER_CARRY_POSITION
-            && Helpers.WithinDelta(this.innerElevatorHeight, this.desiredInnerHeight, TuningConstants.ELEVATOR_CARRY_POSITION_SHELF_DELTA)
-            && Helpers.WithinDelta(this.outerElevatorHeight, this.desiredOuterHeight, TuningConstants.ELEVATOR_CARRY_POSITION_SHELF_DELTA))
+        if (TuningConstants.ELEVATOR_USE_CLUTCH
+            && Helpers.WithinDelta(this.innerElevatorHeight, this.desiredInnerHeight, TuningConstants.ELEVATOR_CLUTCH_POSITION_DELTA)
+            && Helpers.WithinDelta(this.outerElevatorHeight, this.desiredOuterHeight, TuningConstants.ELEVATOR_CLUTCH_POSITION_DELTA))
         {
             this.innerElevatorMotor.stop();
             this.outerElevatorMotor.stop();
