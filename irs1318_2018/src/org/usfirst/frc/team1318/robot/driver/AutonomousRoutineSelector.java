@@ -299,18 +299,18 @@ public class AutonomousRoutineSelector
 
     private static IControlTask PlaceCubeOnSwitchFromMiddle(boolean switchIsLeft)
     {
-        return new WaitTask(0);
-    }
-
-    private static IControlTask PlaceCubeOnScaleFromMiddle(boolean scaleIsLeft)
-    {
         return ConcurrentTask.AllTasks(
             AutonomousRoutineSelector.InitialSetUp(),
             SequentialTask.Sequence(
                 new DriveDistanceTimedTask(12.0, 1.5),
-                new TurnTimedTask(scaleIsLeft ? -25.0 : 25.0, 1.25),
+                new TurnTimedTask(switchIsLeft ? -25.0 : 25.0, 1.25),
                 new DriveDistanceTimedTask(122.5, 3.0),
                 AutonomousRoutineSelector.DepositCube(false)));
+    }
+
+    private static IControlTask PlaceCubeOnScaleFromMiddle(boolean scaleIsLeft)
+    {
+        return new WaitTask(0);
     }
 
     private static IControlTask CrossBaseLine()
