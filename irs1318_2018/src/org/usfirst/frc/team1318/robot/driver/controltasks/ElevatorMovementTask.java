@@ -48,9 +48,13 @@ public class ElevatorMovementTask extends TimedTask implements IControlTask
     @Override
     public void begin()
     {
+        super.begin();
+
+        this.elevator = this.getInjector().getInstance(ElevatorMechanism.class);
+
         for (Operation op : ElevatorMovementTask.AllElevatorPositionOperations)
         {
-            this.setDigitalOperationState(op, op != this.desiredElevatorPositionOperation);
+            this.setDigitalOperationState(op, op == this.desiredElevatorPositionOperation);
         }
     }
 
@@ -68,6 +72,8 @@ public class ElevatorMovementTask extends TimedTask implements IControlTask
     @Override
     public void stop()
     {
+        super.stop();
+
         for (Operation op : ElevatorMovementTask.AllElevatorPositionOperations)
         {
             this.setDigitalOperationState(op, false);
@@ -80,6 +86,8 @@ public class ElevatorMovementTask extends TimedTask implements IControlTask
     @Override
     public void end()
     {
+        super.end();
+
         for (Operation op : ElevatorMovementTask.AllElevatorPositionOperations)
         {
             this.setDigitalOperationState(op, false);

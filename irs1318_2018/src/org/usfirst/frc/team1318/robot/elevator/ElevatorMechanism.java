@@ -247,8 +247,8 @@ public class ElevatorMechanism implements IMechanism
     }
 
     /**
-     * get the total height of both elevators 
-     * @return a height in inches
+     * get the total error of both elevators 
+     * @return a height in encoder ticks
      */
     public double getTotalError()
     {
