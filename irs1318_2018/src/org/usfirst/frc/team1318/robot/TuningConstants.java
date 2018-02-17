@@ -149,14 +149,14 @@ public class TuningConstants
     // Elevator positions (in inches)
     public static final double ELEVATOR_INNER_CARRY_POSITION = 0.0;
     public static final double ELEVATOR_OUTER_CARRY_POSITION = 3.5;
-    public static final double ELEVATOR_INNER_SWITCH_POSITION = 12.0;
+    public static final double ELEVATOR_INNER_SWITCH_POSITION = 12.0; // Switch Fence Height: 19in. 
     public static final double ELEVATOR_OUTER_SWITCH_POSITION = 24.0;
-    public static final double ELEVATOR_INNER_LOW_SCALE_POSITION = 24.0;
+    public static final double ELEVATOR_INNER_LOW_SCALE_POSITION = 24.0; // Low Scale Height: 52in.
     public static final double ELEVATOR_OUTER_LOW_SCALE_POSITION = 24.0;
-    public static final double ELEVATOR_INNER_HIGH_SCALE_POSITION = 32.0;
-    public static final double ELEVATOR_OUTER_HIGH_SCALE_POSITION = 32.0;
-    public static final double ELEVATOR_INNER_CLIMB_POSITION = 34.0;
-    public static final double ELEVATOR_OUTER_CLIMB_POSITION = 20.0;
+    public static final double ELEVATOR_INNER_HIGH_SCALE_POSITION = 32.0; // High Scale Height: 76in. 
+    public static final double ELEVATOR_OUTER_HIGH_SCALE_POSITION = HardwareConstants.ELEVATOR_OUTER_MAX_HEIGHT;
+    public static final double ELEVATOR_INNER_CLIMB_POSITION = 34.0; // Bar Height: 84in. 
+    public static final double ELEVATOR_OUTER_CLIMB_POSITION = HardwareConstants.ELEVATOR_OUTER_MAX_HEIGHT;
 
     public static final boolean ELEVATOR_USE_CLUTCH = false;
     public static final double ELEVATOR_CLUTCH_POSITION_DELTA = 0.75;
