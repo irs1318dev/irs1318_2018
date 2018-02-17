@@ -521,33 +521,33 @@ public class ElevatorMechanism implements IMechanism
 
         double leftOuterIntakePower = 0.0;
         double rightOuterIntakePower = 0.0;
-        double leftCarriageIntakePower = 0.0;
-        double rightCarriageIntakePower = 0.0;
+        double topCarriageIntakePower = 0.0;
+        double bottomCarriageIntakePower = 0.0;
         if (shouldIntake)
         {
             leftOuterIntakePower = TuningConstants.ELEVATOR_LEFT_OUTER_INTAKE_POWER;
             rightOuterIntakePower = TuningConstants.ELEVATOR_RIGHT_OUTER_INTAKE_POWER;
-            leftCarriageIntakePower = TuningConstants.ELEVATOR_TOP_CARRIAGE_INTAKE_POWER;
-            rightCarriageIntakePower = TuningConstants.ELEVATOR_BOTTOM_CARRIAGE_INTAKE_POWER;
+            topCarriageIntakePower = TuningConstants.ELEVATOR_TOP_CARRIAGE_INTAKE_POWER;
+            bottomCarriageIntakePower = TuningConstants.ELEVATOR_BOTTOM_CARRIAGE_INTAKE_POWER;
         }
         else if (shouldIntakeCorrection)
         {
             leftOuterIntakePower = TuningConstants.ELEVATOR_LEFT_OUTER_INTAKE_CORRECTION_POWER;
             rightOuterIntakePower = TuningConstants.ELEVATOR_RIGHT_OUTER_INTAKE_CORRECTION_POWER;
-            leftCarriageIntakePower = TuningConstants.ELEVATOR_TOP_CARRIAGE_INTAKE_POWER;
-            rightCarriageIntakePower = TuningConstants.ELEVATOR_BOTTOM_CARRIAGE_INTAKE_POWER;
+            topCarriageIntakePower = TuningConstants.ELEVATOR_TOP_CARRIAGE_INTAKE_POWER;
+            bottomCarriageIntakePower = TuningConstants.ELEVATOR_BOTTOM_CARRIAGE_INTAKE_POWER;
         }
         else if (shouldOuttake)
         {
             leftOuterIntakePower = TuningConstants.ELEVATOR_LEFT_OUTER_OUTTAKE_POWER;
             rightOuterIntakePower = TuningConstants.ELEVATOR_RIGHT_OUTER_OUTTAKE_POWER;
-            leftCarriageIntakePower = TuningConstants.ELEVATOR_TOP_CARRIAGE_OUTTAKE_POWER;
-            rightCarriageIntakePower = TuningConstants.ELEVATOR_BOTTOM_CARRIAGE_OUTTAKE_POWER;
+            topCarriageIntakePower = TuningConstants.ELEVATOR_TOP_CARRIAGE_OUTTAKE_POWER;
+            bottomCarriageIntakePower = TuningConstants.ELEVATOR_BOTTOM_CARRIAGE_OUTTAKE_POWER;
         }
         else if (this.shouldHold)
         {
-            leftCarriageIntakePower = TuningConstants.ELEVATOR_TOP_CARRIAGE_HOLD_POWER;
-            rightCarriageIntakePower = TuningConstants.ELEVATOR_BOTTOM_CARRIAGE_HOLD_POWER;
+            topCarriageIntakePower = TuningConstants.ELEVATOR_TOP_CARRIAGE_HOLD_POWER;
+            bottomCarriageIntakePower = TuningConstants.ELEVATOR_BOTTOM_CARRIAGE_HOLD_POWER;
         }
 
         // Use outer intakes only if carriage is below a certain height and the intake arm is down
@@ -563,8 +563,8 @@ public class ElevatorMechanism implements IMechanism
             this.rightOuterIntakeMotor.set(0);
         }
 
-        this.topCarriageIntakeMotor.set(leftCarriageIntakePower);
-        this.bottomCarriageIntakeMotor.set(rightCarriageIntakePower);
+        this.topCarriageIntakeMotor.set(topCarriageIntakePower);
+        this.bottomCarriageIntakeMotor.set(bottomCarriageIntakePower);
 
         this.collectedIndicatorLight.set(this.isInnerThroughBeamBlocked);
 
