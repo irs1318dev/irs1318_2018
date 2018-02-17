@@ -21,10 +21,11 @@ public class ElevatorMovementTask extends TimedTask implements IControlTask
         Operation.ElevatorTopPosition,
     };
 
-    private ElevatorMechanism elevator;
-
     private final boolean completeWithTime; // Either wait for movement completion or operate for a certain period of time
     private final Operation desiredElevatorPositionOperation;
+
+    private ElevatorMechanism elevator;
+    private boolean firstLoop;
 
     public ElevatorMovementTask(Operation desiredElevatorPositionOperation)
     {
@@ -51,6 +52,7 @@ public class ElevatorMovementTask extends TimedTask implements IControlTask
         super.begin();
 
         this.elevator = this.getInjector().getInstance(ElevatorMechanism.class);
+        this.firstLoop = true;
 
         for (Operation op : ElevatorMovementTask.AllElevatorPositionOperations)
         {
@@ -64,6 +66,7 @@ public class ElevatorMovementTask extends TimedTask implements IControlTask
     @Override
     public void update()
     {
+        this.firstLoop = false;
     }
 
     /**
@@ -117,7 +120,7 @@ public class ElevatorMovementTask extends TimedTask implements IControlTask
         }
 
         double totalError = this.elevator.getTotalError();
-        if (totalError < TuningConstants.ELEVATOR_CLIMBING_MOVEMENT_DISTANCE_THRESHOLD)
+        if (!this.firstLoop && totalError < TuningConstants.ELEVATOR_CLIMBING_MOVEMENT_DISTANCE_THRESHOLD)
         {
             return true;
         }

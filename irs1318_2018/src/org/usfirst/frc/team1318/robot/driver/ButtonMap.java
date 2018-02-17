@@ -304,10 +304,10 @@ public class ButtonMap implements IButtonMap
                 new MacroOperationDescription(
                     UserInputDevice.Driver,
                     UserInputDeviceButton.JOYSTICK_STICK_TOP_RIGHT_BUTTON,
-                    ButtonType.Click,
+                    ButtonType.Toggle,
                     () -> SequentialTask.Sequence(
                         new ElevatorMovementTask(5.0, Operation.ElevatorClimbPosition),
-                        new ReleaseServoTimedTask(1.5),
+                        new ReleaseServoTimedTask(2.5),
                         new ElevatorMovementTask(1.0, Operation.ElevatorCarryPosition),
                         new EnableWinchTimedTask(.2)),
                     new Operation[]

@@ -142,7 +142,7 @@ public class TuningConstants
     public static final double ELEVATOR_OUTER_LOW_SCALE_POSITION = 24.0;
     public static final double ELEVATOR_INNER_HIGH_SCALE_POSITION = 32.0;
     public static final double ELEVATOR_OUTER_HIGH_SCALE_POSITION = 32.0;
-    public static final double ELEVATOR_INNER_CLIMB_POSITION = 36.0;
+    public static final double ELEVATOR_INNER_CLIMB_POSITION = 34.0;
     public static final double ELEVATOR_OUTER_CLIMB_POSITION = 20.0;
 
     public static final boolean ELEVATOR_USE_CARRY_POSITION_SHELF = false;
@@ -183,7 +183,7 @@ public class TuningConstants
     public static final double ELEVATOR_INTAKE_CORRECTION_TRIGGER_TIME_THRESHOLD = 1.0;
     public static final double ELEVATOR_INTAKE_CORRECTION_OPERATION_TIME_THRESHOLD = 1.0;
 
-    public static final double ELEVATOR_CLIMBING_MOVEMENT_DISTANCE_THRESHOLD = 500.0; // in ticks
+    public static final double ELEVATOR_CLIMBING_MOVEMENT_DISTANCE_THRESHOLD = 1500.0; // in ticks
     public static final double ELEVATOR_CLIMBING_MOVEMENT_TIME_THRESHOLD = 4.0;
 
     //================================================== Climber ==============================================================

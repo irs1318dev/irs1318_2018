@@ -13,6 +13,7 @@ public class ReleaseServoTimedTask extends TimedTask
     public void begin()
     {
         super.begin();
+
         this.setDigitalOperationState(Operation.ClimberRelease, true);
     }
 
@@ -24,12 +25,16 @@ public class ReleaseServoTimedTask extends TimedTask
     @Override
     public void end()
     {
+        super.end();
+
         this.setDigitalOperationState(Operation.ClimberRelease, false);
     }
 
     @Override
     public void stop()
     {
+        super.stop();
+
         this.setDigitalOperationState(Operation.ClimberRelease, false);
     }
 }
