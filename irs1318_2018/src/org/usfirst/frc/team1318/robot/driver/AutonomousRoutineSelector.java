@@ -313,15 +313,6 @@ public class AutonomousRoutineSelector
                 AutonomousRoutineSelector.DepositCube(false)));
     }
 
-    private static IControlTask DepositCube(boolean isScale)
-    {
-        return ConcurrentTask.AllTasks(
-            AutonomousRoutineSelector.InitialSetUp(),
-            SequentialTask.Sequence(
-                new ElevatorMovementTask(4.0, isScale ? Operation.ElevatorHighScalePosition : Operation.ElevatorSwitchPosition),
-                new OuttakeTask(2.0)));
-    }
-
     private static IControlTask CrossBaseLine()
     {
         return ConcurrentTask.AllTasks(
@@ -332,6 +323,13 @@ public class AutonomousRoutineSelector
     private static IControlTask InitialSetUp()
     {
         return new ElevatorMovementTask(0.25, Operation.ElevatorCarryPosition);
+    }
+
+    private static IControlTask DepositCube(boolean isScale)
+    {
+        return SequentialTask.Sequence(
+            new ElevatorMovementTask(4.0, isScale ? Operation.ElevatorHighScalePosition : Operation.ElevatorSwitchPosition),
+            new OuttakeTask(2.0));
     }
 }
 
