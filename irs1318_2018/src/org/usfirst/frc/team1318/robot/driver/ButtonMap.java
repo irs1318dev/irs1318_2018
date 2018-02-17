@@ -82,6 +82,12 @@ public class ButtonMap implements IButtonMap
                     UserInputDeviceButton.NONE,
                     ButtonType.Toggle));
             put(
+                Operation.DriveTrainUseBrakeMode,
+                new DigitalOperationDescription(
+                    UserInputDevice.None,
+                    UserInputDeviceButton.NONE,
+                    ButtonType.Toggle));
+            put(
                 Operation.DriveTrainLeftPosition,
                 new AnalogOperationDescription(
                     UserInputDevice.None,
@@ -232,6 +238,7 @@ public class ButtonMap implements IButtonMap
                     new Operation[]
                     {
                         Operation.DriveTrainUsePositionalMode,
+                        Operation.DriveTrainUseBrakeMode,
                         Operation.DriveTrainLeftPosition,
                         Operation.DriveTrainRightPosition,
                     }));

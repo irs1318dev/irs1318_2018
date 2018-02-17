@@ -49,6 +49,7 @@ public class DriveTrainMechanism implements IMechanism
 
     private boolean usePID;
     private boolean usePositionalMode;
+    private boolean useBrakeMode;
 
     private double leftVelocity;
     private double leftError;
@@ -113,6 +114,7 @@ public class DriveTrainMechanism implements IMechanism
 
         this.usePID = TuningConstants.DRIVETRAIN_USE_PID;
         this.usePositionalMode = false;
+        this.useBrakeMode = false;
 
         this.leftVelocity = 0.0;
         this.leftError = 0.0;
@@ -186,10 +188,11 @@ public class DriveTrainMechanism implements IMechanism
         this.driver = driver;
 
         // switch to default velocity PID mode whenever we switch drivers (defense-in-depth)
-        if (!this.usePID || this.usePositionalMode)
+        if (!this.usePID || this.usePositionalMode || this.useBrakeMode)
         {
             this.usePID = TuningConstants.DRIVETRAIN_USE_PID;
             this.usePositionalMode = false;
+            this.useBrakeMode = false;
         }
 
         this.setControlMode();
@@ -235,9 +238,11 @@ public class DriveTrainMechanism implements IMechanism
 
         // check our desired PID mode (needed for positional mode or break mode)
         boolean newUsePositionalMode = this.driver.getDigital(Operation.DriveTrainUsePositionalMode);
-        if (newUsePositionalMode != this.usePositionalMode)
+        boolean newUseBrakeMode = this.driver.getDigital(Operation.DriveTrainUseBrakeMode);
+        if (newUsePositionalMode != this.usePositionalMode || newUseBrakeMode != this.useBrakeMode)
         {
             this.usePositionalMode = newUsePositionalMode;
+            this.useBrakeMode = newUseBrakeMode;
 
             // re-create PID handler
             this.setControlMode();
@@ -305,24 +310,48 @@ public class DriveTrainMechanism implements IMechanism
         {
             if (this.usePositionalMode)
             {
-                this.leftPID = new PIDHandler(
-                    TuningConstants.DRIVETRAIN_POSITION_PID_LEFT_KP,
-                    TuningConstants.DRIVETRAIN_POSITION_PID_LEFT_KI,
-                    TuningConstants.DRIVETRAIN_POSITION_PID_LEFT_KD,
-                    TuningConstants.DRIVETRAIN_POSITION_PID_LEFT_KF,
-                    1.0,
-                    -TuningConstants.DRIVETRAIN_POSITIONAL_MAX_POWER_LEVEL,
-                    TuningConstants.DRIVETRAIN_POSITIONAL_MAX_POWER_LEVEL,
-                    this.timer);
-                this.rightPID = new PIDHandler(
-                    TuningConstants.DRIVETRAIN_POSITION_PID_RIGHT_KP,
-                    TuningConstants.DRIVETRAIN_POSITION_PID_RIGHT_KI,
-                    TuningConstants.DRIVETRAIN_POSITION_PID_RIGHT_KD,
-                    TuningConstants.DRIVETRAIN_POSITION_PID_RIGHT_KF,
-                    1.0,
-                    -TuningConstants.DRIVETRAIN_POSITIONAL_MAX_POWER_LEVEL,
-                    TuningConstants.DRIVETRAIN_POSITIONAL_MAX_POWER_LEVEL,
-                    this.timer);
+                if (this.useBrakeMode)
+                {
+                    this.leftPID = new PIDHandler(
+                        TuningConstants.DRIVETRAIN_BRAKE_PID_LEFT_KP,
+                        TuningConstants.DRIVETRAIN_BRAKE_PID_LEFT_KI,
+                        TuningConstants.DRIVETRAIN_BRAKE_PID_LEFT_KD,
+                        TuningConstants.DRIVETRAIN_BRAKE_PID_LEFT_KF,
+                        1.0,
+                        -TuningConstants.DRIVETRAIN_BRAKE_MAX_POWER_LEVEL,
+                        TuningConstants.DRIVETRAIN_BRAKE_MAX_POWER_LEVEL,
+                        this.timer);
+                    this.rightPID = new PIDHandler(
+                        TuningConstants.DRIVETRAIN_BRAKE_PID_RIGHT_KP,
+                        TuningConstants.DRIVETRAIN_BRAKE_PID_RIGHT_KI,
+                        TuningConstants.DRIVETRAIN_BRAKE_PID_RIGHT_KD,
+                        TuningConstants.DRIVETRAIN_BRAKE_PID_RIGHT_KF,
+                        1.0,
+                        -TuningConstants.DRIVETRAIN_BRAKE_MAX_POWER_LEVEL,
+                        TuningConstants.DRIVETRAIN_BRAKE_MAX_POWER_LEVEL,
+                        this.timer);
+                }
+                else
+                {
+                    this.leftPID = new PIDHandler(
+                        TuningConstants.DRIVETRAIN_POSITION_PID_LEFT_KP,
+                        TuningConstants.DRIVETRAIN_POSITION_PID_LEFT_KI,
+                        TuningConstants.DRIVETRAIN_POSITION_PID_LEFT_KD,
+                        TuningConstants.DRIVETRAIN_POSITION_PID_LEFT_KF,
+                        1.0,
+                        -TuningConstants.DRIVETRAIN_POSITIONAL_MAX_POWER_LEVEL,
+                        TuningConstants.DRIVETRAIN_POSITIONAL_MAX_POWER_LEVEL,
+                        this.timer);
+                    this.rightPID = new PIDHandler(
+                        TuningConstants.DRIVETRAIN_POSITION_PID_RIGHT_KP,
+                        TuningConstants.DRIVETRAIN_POSITION_PID_RIGHT_KI,
+                        TuningConstants.DRIVETRAIN_POSITION_PID_RIGHT_KD,
+                        TuningConstants.DRIVETRAIN_POSITION_PID_RIGHT_KF,
+                        1.0,
+                        -TuningConstants.DRIVETRAIN_POSITIONAL_MAX_POWER_LEVEL,
+                        TuningConstants.DRIVETRAIN_POSITIONAL_MAX_POWER_LEVEL,
+                        this.timer);
+                }
             }
             else
             {
