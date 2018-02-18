@@ -16,7 +16,7 @@ public enum Operation
     DriveTrainLeftPosition,
     DriveTrainRightPosition,
     DriveTrainSwapFrontOrientation,
-    
+
     // Elevator operations
     ElevatorBottomPosition,
     ElevatorCarryPosition,
@@ -32,13 +32,11 @@ public enum Operation
     ElevatorOuttake,
     ElevatorIntakeArmsUp,
     ElevatorIntakeArmsDown,
-    ElevatorIntakeFingersOut,
     ElevatorIntakeFingersIn,
-     
+
     // Climber operations
     ClimberRelease, 
     ClimberWinch, 
     ClimberEnableWinch,
     ClimberDisableWinch, 
-    
 }

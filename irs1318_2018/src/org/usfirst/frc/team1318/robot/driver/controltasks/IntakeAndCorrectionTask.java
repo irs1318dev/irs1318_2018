@@ -40,7 +40,6 @@ public class IntakeAndCorrectionTask extends ControlTaskBase implements IControl
         this.setDigitalOperationState(Operation.ElevatorIntakeCorrection, false);
         this.setDigitalOperationState(Operation.ElevatorOuttake, false);
         this.setDigitalOperationState(Operation.ElevatorIntakeFingersIn, false);
-        this.setDigitalOperationState(Operation.ElevatorIntakeFingersOut, true);
     }
 
     /**
@@ -51,7 +50,7 @@ public class IntakeAndCorrectionTask extends ControlTaskBase implements IControl
     {
         double currentTime = this.timer.get();
         double timeSinceStart = currentTime - this.startTime;
-        boolean shouldFingerOut = timeSinceStart < TuningConstants.ELEVATOR_FINGER_OUT_TIME_THRESHOLD;
+        boolean shouldFingerIn = timeSinceStart >= TuningConstants.ELEVATOR_FINGER_OUT_TIME_THRESHOLD;
         if (this.elevator.getOuterThroughBeamStatus() && !this.elevator.getInnerThroughBeamStatus())
         {
             if (this.outerBeamBrokenTime == null)
@@ -68,8 +67,7 @@ public class IntakeAndCorrectionTask extends ControlTaskBase implements IControl
                     this.setDigitalOperationState(Operation.ElevatorIntake, false);
                     this.setDigitalOperationState(Operation.ElevatorIntakeCorrection, true);
                     this.setDigitalOperationState(Operation.ElevatorOuttake, false);
-                    this.setDigitalOperationState(Operation.ElevatorIntakeFingersIn, !shouldFingerOut);
-                    this.setDigitalOperationState(Operation.ElevatorIntakeFingersOut, shouldFingerOut);
+                    this.setDigitalOperationState(Operation.ElevatorIntakeFingersIn, shouldFingerIn);
 
                     return;
                 }
@@ -87,8 +85,7 @@ public class IntakeAndCorrectionTask extends ControlTaskBase implements IControl
         this.setDigitalOperationState(Operation.ElevatorIntake, true);
         this.setDigitalOperationState(Operation.ElevatorIntakeCorrection, false);
         this.setDigitalOperationState(Operation.ElevatorOuttake, false);
-        this.setDigitalOperationState(Operation.ElevatorIntakeFingersIn, !shouldFingerOut);
-        this.setDigitalOperationState(Operation.ElevatorIntakeFingersOut, shouldFingerOut);
+        this.setDigitalOperationState(Operation.ElevatorIntakeFingersIn, shouldFingerIn);
     }
 
     /**
@@ -101,7 +98,6 @@ public class IntakeAndCorrectionTask extends ControlTaskBase implements IControl
         this.setDigitalOperationState(Operation.ElevatorIntakeCorrection, false);
         this.setDigitalOperationState(Operation.ElevatorOuttake, false);
         this.setDigitalOperationState(Operation.ElevatorIntakeFingersIn, false);
-        this.setDigitalOperationState(Operation.ElevatorIntakeFingersOut, false);
     }
 
     /**
@@ -114,7 +110,6 @@ public class IntakeAndCorrectionTask extends ControlTaskBase implements IControl
         this.setDigitalOperationState(Operation.ElevatorIntakeCorrection, false);
         this.setDigitalOperationState(Operation.ElevatorOuttake, false);
         this.setDigitalOperationState(Operation.ElevatorIntakeFingersIn, false);
-        this.setDigitalOperationState(Operation.ElevatorIntakeFingersOut, false);
     }
 
     /**

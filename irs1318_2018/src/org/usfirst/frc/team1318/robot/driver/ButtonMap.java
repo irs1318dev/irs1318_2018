@@ -193,17 +193,11 @@ public class ButtonMap implements IButtonMap
                     0, // POV up
                     ButtonType.Click));
             put(
-                Operation.ElevatorIntakeFingersOut,
-                new DigitalOperationDescription(
-                    UserInputDevice.Driver,
-                    270, // POV left
-                    ButtonType.Click));
-            put(
                 Operation.ElevatorIntakeFingersIn,
                 new DigitalOperationDescription(
                     UserInputDevice.Driver,
                     90, // POV right
-                    ButtonType.Click));
+                    ButtonType.Simple));
 
             // Operations for the climber
             put(
@@ -300,7 +294,6 @@ public class ButtonMap implements IButtonMap
                         Operation.ElevatorIntake,
                         Operation.ElevatorIntakeCorrection,
                         Operation.ElevatorOuttake,
-                        Operation.ElevatorIntakeFingersOut,
                         Operation.ElevatorIntakeFingersIn,
                     }));
             put(
@@ -317,6 +310,7 @@ public class ButtonMap implements IButtonMap
                         Operation.ElevatorIntake,
                         Operation.ElevatorIntakeCorrection,
                         Operation.ElevatorOuttake,
+                        Operation.ElevatorIntakeFingersIn,
                     }));
             put(
                 MacroOperation.HookClimber,

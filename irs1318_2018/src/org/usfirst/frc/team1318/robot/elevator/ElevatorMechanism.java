@@ -591,7 +591,7 @@ public class ElevatorMechanism implements IMechanism
         {
             this.intakeFingerExtender.set(DoubleSolenoidValue.kReverse);
         }
-        else if (this.driver.getDigital(Operation.ElevatorIntakeFingersOut))
+        else
         {
             this.intakeFingerExtender.set(DoubleSolenoidValue.kForward);
         }
