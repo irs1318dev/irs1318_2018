@@ -497,7 +497,7 @@ public class ElevatorMechanism implements IMechanism
             TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MIN,
             TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MAX);
 
-        if (((this.isIntakeArmDown && !moveArmUp) || moveArmDown)
+        if ((this.isIntakeArmDown && (!moveArmUp || moveArmDown))
             || (!desiresWithinRestrictedRange
                 && ((isBelowRestrictedRange && desiresBelowRestrictedRange)
                     || (isAboveRestrictedRange && desiresAboveRestrictedRange))))
@@ -572,19 +572,16 @@ public class ElevatorMechanism implements IMechanism
 
         this.collectedIndicatorLight.set(this.isInnerThroughBeamBlocked);
 
-        // block moving arm up/down if the carriage is within the restricted range
-        if (!isWithinRestrictedRange && !desiresWithinRestrictedRange)
+        // block moving arm up unless the carriage is outside the restricted range
+        if (moveArmDown)
         {
-            if (moveArmDown)
-            {
-                this.isIntakeArmDown = true;
-                this.intakeArmExtender.set(DoubleSolenoidValue.kForward);
-            }
-            else if (moveArmUp)
-            {
-                this.isIntakeArmDown = false;
-                this.intakeArmExtender.set(DoubleSolenoidValue.kReverse);
-            }
+            this.isIntakeArmDown = true;
+            this.intakeArmExtender.set(DoubleSolenoidValue.kForward);
+        }
+        else if (moveArmUp && !isWithinRestrictedRange && !desiresWithinRestrictedRange)
+        {
+            this.isIntakeArmDown = false;
+            this.intakeArmExtender.set(DoubleSolenoidValue.kReverse);
         }
 
         if (this.driver.getDigital(Operation.ElevatorIntakeFingersIn))
