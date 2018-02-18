@@ -15,14 +15,15 @@ public class IntakeAndCorrectionTask extends ControlTaskBase implements IControl
     private ITimer timer;
     private ElevatorMechanism elevator;
 
-    private Double startTime;
+    private double startTime;
+    private Double outerBeamBrokenTime;
 
     /**
      * Initializes a new IntakeAndCorrectionTask
      */
     public IntakeAndCorrectionTask()
     {
-        this.startTime = null;
+        this.outerBeamBrokenTime = null;
     }
 
     /**
@@ -33,10 +34,13 @@ public class IntakeAndCorrectionTask extends ControlTaskBase implements IControl
     {
         this.timer = this.getInjector().getInstance(ITimer.class);
         this.elevator = this.getInjector().getInstance(ElevatorMechanism.class);
+        this.startTime = this.timer.get();
 
         this.setDigitalOperationState(Operation.ElevatorIntake, true);
         this.setDigitalOperationState(Operation.ElevatorIntakeCorrection, false);
         this.setDigitalOperationState(Operation.ElevatorOuttake, false);
+        this.setDigitalOperationState(Operation.ElevatorIntakeFingersIn, false);
+        this.setDigitalOperationState(Operation.ElevatorIntakeFingersOut, true);
     }
 
     /**
@@ -45,15 +49,17 @@ public class IntakeAndCorrectionTask extends ControlTaskBase implements IControl
     @Override
     public void update()
     {
+        double currentTime = this.timer.get();
+        double timeSinceStart = currentTime - this.startTime;
+        boolean shouldFingerOut = timeSinceStart < TuningConstants.ELEVATOR_FINGER_OUT_THRESHOLD;
         if (this.elevator.getOuterThroughBeamStatus() && !this.elevator.getInnerThroughBeamStatus())
         {
-            double currentTime = this.timer.get();
-            if (this.startTime == null)
+            if (this.outerBeamBrokenTime == null)
             {
-                this.startTime = currentTime;
+                this.outerBeamBrokenTime = currentTime;
             }
 
-            double waitTime = currentTime - this.startTime;
+            double waitTime = currentTime - this.outerBeamBrokenTime;
             if (waitTime > TuningConstants.ELEVATOR_INTAKE_CORRECTION_TRIGGER_TIME_THRESHOLD)
             {
                 double correctTime = waitTime - TuningConstants.ELEVATOR_INTAKE_CORRECTION_TRIGGER_TIME_THRESHOLD;
@@ -62,23 +68,27 @@ public class IntakeAndCorrectionTask extends ControlTaskBase implements IControl
                     this.setDigitalOperationState(Operation.ElevatorIntake, false);
                     this.setDigitalOperationState(Operation.ElevatorIntakeCorrection, true);
                     this.setDigitalOperationState(Operation.ElevatorOuttake, false);
+                    this.setDigitalOperationState(Operation.ElevatorIntakeFingersIn, !shouldFingerOut);
+                    this.setDigitalOperationState(Operation.ElevatorIntakeFingersOut, shouldFingerOut);
 
                     return;
                 }
                 else
                 {
-                    this.startTime = null;
+                    this.outerBeamBrokenTime = null;
                 }
             }
         }
         else
         {
-            this.startTime = null;
+            this.outerBeamBrokenTime = null;
         }
 
         this.setDigitalOperationState(Operation.ElevatorIntake, true);
         this.setDigitalOperationState(Operation.ElevatorIntakeCorrection, false);
         this.setDigitalOperationState(Operation.ElevatorOuttake, false);
+        this.setDigitalOperationState(Operation.ElevatorIntakeFingersIn, !shouldFingerOut);
+        this.setDigitalOperationState(Operation.ElevatorIntakeFingersOut, shouldFingerOut);
     }
 
     /**
@@ -90,6 +100,8 @@ public class IntakeAndCorrectionTask extends ControlTaskBase implements IControl
         this.setDigitalOperationState(Operation.ElevatorIntake, false);
         this.setDigitalOperationState(Operation.ElevatorIntakeCorrection, false);
         this.setDigitalOperationState(Operation.ElevatorOuttake, false);
+        this.setDigitalOperationState(Operation.ElevatorIntakeFingersIn, false);
+        this.setDigitalOperationState(Operation.ElevatorIntakeFingersOut, false);
     }
 
     /**
@@ -101,6 +113,8 @@ public class IntakeAndCorrectionTask extends ControlTaskBase implements IControl
         this.setDigitalOperationState(Operation.ElevatorIntake, false);
         this.setDigitalOperationState(Operation.ElevatorIntakeCorrection, false);
         this.setDigitalOperationState(Operation.ElevatorOuttake, false);
+        this.setDigitalOperationState(Operation.ElevatorIntakeFingersIn, false);
+        this.setDigitalOperationState(Operation.ElevatorIntakeFingersOut, false);
     }
 
     /**
@@ -120,6 +134,6 @@ public class IntakeAndCorrectionTask extends ControlTaskBase implements IControl
     @Override
     public boolean hasCompleted()
     {
-        return this.elevator.getInnerThroughBeamStatus();
+        return false; //this.elevator.getInnerThroughBeamStatus();
     }
 }

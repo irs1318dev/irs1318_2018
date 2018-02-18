@@ -25,7 +25,6 @@ import org.usfirst.frc.team1318.robot.driver.controltasks.ReleaseServoTimedTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.SequentialTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.VisionAdvanceAndCenterTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.VisionCenteringTask;
-import org.usfirst.frc.team1318.robot.driver.controltasks.WaitForeverTask;
 
 @Singleton
 public class ButtonMap implements IButtonMap
@@ -167,7 +166,7 @@ public class ButtonMap implements IButtonMap
                 Operation.ElevatorIntake,
                 new DigitalOperationDescription(
                     UserInputDevice.Driver,
-                    UserInputDeviceButton.JOYSTICK_STICK_BOTTOM_LEFT_BUTTON,
+                    UserInputDeviceButton.NONE, // JOYSTICK_STICK_BOTTOM_LEFT_BUTTON,
                     ButtonType.Simple));
             put(
                 Operation.ElevatorIntakeCorrection,
@@ -182,16 +181,28 @@ public class ButtonMap implements IButtonMap
                     UserInputDeviceButton.JOYSTICK_STICK_TOP_LEFT_BUTTON,
                     ButtonType.Simple));
             put(
-                Operation.ElevatorIntakeArmUp,
+                Operation.ElevatorIntakeArmsUp,
                 new DigitalOperationDescription(
                     UserInputDevice.Driver,
                     180, // POV down
                     ButtonType.Click));
             put(
-                Operation.ElevatorIntakeArmDown,
+                Operation.ElevatorIntakeArmsDown,
                 new DigitalOperationDescription(
                     UserInputDevice.Driver,
                     0, // POV up
+                    ButtonType.Click));
+            put(
+                Operation.ElevatorIntakeFingersOut,
+                new DigitalOperationDescription(
+                    UserInputDevice.Driver,
+                    270, // POV left
+                    ButtonType.Click));
+            put(
+                Operation.ElevatorIntakeFingersIn,
+                new DigitalOperationDescription(
+                    UserInputDevice.Driver,
+                    90, // POV right
                     ButtonType.Click));
 
             // Operations for the climber
@@ -281,7 +292,7 @@ public class ButtonMap implements IButtonMap
                 MacroOperation.IntakeAndCorrection,
                 new MacroOperationDescription(
                     UserInputDevice.Driver,
-                    UserInputDeviceButton.NONE, //JOYSTICK_STICK_BOTTOM_LEFT_BUTTON,
+                    UserInputDeviceButton.JOYSTICK_STICK_BOTTOM_LEFT_BUTTON,
                     ButtonType.Simple,
                     () -> new IntakeAndCorrectionTask(),
                     new Operation[]
@@ -289,6 +300,8 @@ public class ButtonMap implements IButtonMap
                         Operation.ElevatorIntake,
                         Operation.ElevatorIntakeCorrection,
                         Operation.ElevatorOuttake,
+                        Operation.ElevatorIntakeFingersOut,
+                        Operation.ElevatorIntakeFingersIn,
                     }));
             put(
                 MacroOperation.ReIntake,
@@ -298,8 +311,7 @@ public class ButtonMap implements IButtonMap
                     ButtonType.Simple,
                     () -> SequentialTask.Sequence(
                         new OuttakeTask(0.1),
-                        new IntakeAndCorrectionTask(),
-                        new WaitForeverTask()),
+                        new IntakeAndCorrectionTask()),
                     new Operation[]
                     {
                         Operation.ElevatorIntake,

@@ -43,17 +43,24 @@ public class ElectronicsConstants
 
     //================================================== Elevator ==============================================================
 
+    // CAN:
     public static final int ELEVATOR_INNER_MOTOR_CAN_ID = 5;
     public static final int ELEVATOR_OUTER_MOTOR_CAN_ID = 6;
     public static final int ELEVATOR_TOP_CARRIAGE_INTAKE_MOTOR_CAN_ID = 7;
     public static final int ELEVATOR_BOTTOM_CARRIAGE_INTAKE_MOTOR_CAN_ID = 8;
     public static final int ELEVATOR_LEFT_OUTER_INTAKE_MOTOR_CAN_ID = 9;
     public static final int ELEVATOR_RIGHT_OUTER_INTAKE_MOTOR_CAN_ID = 10;
-    public static final int ELEVATOR_INTAKE_ARM_PCM_CHANNEL_A = 6; // Module A
-    public static final int ELEVATOR_INTAKE_ARM_PCM_CHANNEL_B = 1; // Module A
+
+    // Analog I/O:
     public static final int ELEVATOR_INNER_THROUGH_BEAM_SENSOR_ANALOG_CHANNEL = 0;
     public static final int ELEVATOR_OUTER_THROUGH_BEAM_SENSOR_ANALOG_CHANNEL = 1;
-    public static final int ELEVATOR_COLLECTED_INDICATOR_LIGHT_PCM_CHANNEL = 0; // Module A
+
+    // PCM:
+    public static final int ELEVATOR_INTAKE_ARM_PCM_CHANNEL_A = 0; // Module A
+    public static final int ELEVATOR_INTAKE_ARM_PCM_CHANNEL_B = 1; // Module A
+    public static final int ELEVATOR_INTAKE_FINGER_PCM_CHANNEL_A = 6; // Module A
+    public static final int ELEVATOR_INTAKE_FINGER_PCM_CHANNEL_B = 7; // Module A
+    public static final int ELEVATOR_COLLECTED_INDICATOR_LIGHT_PCM_CHANNEL = 2; // Module A
 
     //================================================== Climber ==============================================================
 

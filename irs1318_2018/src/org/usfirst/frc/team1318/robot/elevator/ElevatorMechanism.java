@@ -51,6 +51,7 @@ public class ElevatorMechanism implements IMechanism
     //    private final IAnalogInput outerThroughBeamSensor;
 
     private final IDoubleSolenoid intakeArmExtender;
+    private final IDoubleSolenoid intakeFingerExtender;
 
     private final ISolenoid collectedIndicatorLight;
 
@@ -160,6 +161,11 @@ public class ElevatorMechanism implements IMechanism
             ElectronicsConstants.PCM_A_MODULE,
             ElectronicsConstants.ELEVATOR_INTAKE_ARM_PCM_CHANNEL_A,
             ElectronicsConstants.ELEVATOR_INTAKE_ARM_PCM_CHANNEL_B);
+
+        this.intakeFingerExtender = provider.getDoubleSolenoid(
+            ElectronicsConstants.PCM_A_MODULE,
+            ElectronicsConstants.ELEVATOR_INTAKE_FINGER_PCM_CHANNEL_A,
+            ElectronicsConstants.ELEVATOR_INTAKE_FINGER_PCM_CHANNEL_B);
 
         this.innerThroughBeamSensor = provider.getAnalogInput(ElectronicsConstants.ELEVATOR_INNER_THROUGH_BEAM_SENSOR_ANALOG_CHANNEL);
         //        this.outerThroughBeamSensor = provider.getAnalogInput(ElectronicsConstants.ELEVATOR_OUTER_THROUGH_BEAM_SENSOR_ANALOG_CHANNEL);
@@ -388,8 +394,8 @@ public class ElevatorMechanism implements IMechanism
         //            this.outerElevatorMotor.reset();
         //        }
 
-        boolean moveArmUp = this.driver.getDigital(Operation.ElevatorIntakeArmUp);
-        boolean moveArmDown = this.driver.getDigital(Operation.ElevatorIntakeArmDown);
+        boolean moveArmUp = this.driver.getDigital(Operation.ElevatorIntakeArmsUp);
+        boolean moveArmDown = this.driver.getDigital(Operation.ElevatorIntakeArmsDown);
         boolean shouldIntake = this.driver.getDigital(Operation.ElevatorIntake);
         boolean shouldIntakeCorrection = this.driver.getDigital(Operation.ElevatorIntakeCorrection);
         boolean shouldOuttake = this.driver.getDigital(Operation.ElevatorOuttake);
@@ -567,15 +573,27 @@ public class ElevatorMechanism implements IMechanism
         this.collectedIndicatorLight.set(this.isInnerThroughBeamBlocked);
 
         // block moving arm up/down if the carriage is within the restricted range
-        if (moveArmDown)
+        if (!isWithinRestrictedRange && !desiresWithinRestrictedRange)
         {
-            this.isIntakeArmDown = true;
-            this.intakeArmExtender.set(DoubleSolenoidValue.kForward);
+            if (moveArmDown)
+            {
+                this.isIntakeArmDown = true;
+                this.intakeArmExtender.set(DoubleSolenoidValue.kForward);
+            }
+            else if (moveArmUp)
+            {
+                this.isIntakeArmDown = false;
+                this.intakeArmExtender.set(DoubleSolenoidValue.kReverse);
+            }
         }
-        else if (moveArmUp && !isWithinRestrictedRange && !desiresWithinRestrictedRange)
+
+        if (this.driver.getDigital(Operation.ElevatorIntakeFingersIn))
         {
-            this.isIntakeArmDown = false;
-            this.intakeArmExtender.set(DoubleSolenoidValue.kReverse);
+            this.intakeFingerExtender.set(DoubleSolenoidValue.kReverse);
+        }
+        else if (this.driver.getDigital(Operation.ElevatorIntakeFingersOut))
+        {
+            this.intakeFingerExtender.set(DoubleSolenoidValue.kForward);
         }
 
         this.lastUpdateTime = currentTime;
@@ -596,6 +614,7 @@ public class ElevatorMechanism implements IMechanism
         this.rightOuterIntakeMotor.stop();
 
         this.intakeArmExtender.set(DoubleSolenoidValue.kOff);
+        this.intakeFingerExtender.set(DoubleSolenoidValue.kOff);
         this.collectedIndicatorLight.set(false);
 
         this.innerElevatorVelocity = 0.0;

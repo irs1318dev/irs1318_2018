@@ -193,6 +193,7 @@ public class TuningConstants
     // Elevator intake correction time thresholds (in seconds)
     public static final double ELEVATOR_INTAKE_CORRECTION_TRIGGER_TIME_THRESHOLD = 1.0;
     public static final double ELEVATOR_INTAKE_CORRECTION_OPERATION_TIME_THRESHOLD = 1.0;
+    public static final double ELEVATOR_FINGER_OUT_THRESHOLD = 0.5;
 
     public static final double ELEVATOR_CLIMBING_MOVEMENT_DISTANCE_THRESHOLD = 1500.0; // in ticks
     public static final double ELEVATOR_CLIMBING_MOVEMENT_TIME_THRESHOLD = 4.0;

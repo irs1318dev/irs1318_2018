@@ -30,8 +30,10 @@ public enum Operation
     ElevatorIntake,
     ElevatorIntakeCorrection,
     ElevatorOuttake,
-    ElevatorIntakeArmUp,
-    ElevatorIntakeArmDown,
+    ElevatorIntakeArmsUp,
+    ElevatorIntakeArmsDown,
+    ElevatorIntakeFingersOut,
+    ElevatorIntakeFingersIn,
      
     // Climber operations
     ClimberRelease, 
