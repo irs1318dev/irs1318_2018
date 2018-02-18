@@ -9,6 +9,7 @@ import org.usfirst.frc.team1318.robot.driver.controltasks.ConcurrentTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.DriveDistancePositionTimedTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.DriveDistanceTimedTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.ElevatorMovementTask;
+import org.usfirst.frc.team1318.robot.driver.controltasks.IntakeArmDownTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.OuttakeTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.SequentialTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.TurnTimedTask;
@@ -170,15 +171,15 @@ public class AutonomousRoutineSelector
             case Right:
                 if (!isSwitchSideLeft && !isScaleSideLeft)
                 {
-                    return prefersSwitch ? PlaceCubeOnSameSideSwitch(true) : PlaceCubeOnSameSideScale(true);
+                    return prefersSwitch ? PlaceCubeOnSameSideSwitch(false) : PlaceCubeOnSameSideScale(false);
                 }
                 else if (!isScaleSideLeft)
                 {
-                    return PlaceCubeOnSameSideScale(true);
+                    return PlaceCubeOnSameSideScale(false);
                 }
                 else
                 {
-                    return PlaceCubeOnSameSideSwitch(true);
+                    return PlaceCubeOnSameSideSwitch(false);
                 }
 
             case Special:
@@ -322,7 +323,9 @@ public class AutonomousRoutineSelector
 
     private static IControlTask InitialSetUp()
     {
-        return new ElevatorMovementTask(0.25, Operation.ElevatorCarryPosition);
+        return ConcurrentTask.AllTasks(
+            new IntakeArmDownTask(0.25),
+            new ElevatorMovementTask(0.25, Operation.ElevatorCarryPosition));
     }
 
     private static IControlTask DepositCube(boolean isScale)
