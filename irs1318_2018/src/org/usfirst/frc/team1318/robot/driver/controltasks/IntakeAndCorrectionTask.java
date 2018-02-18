@@ -51,7 +51,7 @@ public class IntakeAndCorrectionTask extends ControlTaskBase implements IControl
     {
         double currentTime = this.timer.get();
         double timeSinceStart = currentTime - this.startTime;
-        boolean shouldFingerOut = timeSinceStart < TuningConstants.ELEVATOR_FINGER_OUT_THRESHOLD;
+        boolean shouldFingerOut = timeSinceStart < TuningConstants.ELEVATOR_FINGER_OUT_TIME_THRESHOLD;
         if (this.elevator.getOuterThroughBeamStatus() && !this.elevator.getInnerThroughBeamStatus())
         {
             if (this.outerBeamBrokenTime == null)
