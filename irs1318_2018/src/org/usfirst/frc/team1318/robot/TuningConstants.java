@@ -135,7 +135,7 @@ public class TuningConstants
 
     // Elevator motor/sensor orientations
     public static final boolean ELEVATOR_INNER_INVERT_OUTPUT = true;
-    public static final boolean ELEVATOR_INNER_INVERT_SENSOR = false;
+    public static final boolean ELEVATOR_INNER_INVERT_SENSOR = true;
     public static final boolean ELEVATOR_OUTER_INVERT_OUTPUT = false;
     public static final boolean ELEVATOR_OUTER_INVERT_SENSOR = false;
 
