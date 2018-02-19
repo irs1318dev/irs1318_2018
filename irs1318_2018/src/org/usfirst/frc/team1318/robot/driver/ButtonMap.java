@@ -33,6 +33,13 @@ public class ButtonMap implements IButtonMap
     public static Map<Operation, OperationDescription> OperationSchema = new HashMap<Operation, OperationDescription>()
     {
         {
+            put(
+                Operation.DebugShift,
+                new DigitalOperationDescription(
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_STICK_TRIGGER_BUTTON,
+                    ButtonType.Simple));
+
             // Operations for vision
             put(
                 Operation.EnableVision,
