@@ -522,12 +522,12 @@ public class ElevatorMechanism implements IMechanism
         }
         else //if (debugShift)
         {
-            if (this.innerElevatorReverseLimitSwitchStatus)
+            if (this.innerElevatorReverseLimitSwitchStatus || this.innerElevatorPosition < 0.0)
             {
                 this.innerElevatorMotor.reset();
             }
 
-            if (this.outerElevatorReverseLimitSwitchStatus)
+            if (this.outerElevatorReverseLimitSwitchStatus || this.outerElevatorPosition < 0.0)
             {
                 this.outerElevatorMotor.reset();
             }
