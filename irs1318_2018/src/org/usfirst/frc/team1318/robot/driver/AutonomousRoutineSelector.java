@@ -9,8 +9,8 @@ import org.usfirst.frc.team1318.robot.driver.controltasks.ConcurrentTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.DriveDistancePositionTimedTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.DriveDistanceTimedTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.ElevatorMovementTask;
+import org.usfirst.frc.team1318.robot.driver.controltasks.IntakeAndCorrectionTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.IntakeArmDownTask;
-import org.usfirst.frc.team1318.robot.driver.controltasks.IntakeTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.OuttakeTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.SequentialTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.TurnTimedTask;
@@ -321,9 +321,8 @@ public class AutonomousRoutineSelector
             new ElevatorMovementTask(2, Operation.ElevatorCarryPosition),
             new DriveDistanceTimedTask(-11, 0.5),
             new TurnTimedTask(scaleIsLeft ? 105 : -105, 1.5),
-            ConcurrentTask.AllTasks(
-                new DriveDistanceTimedTask(61, 2),
-                new IntakeTask(2)),
+            new DriveDistanceTimedTask(61, 2),
+            new IntakeAndCorrectionTask(),
             new TurnTimedTask(scaleIsLeft ? 150 : -150, 2.0),
             new DriveDistanceTimedTask(76, 2),
             AutonomousRoutineSelector.DepositCube(true));
