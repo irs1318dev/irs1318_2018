@@ -111,6 +111,24 @@ public class TuningConstants
 
     //================================================== Elevator ==============================================================
 
+    public static final boolean ELEVATOR_USE_MOTION_MAGIC = false;
+
+    // MotionMagic Position PID (inner)
+    public static final double ELEVATOR_MM_POSITION_PID_INNER_KP = 0.0;
+    public static final double ELEVATOR_MM_POSITION_PID_INNER_KI = 0.0;
+    public static final double ELEVATOR_MM_POSITION_PID_INNER_KD = 0.0;
+    public static final double ELEVATOR_MM_POSITION_PID_INNER_KF = 0.0;
+    public static final int ELEVATOR_MM_POSITION_PID_INNER_CRUISE_VELOC = 0;
+    public static final int ELEVATOR_MM_POSITION_PID_INNER_ACCEL = 0;
+
+    // MotionMagic Position PID (outer)
+    public static final double ELEVATOR_MM_POSITION_PID_OUTER_KP = 0.0;
+    public static final double ELEVATOR_MM_POSITION_PID_OUTER_KI = 0.0;
+    public static final double ELEVATOR_MM_POSITION_PID_OUTER_KD = 0.0;
+    public static final double ELEVATOR_MM_POSITION_PID_OUTER_KF = 0.0;
+    public static final int ELEVATOR_MM_POSITION_PID_OUTER_CRUISE_VELOC = 0;
+    public static final int ELEVATOR_MM_POSITION_PID_OUTER_ACCEL = 0;
+
     // Position PID (inner)
     public static final double ELEVATOR_POSITION_PID_INNER_KP = 0.3;
     public static final double ELEVATOR_POSITION_PID_INNER_KI = 0.0;
@@ -147,7 +165,7 @@ public class TuningConstants
     public static final double ELEVATOR_THROUGH_BEAM_UNBLOCKED_VOLTAGE_THRESHOLD = 3.0;
 
     // Elevator positions (in inches)
-    public static final double ELEVATOR_INNER_CARRY_POSITION = 0.0;
+    public static final double ELEVATOR_INNER_CARRY_POSITION = 3.0; // note: inner elevator will be disabled after it is near the inner carry position - it will actually sink to 0.0...
     public static final double ELEVATOR_OUTER_CARRY_POSITION = 3.5;
     public static final double ELEVATOR_INNER_SWITCH_POSITION = 12.0; // Switch Fence Height: 19in. 
     public static final double ELEVATOR_OUTER_SWITCH_POSITION = 24.0;
@@ -158,8 +176,9 @@ public class TuningConstants
     public static final double ELEVATOR_INNER_CLIMB_POSITION = 34.0; // Bar Height: 84in. 
     public static final double ELEVATOR_OUTER_CLIMB_POSITION = HardwareConstants.ELEVATOR_OUTER_MAX_HEIGHT;
 
-    public static final boolean ELEVATOR_USE_CLUTCH = false;
-    public static final double ELEVATOR_CLUTCH_POSITION_DELTA = 0.75;
+    public static final boolean ELEVATOR_USE_CLUTCH = true;
+    public static final double ELEVATOR_CLUTCH_POSITION_DELTA = 1.0;
+    public static final double ELEVATOR_INNER_CARRY_DISABLE_DELTA = 1.0;
 
     // Height below which we won't run the outer intake wheels
     public static final double ELEVATOR_MAXIMUM_OUTER_INTAKE_USE_HEIGHT = 12.0;
