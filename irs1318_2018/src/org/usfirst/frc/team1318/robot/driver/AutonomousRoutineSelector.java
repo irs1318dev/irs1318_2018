@@ -10,6 +10,7 @@ import org.usfirst.frc.team1318.robot.driver.controltasks.DriveDistancePositionT
 import org.usfirst.frc.team1318.robot.driver.controltasks.DriveDistanceTimedTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.ElevatorMovementTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.IntakeArmDownTask;
+import org.usfirst.frc.team1318.robot.driver.controltasks.IntakeTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.OuttakeTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.SequentialTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.TurnTimedTask;
@@ -312,6 +313,20 @@ public class AutonomousRoutineSelector
     private static IControlTask PlaceCubeOnScaleFromMiddle(boolean scaleIsLeft)
     {
         return new WaitTask(0);
+    }
+
+    private static IControlTask PlaceSecondCubeOnScaleFromScale(boolean scaleIsLeft)
+    {
+        return SequentialTask.Sequence(
+            new ElevatorMovementTask(2, Operation.ElevatorCarryPosition),
+            new DriveDistanceTimedTask(-11, 0.5),
+            new TurnTimedTask(scaleIsLeft ? 105 : -105, 1.5),
+            ConcurrentTask.AllTasks(
+                new DriveDistanceTimedTask(61, 2),
+                new IntakeTask(2)),
+            new TurnTimedTask(scaleIsLeft ? 150 : -150, 2.0),
+            new DriveDistanceTimedTask(76, 2),
+            AutonomousRoutineSelector.DepositCube(true));
     }
 
     private static IControlTask CrossBaseLine()
