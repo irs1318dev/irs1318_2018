@@ -157,8 +157,8 @@ public class TuningConstants
     public static final boolean ELEVATOR_OUTER_INVERT_OUTPUT = true;
     public static final boolean ELEVATOR_OUTER_INVERT_SENSOR = true;
 
-    public static final boolean ELEVATOR_TOP_CARRIAGE_INTAKE_INVERT_OUTPUT = true;
-    public static final boolean ELEVATOR_BOTTOM_CARRIAGE_INTAKE_INVERT_OUTPUT = false;
+    public static final boolean ELEVATOR_TOP_CARRIAGE_INTAKE_INVERT_OUTPUT = false;
+    public static final boolean ELEVATOR_BOTTOM_CARRIAGE_INTAKE_INVERT_OUTPUT = true;
     public static final boolean ELEVATOR_LEFT_OUTER_INTAKE_INVERT_OUTPUT = true;
     public static final boolean ELEVATOR_RIGHT_OUTER_INTAKE_INVERT_OUTPUT = false;
 
@@ -167,8 +167,8 @@ public class TuningConstants
     // Elevator positions (in inches)
     public static final double ELEVATOR_INNER_CARRY_POSITION = 0.0;
     public static final double ELEVATOR_OUTER_CARRY_POSITION = 3.5;
-    public static final double ELEVATOR_INNER_SWITCH_POSITION = 12.0; // Switch Fence Height: 19in. 
-    public static final double ELEVATOR_OUTER_SWITCH_POSITION = 24.0;
+    public static final double ELEVATOR_INNER_SWITCH_POSITION = 0; // Switch Fence Height: 19in. 
+    public static final double ELEVATOR_OUTER_SWITCH_POSITION = 25.0;
     public static final double ELEVATOR_INNER_LOW_SCALE_POSITION = 24.0; // Low Scale Height: 52in.
     public static final double ELEVATOR_OUTER_LOW_SCALE_POSITION = 24.0;
     public static final double ELEVATOR_INNER_HIGH_SCALE_POSITION = 32.0; // High Scale Height: 76in. 
@@ -184,7 +184,7 @@ public class TuningConstants
     public static final double ELEVATOR_MAXIMUM_OUTER_INTAKE_USE_HEIGHT = 12.0;
 
     // Range of carriage locations where we disallow raising/lowering intake arm
-    public static final double ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MIN = 2.0;
+    public static final double ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MIN = 5.0;
     public static final double ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MAX = 30.0;
 
     // Elevator velocities
@@ -192,7 +192,7 @@ public class TuningConstants
 
     // Elevator intake powers
     public static final double ELEVATOR_TOP_CARRIAGE_HOLD_POWER = 0.15;
-    public static final double ELEVATOR_BOTTOM_CARRIAGE_HOLD_POWER = 0.1;
+    public static final double ELEVATOR_BOTTOM_CARRIAGE_HOLD_POWER = 0.10;
 
     public static final double ELEVATOR_LEFT_OUTER_INTAKE_POWER = 1.0;
     public static final double ELEVATOR_RIGHT_OUTER_INTAKE_POWER = 0.8;
@@ -202,8 +202,8 @@ public class TuningConstants
     // Elevator outtake powers
     public static final double ELEVATOR_LEFT_OUTER_OUTTAKE_POWER = -0.3;
     public static final double ELEVATOR_RIGHT_OUTER_OUTTAKE_POWER = -0.3;
-    public static final double ELEVATOR_TOP_CARRIAGE_OUTTAKE_POWER = -0.7;
-    public static final double ELEVATOR_BOTTOM_CARRIAGE_OUTTAKE_POWER = -0.7;
+    public static final double ELEVATOR_TOP_CARRIAGE_OUTTAKE_POWER = -0.9;
+    public static final double ELEVATOR_BOTTOM_CARRIAGE_OUTTAKE_POWER = -0.9;
 
     // Elevator intake correction powers
     public static final double ELEVATOR_LEFT_OUTER_INTAKE_CORRECTION_POWER = 0.2;

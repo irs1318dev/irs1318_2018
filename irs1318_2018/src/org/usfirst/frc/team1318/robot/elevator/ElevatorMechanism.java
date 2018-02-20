@@ -467,13 +467,13 @@ public class ElevatorMechanism implements IMechanism
             this.outerElevatorMotor.setControlMode(TalonSRXControlMode.PercentOutput);
             if (forceUp)
             {
-                this.innerElevatorMotor.set(this.innerElevatorForwardLimitSwitchStatus ? 0.0 : 0.2);
-                this.outerElevatorMotor.set(this.outerElevatorForwardLimitSwitchStatus ? 0.0 : 0.2);
+                this.innerElevatorMotor.set(this.innerElevatorForwardLimitSwitchStatus ? 0.0 : 0.4);
+                this.outerElevatorMotor.set(this.outerElevatorForwardLimitSwitchStatus ? 0.0 : 0.4);
             }
             else if (forceDown)
             {
-                this.innerElevatorMotor.set(this.innerElevatorReverseLimitSwitchStatus ? 0.0 : -0.2);
-                this.outerElevatorMotor.set(this.outerElevatorReverseLimitSwitchStatus ? 0.0 : -0.2);
+                this.innerElevatorMotor.set(this.innerElevatorReverseLimitSwitchStatus ? 0.0 : -0.4);
+                this.outerElevatorMotor.set(this.outerElevatorReverseLimitSwitchStatus ? 0.0 : -0.4);
             }
         }
         else
