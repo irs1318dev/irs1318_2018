@@ -111,23 +111,23 @@ public class TuningConstants
 
     //================================================== Elevator ==============================================================
 
-    public static final boolean ELEVATOR_USE_MOTION_MAGIC = false;
+    public static final boolean ELEVATOR_USE_MOTION_MAGIC = true;
 
     // MotionMagic Position PID (inner)
-    public static final double ELEVATOR_MM_POSITION_PID_INNER_KP = 0.0;
+    public static final double ELEVATOR_MM_POSITION_PID_INNER_KP = 0.133;
     public static final double ELEVATOR_MM_POSITION_PID_INNER_KI = 0.0;
     public static final double ELEVATOR_MM_POSITION_PID_INNER_KD = 0.0;
-    public static final double ELEVATOR_MM_POSITION_PID_INNER_KF = 0.0;
-    public static final int ELEVATOR_MM_POSITION_PID_INNER_CRUISE_VELOC = 0;
-    public static final int ELEVATOR_MM_POSITION_PID_INNER_ACCEL = 0;
+    public static final double ELEVATOR_MM_POSITION_PID_INNER_KF = 0.276;
+    public static final int ELEVATOR_MM_POSITION_PID_INNER_CRUISE_VELOC = 3500;
+    public static final int ELEVATOR_MM_POSITION_PID_INNER_ACCEL = 2500;
 
     // MotionMagic Position PID (outer)
-    public static final double ELEVATOR_MM_POSITION_PID_OUTER_KP = 0.0;
+    public static final double ELEVATOR_MM_POSITION_PID_OUTER_KP = 0.133;
     public static final double ELEVATOR_MM_POSITION_PID_OUTER_KI = 0.0;
     public static final double ELEVATOR_MM_POSITION_PID_OUTER_KD = 0.0;
-    public static final double ELEVATOR_MM_POSITION_PID_OUTER_KF = 0.0;
-    public static final int ELEVATOR_MM_POSITION_PID_OUTER_CRUISE_VELOC = 0;
-    public static final int ELEVATOR_MM_POSITION_PID_OUTER_ACCEL = 0;
+    public static final double ELEVATOR_MM_POSITION_PID_OUTER_KF = 0.378;
+    public static final int ELEVATOR_MM_POSITION_PID_OUTER_CRUISE_VELOC = 2500;
+    public static final int ELEVATOR_MM_POSITION_PID_OUTER_ACCEL = 5000;
 
     // Position PID (inner)
     public static final double ELEVATOR_POSITION_PID_INNER_KP = 0.3;
@@ -179,6 +179,8 @@ public class TuningConstants
     public static final boolean ELEVATOR_USE_CLUTCH = true;
     public static final double ELEVATOR_CLUTCH_POSITION_DELTA = 1.0;
     public static final double ELEVATOR_INNER_CARRY_DISABLE_DELTA = 1.0;
+
+    public static final double ELEVATOR_DEBUG_POWER_LEVEL = 0.5;
 
     // Height below which we won't run the outer intake wheels
     public static final double ELEVATOR_MAXIMUM_OUTER_INTAKE_USE_HEIGHT = 12.0;
