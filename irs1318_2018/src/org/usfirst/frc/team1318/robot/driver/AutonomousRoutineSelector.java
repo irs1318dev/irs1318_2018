@@ -258,9 +258,9 @@ public class AutonomousRoutineSelector
         return ConcurrentTask.AllTasks(
             AutonomousRoutineSelector.InitialSetUp(),
             SequentialTask.Sequence(
-                new DriveDistanceTimedTask(127.75, 5.0), // 147.75
+                new DriveDistanceTimedTask(145.0, 5.0), // 147.75
                 new TurnTimedTask(startingLeft ? 90.0 : -90.0, 1.5),
-                new DriveDistanceTimedTask(11.5, 0.5),
+                new DriveDistanceTimedTask(18, 0.5),
                 AutonomousRoutineSelector.DepositCube(false)));
     }
 
@@ -269,9 +269,9 @@ public class AutonomousRoutineSelector
         return ConcurrentTask.AllTasks(
             AutonomousRoutineSelector.InitialSetUp(),
             SequentialTask.Sequence(
-                new DriveDistanceTimedTask(205.0, 9.0),
+                new DriveDistanceTimedTask(250.0, 9.0),
                 new TurnTimedTask(startingLeft ? 45.0 : -45.0, 1.5),
-                new DriveDistanceTimedTask(6.0, 1.0),
+                new DriveDistanceTimedTask(8.0, 1.0),
                 AutonomousRoutineSelector.DepositCube(true)));
     }
 
@@ -282,11 +282,11 @@ public class AutonomousRoutineSelector
         return ConcurrentTask.AllTasks(
             AutonomousRoutineSelector.InitialSetUp(),
             SequentialTask.Sequence(
-                new DriveDistanceTimedTask(175.0, 4.5),
-                new TurnTimedTask(startingLeft ? 90.0 : -90.0, 0.75),
-                new DriveDistanceTimedTask(180.0, 4.5),
-                new TurnTimedTask(startingLeft ? 90.0 : -90.0, 0.75),
-                new DriveDistanceTimedTask(36.0, 1.5),
+                new DriveDistanceTimedTask(205.0, 4.5),
+                new TurnTimedTask(startingLeft ? 90.0 : -90.0, 1.0),
+                new DriveDistanceTimedTask(225.0, 4.5),
+                new TurnTimedTask(startingLeft ? 90.0 : -90.0, 1.0),
+                new DriveDistanceTimedTask(45.0, 1.5),
                 new TurnTimedTask(startingLeft ? 90.0 : -90.0, 0.75),
                 new DriveDistanceTimedTask(12.0, 1.0),
                 AutonomousRoutineSelector.DepositCube(false)));
@@ -297,12 +297,13 @@ public class AutonomousRoutineSelector
         return ConcurrentTask.AllTasks(
             AutonomousRoutineSelector.InitialSetUp(),
             SequentialTask.Sequence(
-                new DriveDistanceTimedTask(175.0, 4.5),
-                new TurnTimedTask(startingLeft ? 90.0 : -90.0, 0.75),
-                new DriveDistanceTimedTask(180.0, 4.5),
-                new TurnTimedTask(startingLeft ? -90.0 : 90.0, 0.75),
-                new DriveDistanceTimedTask(18.0, 1.0),
+                new DriveDistanceTimedTask(205.0, 4.5),
+                new TurnTimedTask(startingLeft ? 90.0 : -90.0, 1.0),
+                new DriveDistanceTimedTask(225.0, 4.5),
+                new TurnTimedTask(startingLeft ? -90.0 : 90.0, 1.0),
+                new DriveDistanceTimedTask(22.0, 1.0),
                 new TurnTimedTask(startingLeft ? -45.0 : 45.0, 0.75),
+                new DriveDistanceTimedTask(12.0, 1.0),
                 AutonomousRoutineSelector.DepositCube(true)));
     }
 
@@ -311,11 +312,11 @@ public class AutonomousRoutineSelector
         return ConcurrentTask.AllTasks(
             AutonomousRoutineSelector.InitialSetUp(),
             SequentialTask.Sequence(
-                new DriveDistanceTimedTask(18.0, 1.0),
+                new DriveDistanceTimedTask(24.0, 1.0),
                 new TurnTimedTask(switchIsLeft ? -50.0 : 50.0, 0.75),
-                new DriveDistanceTimedTask(60.0, 3.0),
+                new DriveDistanceTimedTask(75.0, 3.0),
                 new TurnTimedTask(switchIsLeft ? 40.0 : -40.0, 0.75),
-                new DriveDistanceTimedTask(18.0, 1.0),
+                new DriveDistanceTimedTask(24.0, 1.0),
                 AutonomousRoutineSelector.DepositCube(false)));
     }
 
@@ -354,7 +355,7 @@ public class AutonomousRoutineSelector
     private static IControlTask DepositCube(boolean isScale)
     {
         return SequentialTask.Sequence(
-            new ElevatorMovementTask(2.0, isScale ? Operation.ElevatorHighScalePosition : Operation.ElevatorSwitchPosition),
+            new ElevatorMovementTask(isScale ? 1.75 : 1.25, isScale ? Operation.ElevatorHighScalePosition : Operation.ElevatorSwitchPosition),
             new OuttakeTask(2.0));
     }
 }
