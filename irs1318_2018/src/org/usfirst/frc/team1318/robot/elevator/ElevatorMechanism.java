@@ -423,8 +423,6 @@ public class ElevatorMechanism implements IMechanism
 
         double currentTotalHeight = this.innerElevatorHeight + this.outerElevatorHeight;
 
-        boolean debugShift = this.driver.getDigital(Operation.DebugShift);
-
         boolean moveArmUp = this.driver.getDigital(Operation.ElevatorIntakeArmsUp);
         boolean moveArmDown = this.driver.getDigital(Operation.ElevatorIntakeArmsDown);
         boolean shouldIntake = this.driver.getDigital(Operation.ElevatorIntake);
@@ -446,7 +444,39 @@ public class ElevatorMechanism implements IMechanism
             TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MIN,
             TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MAX);
         boolean desiresWithinRestrictedRange = false;
-        if (!debugShift)
+
+        boolean forceUp = this.driver.getDigital(Operation.ElevatorForceUp);
+        boolean forceDown = this.driver.getDigital(Operation.ElevatorForceDown);
+        if (forceUp || forceDown)
+        {
+            this.desiredInnerHeight = this.innerElevatorHeight;
+            this.desiredOuterHeight = this.outerElevatorHeight;
+            if (this.innerElevatorReverseLimitSwitchStatus || this.innerElevatorPosition < 0.0)
+            {
+                this.desiredInnerHeight = 0.0;
+                this.innerElevatorMotor.reset();
+            }
+
+            if (this.outerElevatorReverseLimitSwitchStatus || this.outerElevatorPosition < 0.0)
+            {
+                this.desiredOuterHeight = 0.0;
+                this.outerElevatorMotor.reset();
+            }
+
+            this.innerElevatorMotor.setControlMode(TalonSRXControlMode.PercentOutput);
+            this.outerElevatorMotor.setControlMode(TalonSRXControlMode.PercentOutput);
+            if (forceUp)
+            {
+                this.innerElevatorMotor.set(this.innerElevatorForwardLimitSwitchStatus ? 0.0 : 0.2);
+                this.outerElevatorMotor.set(this.outerElevatorForwardLimitSwitchStatus ? 0.0 : 0.2);
+            }
+            else if (forceDown)
+            {
+                this.innerElevatorMotor.set(this.innerElevatorReverseLimitSwitchStatus ? 0.0 : -0.2);
+                this.outerElevatorMotor.set(this.outerElevatorReverseLimitSwitchStatus ? 0.0 : -0.2);
+            }
+        }
+        else
         {
             double newDesiredInnerHeight = this.desiredInnerHeight;
             double newDesiredOuterHeight = this.desiredOuterHeight;
@@ -558,36 +588,6 @@ public class ElevatorMechanism implements IMechanism
             }
 
             this.innerElevatorMotor.set(this.desiredInnerHeight / HardwareConstants.ELEVATOR_INNER_PULSE_DISTANCE);
-        }
-        else //if (debugShift)
-        {
-            if (this.innerElevatorReverseLimitSwitchStatus || this.innerElevatorPosition < 0.0)
-            {
-                this.innerElevatorMotor.reset();
-            }
-
-            if (this.outerElevatorReverseLimitSwitchStatus || this.outerElevatorPosition < 0.0)
-            {
-                this.outerElevatorMotor.reset();
-            }
-
-            this.innerElevatorMotor.setControlMode(TalonSRXControlMode.PercentOutput);
-            this.outerElevatorMotor.setControlMode(TalonSRXControlMode.PercentOutput);
-            if (this.driver.getDigital(Operation.ElevatorMoveUp))
-            {
-                this.innerElevatorMotor.set(this.innerElevatorForwardLimitSwitchStatus ? 0.0 : 0.2);
-                this.outerElevatorMotor.set(this.outerElevatorForwardLimitSwitchStatus ? 0.0 : 0.2);
-            }
-            else if (this.driver.getDigital(Operation.ElevatorMoveDown))
-            {
-                this.innerElevatorMotor.set(this.innerElevatorReverseLimitSwitchStatus ? 0.0 : -0.2);
-                this.outerElevatorMotor.set(this.outerElevatorReverseLimitSwitchStatus ? 0.0 : -0.2);
-            }
-            else
-            {
-                this.innerElevatorMotor.set(0.0);
-                this.outerElevatorMotor.set(0.0);
-            }
         }
 
         double leftOuterIntakePower = 0.0;

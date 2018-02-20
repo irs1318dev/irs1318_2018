@@ -2,9 +2,6 @@ package org.usfirst.frc.team1318.robot.driver;
 
 public enum Operation
 {
-    // Debug Shift
-    DebugShift,
-
     // Vision operations:
     EnableVision,
 
@@ -30,6 +27,8 @@ public enum Operation
     ElevatorTopPosition,
     ElevatorMoveUp,
     ElevatorMoveDown,
+    ElevatorForceUp,
+    ElevatorForceDown,
     ElevatorIntake,
     ElevatorIntakeCorrection,
     ElevatorOuttake,

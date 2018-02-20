@@ -1,10 +1,12 @@
 package org.usfirst.frc.team1318.robot.driver.common.states;
 
 import java.util.Map;
+import java.util.Set;
 
 import org.usfirst.frc.team1318.robot.TuningConstants;
 import org.usfirst.frc.team1318.robot.common.wpilib.IJoystick;
 import org.usfirst.frc.team1318.robot.driver.Operation;
+import org.usfirst.frc.team1318.robot.driver.Shift;
 import org.usfirst.frc.team1318.robot.driver.common.IControlTask;
 import org.usfirst.frc.team1318.robot.driver.common.UserInputDeviceButton;
 import org.usfirst.frc.team1318.robot.driver.common.buttons.ClickButton;
@@ -92,12 +94,19 @@ public class MacroOperationState extends OperationState
      * Checks whether the operation state should change based on the driver and co-driver joysticks and component sensors. 
      * @param driver joystick to update from
      * @param coDriver joystick to update from
+     * @param activeShifts to update from
      * @return true if there was any active user input that triggered a state change
      */
     @Override
-    public boolean checkInput(IJoystick driver, IJoystick coDriver)
+    public boolean checkInput(IJoystick driver, IJoystick coDriver, Set<Shift> activeShifts)
     {
         MacroOperationDescription description = (MacroOperationDescription)this.getDescription();
+
+        Shift requiredShift = description.getRequiredShift();
+        if (!activeShifts.contains(requiredShift))
+        {
+            return false;
+        }
 
         IJoystick relevantJoystick;
         UserInputDeviceButton relevantButton;

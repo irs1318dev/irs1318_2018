@@ -3,6 +3,7 @@ package org.usfirst.frc.team1318.robot.driver.common.descriptions;
 import java.util.function.Supplier;
 
 import org.usfirst.frc.team1318.robot.driver.Operation;
+import org.usfirst.frc.team1318.robot.driver.Shift;
 import org.usfirst.frc.team1318.robot.driver.common.IControlTask;
 import org.usfirst.frc.team1318.robot.driver.common.UserInputDeviceButton;
 import org.usfirst.frc.team1318.robot.driver.common.buttons.ButtonType;
@@ -32,7 +33,14 @@ public class MacroOperationDescription extends OperationDescription
         Supplier<IControlTask> taskSupplier,
         Operation... affectedOperations)
     {
-        this(true, userInputDevice, userInputDeviceButton, 0, DigitalSensor.None, buttonType, taskSupplier, affectedOperations);
+        this(
+            true,
+            userInputDevice,
+            userInputDeviceButton,
+            buttonType,
+            Shift.Any,
+            taskSupplier,
+            affectedOperations);
     }
 
     /**
@@ -40,6 +48,7 @@ public class MacroOperationDescription extends OperationDescription
      * @param clearInterrupt whether to clear the interruption of the operations when the macro completes
      * @param userInputDevice which device will perform the macro operation (driver or codriver joystick)
      * @param userInputDeviceButton the button on the device that performs the macro operation
+     * @param requiredShift the shift button that must be applied to perform macro
      * @param buttonType the behavior type to use for the macro operation
      * @param taskSupplier the function that creates the tasks that should be performed by the macro
      * @param affectedOperations the list of operations that will be utilized by this macro
@@ -49,10 +58,20 @@ public class MacroOperationDescription extends OperationDescription
         UserInputDevice userInputDevice,
         UserInputDeviceButton userInputDeviceButton,
         ButtonType buttonType,
+        Shift requiredShift,
         Supplier<IControlTask> taskSupplier,
         Operation... affectedOperations)
     {
-        this(clearInterrupt, userInputDevice, userInputDeviceButton, 0, DigitalSensor.None, buttonType, taskSupplier, affectedOperations);
+        this(
+            true,
+            userInputDevice,
+            userInputDeviceButton,
+            0,
+            DigitalSensor.None,
+            requiredShift,
+            buttonType,
+            taskSupplier,
+            affectedOperations);
     }
 
     /**
@@ -70,7 +89,13 @@ public class MacroOperationDescription extends OperationDescription
         Supplier<IControlTask> taskSupplier,
         Operation... affectedOperations)
     {
-        this(true, userInputDevice, UserInputDeviceButton.JOYSTICK_POV, povValue, DigitalSensor.None, buttonType, taskSupplier,
+        this(
+            true,
+            userInputDevice,
+            povValue,
+            Shift.Any,
+            buttonType,
+            taskSupplier,
             affectedOperations);
     }
 
@@ -79,6 +104,7 @@ public class MacroOperationDescription extends OperationDescription
      * @param clearInterrupt whether to clear the interruption of the operations when the macro completes
      * @param userInputDevice which device will perform the macro operation (driver or codriver joystick)
      * @param povValue the value of the POV (hat) used to perform the macro operation
+     * @param requiredShift the shift button that must be applied to perform macro
      * @param buttonType the behavior type to use for the macro operation
      * @param taskSupplier the function that creates the tasks that should be performed by the macro
      * @param affectedOperations the list of operations that will be utilized by this macro
@@ -87,28 +113,21 @@ public class MacroOperationDescription extends OperationDescription
         boolean clearInterrupt,
         UserInputDevice userInputDevice,
         int povValue,
+        Shift requiredShift,
         ButtonType buttonType,
         Supplier<IControlTask> taskSupplier,
         Operation... affectedOperations)
     {
-        this(clearInterrupt, userInputDevice, UserInputDeviceButton.JOYSTICK_POV, povValue, DigitalSensor.None, buttonType, taskSupplier,
+        this(
+            clearInterrupt,
+            userInputDevice,
+            UserInputDeviceButton.JOYSTICK_POV,
+            povValue,
+            DigitalSensor.None,
+            requiredShift,
+            buttonType,
+            taskSupplier,
             affectedOperations);
-    }
-
-    /**
-     * Initializes a new MacroOperationDescription based on a sensor
-     * @param sensor the sensor that triggers the macro operation
-     * @param buttonType the behavior type to use for the macro operation
-     * @param taskSupplier the function that creates the tasks that should be performed by the macro
-     * @param affectedOperations the list of operations that will be utilized by this macro
-     */
-    public MacroOperationDescription(
-        DigitalSensor sensor,
-        ButtonType buttonType,
-        Supplier<IControlTask> taskSupplier,
-        Operation... affectedOperations)
-    {
-        this(true, UserInputDevice.Sensor, UserInputDeviceButton.NONE, 0, sensor, buttonType, taskSupplier, affectedOperations);
     }
 
     /**
@@ -126,7 +145,16 @@ public class MacroOperationDescription extends OperationDescription
         Supplier<IControlTask> taskSupplier,
         Operation... affectedOperations)
     {
-        this(clearInterrupt, UserInputDevice.Sensor, UserInputDeviceButton.NONE, 0, sensor, buttonType, taskSupplier, affectedOperations);
+        this(
+            clearInterrupt,
+            UserInputDevice.Sensor,
+            UserInputDeviceButton.NONE,
+            0,
+            sensor,
+            Shift.Any,
+            buttonType,
+            taskSupplier,
+            affectedOperations);
     }
 
     private MacroOperationDescription(
@@ -135,11 +163,12 @@ public class MacroOperationDescription extends OperationDescription
         UserInputDeviceButton userInputDeviceButton,
         int povValue,
         DigitalSensor sensor,
+        Shift requiredShift,
         ButtonType buttonType,
         Supplier<IControlTask> taskSupplier,
         Operation... affectedOperations)
     {
-        super(OperationType.None, userInputDevice);
+        super(OperationType.None, userInputDevice, requiredShift);
 
         this.clearInterrupt = clearInterrupt;
         this.userInputDeviceButton = userInputDeviceButton;
