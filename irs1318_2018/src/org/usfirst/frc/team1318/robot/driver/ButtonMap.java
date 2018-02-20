@@ -250,7 +250,6 @@ public class ButtonMap implements IButtonMap
                 new AnalogOperationDescription(
                     UserInputDevice.Driver,
                     AnalogAxis.Throttle,
-                    Shift.Debug,
                     ElectronicsConstants.INVERT_THROTTLE_AXIS,
                     TuningConstants.CLIMBER_WINCH_DEAD_ZONE));
         }
@@ -343,8 +342,10 @@ public class ButtonMap implements IButtonMap
             put(
                 MacroOperation.HookClimber,
                 new MacroOperationDescription(
+                    true,
                     UserInputDevice.Driver,
                     UserInputDeviceButton.JOYSTICK_STICK_TOP_RIGHT_BUTTON,
+                    Shift.Debug,
                     ButtonType.Toggle,
                     () -> new ClimbTask(),
                     new Operation[]

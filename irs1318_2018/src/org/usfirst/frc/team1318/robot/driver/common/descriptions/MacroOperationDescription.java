@@ -34,11 +34,37 @@ public class MacroOperationDescription extends OperationDescription
         Operation... affectedOperations)
     {
         this(
+            userInputDevice,
+            userInputDeviceButton,
+            Shift.Any,
+            buttonType,
+            taskSupplier,
+            affectedOperations);
+    }
+
+    /**
+     * Initializes a new MacroOperationDescription based on a user interaction
+     * @param userInputDevice which device will perform the macro operation (driver or codriver joystick)
+     * @param userInputDeviceButton the button on the device that performs the macro operation
+     * @param requiredShift the shift button that must be applied to perform macro
+     * @param buttonType the behavior type to use for the macro operation
+     * @param taskSupplier the function that creates the tasks that should be performed by the macro
+     * @param affectedOperations the list of operations that will be utilized by this macro
+     */
+    public MacroOperationDescription(
+        UserInputDevice userInputDevice,
+        UserInputDeviceButton userInputDeviceButton,
+        Shift requiredShift,
+        ButtonType buttonType,
+        Supplier<IControlTask> taskSupplier,
+        Operation... affectedOperations)
+    {
+        this(
             true,
             userInputDevice,
             userInputDeviceButton,
+            requiredShift,
             buttonType,
-            Shift.Any,
             taskSupplier,
             affectedOperations);
     }
@@ -57,8 +83,8 @@ public class MacroOperationDescription extends OperationDescription
         boolean clearInterrupt,
         UserInputDevice userInputDevice,
         UserInputDeviceButton userInputDeviceButton,
-        ButtonType buttonType,
         Shift requiredShift,
+        ButtonType buttonType,
         Supplier<IControlTask> taskSupplier,
         Operation... affectedOperations)
     {
