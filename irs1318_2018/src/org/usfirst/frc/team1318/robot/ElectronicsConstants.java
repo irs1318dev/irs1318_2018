@@ -32,7 +32,7 @@ public class ElectronicsConstants
 
     //================================================== Vision ==============================================================
 
-    public static final int VISION_RING_LIGHT_PCM_CHANNEL = 3; // Module A
+    public static final int VISION_RING_LIGHT_PCM_CHANNEL = 5; // Module A
 
     //================================================== DriveTrain ==============================================================
 
@@ -61,6 +61,7 @@ public class ElectronicsConstants
     public static final int ELEVATOR_INTAKE_FINGER_PCM_CHANNEL_A = 6; // Module A
     public static final int ELEVATOR_INTAKE_FINGER_PCM_CHANNEL_B = 7; // Module A
     public static final int ELEVATOR_COLLECTED_INDICATOR_LIGHT_PCM_CHANNEL = 2; // Module A
+    public static final int ELEVATOR_POSITION_REACHED_INDICATOR_LIGHT_PCM_CHANNEL = 3; // Module A
 
     //================================================== Climber ==============================================================
 

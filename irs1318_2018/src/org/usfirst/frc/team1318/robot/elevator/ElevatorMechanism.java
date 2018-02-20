@@ -54,6 +54,7 @@ public class ElevatorMechanism implements IMechanism
     private final IDoubleSolenoid intakeFingerExtender;
 
     private final ISolenoid collectedIndicatorLight;
+    private final ISolenoid positionReachedIndicatorLight;
 
     private final TalonSRXControlMode pidControlMode;
 
@@ -212,6 +213,10 @@ public class ElevatorMechanism implements IMechanism
         this.collectedIndicatorLight = provider.getSolenoid(
             ElectronicsConstants.PCM_A_MODULE,
             ElectronicsConstants.ELEVATOR_COLLECTED_INDICATOR_LIGHT_PCM_CHANNEL);
+
+        this.positionReachedIndicatorLight = provider.getSolenoid(
+            ElectronicsConstants.PCM_A_MODULE,
+            ElectronicsConstants.ELEVATOR_POSITION_REACHED_INDICATOR_LIGHT_PCM_CHANNEL);
 
         this.innerElevatorVelocity = 0.0;
         this.innerElevatorError = 0.0;
@@ -577,7 +582,6 @@ public class ElevatorMechanism implements IMechanism
             this.innerElevatorMotor.setControlMode(this.pidControlMode);
             this.outerElevatorMotor.setControlMode(this.pidControlMode);
             if (TuningConstants.ELEVATOR_USE_CLUTCH
-                && Helpers.WithinDelta(this.innerElevatorHeight, this.desiredInnerHeight, TuningConstants.ELEVATOR_CLUTCH_POSITION_DELTA)
                 && Helpers.WithinDelta(this.outerElevatorHeight, this.desiredOuterHeight, TuningConstants.ELEVATOR_CLUTCH_POSITION_DELTA))
             {
                 this.outerElevatorMotor.stop();
@@ -638,6 +642,11 @@ public class ElevatorMechanism implements IMechanism
         this.bottomCarriageIntakeMotor.set(bottomCarriageIntakePower);
 
         this.collectedIndicatorLight.set(this.isInnerThroughBeamBlocked);
+        this.positionReachedIndicatorLight.set(
+            Helpers.WithinDelta(
+                currentTotalHeight,
+                this.desiredInnerHeight + this.desiredOuterHeight,
+                TuningConstants.ELEVATOR_POSITION_REACHED_DELTA));
 
         // block moving arm up unless the carriage is outside the restricted range
         if (moveArmDown)
@@ -680,6 +689,7 @@ public class ElevatorMechanism implements IMechanism
         this.intakeArmExtender.set(DoubleSolenoidValue.kOff);
         this.intakeFingerExtender.set(DoubleSolenoidValue.kOff);
         this.collectedIndicatorLight.set(false);
+        this.positionReachedIndicatorLight.set(false);
 
         this.innerElevatorVelocity = 0.0;
         this.innerElevatorError = 0.0;

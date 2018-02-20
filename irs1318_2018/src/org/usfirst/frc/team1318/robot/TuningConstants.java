@@ -178,7 +178,7 @@ public class TuningConstants
 
     public static final boolean ELEVATOR_USE_CLUTCH = true;
     public static final double ELEVATOR_CLUTCH_POSITION_DELTA = 1.0;
-    public static final double ELEVATOR_INNER_CARRY_DISABLE_DELTA = 1.0;
+    public static final double ELEVATOR_POSITION_REACHED_DELTA = 2.0;
 
     public static final double ELEVATOR_DEBUG_POWER_LEVEL = 0.5;
 
