@@ -168,7 +168,7 @@ public class TuningConstants
     public static final double ELEVATOR_INNER_CARRY_POSITION = 0.0;
     public static final double ELEVATOR_OUTER_CARRY_POSITION = 3.5;
     public static final double ELEVATOR_INNER_SWITCH_POSITION = 0; // Switch Fence Height: 19in. 
-    public static final double ELEVATOR_OUTER_SWITCH_POSITION = 25.0;
+    public static final double ELEVATOR_OUTER_SWITCH_POSITION = 22.0;
     public static final double ELEVATOR_INNER_LOW_SCALE_POSITION = 24.0; // Low Scale Height: 52in.
     public static final double ELEVATOR_OUTER_LOW_SCALE_POSITION = 24.0;
     public static final double ELEVATOR_INNER_HIGH_SCALE_POSITION = 32.0; // High Scale Height: 76in. 
