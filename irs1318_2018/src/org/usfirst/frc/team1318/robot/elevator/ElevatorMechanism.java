@@ -668,7 +668,7 @@ public class ElevatorMechanism implements IMechanism
             this.intakeArmExtender.set(DoubleSolenoidValue.kReverse);
         }
 
-        if (this.driver.getDigital(Operation.ElevatorIntakeFingersIn))
+        if (this.isIntakeArmDown && this.driver.getDigital(Operation.ElevatorIntakeFingersIn))
         {
             this.intakeFingerExtender.set(DoubleSolenoidValue.kReverse);
         }
