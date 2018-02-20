@@ -22,7 +22,7 @@ public class OuttakeTask extends TimedTask implements IControlTask
 
         this.setDigitalOperationState(Operation.ElevatorIntake, false);
         this.setDigitalOperationState(Operation.ElevatorIntakeCorrection, false);
-        this.setDigitalOperationState(Operation.ElevatorOuttake, true);
+        this.setDigitalOperationState(Operation.ElevatorStrongOuttake, true);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class OuttakeTask extends TimedTask implements IControlTask
     {
         this.setDigitalOperationState(Operation.ElevatorIntake, false);
         this.setDigitalOperationState(Operation.ElevatorIntakeCorrection, false);
-        this.setDigitalOperationState(Operation.ElevatorOuttake, true);
+        this.setDigitalOperationState(Operation.ElevatorStrongOuttake, true);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class OuttakeTask extends TimedTask implements IControlTask
 
         this.setDigitalOperationState(Operation.ElevatorIntake, false);
         this.setDigitalOperationState(Operation.ElevatorIntakeCorrection, false);
-        this.setDigitalOperationState(Operation.ElevatorOuttake, false);
+        this.setDigitalOperationState(Operation.ElevatorStrongOuttake, false);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class OuttakeTask extends TimedTask implements IControlTask
 
         this.setDigitalOperationState(Operation.ElevatorIntake, false);
         this.setDigitalOperationState(Operation.ElevatorIntakeCorrection, false);
-        this.setDigitalOperationState(Operation.ElevatorOuttake, false);
+        this.setDigitalOperationState(Operation.ElevatorStrongOuttake, false);
     }
 
     @Override

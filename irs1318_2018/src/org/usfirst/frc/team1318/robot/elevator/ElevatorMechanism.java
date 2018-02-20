@@ -432,12 +432,13 @@ public class ElevatorMechanism implements IMechanism
         boolean moveArmDown = this.driver.getDigital(Operation.ElevatorIntakeArmsDown);
         boolean shouldIntake = this.driver.getDigital(Operation.ElevatorIntake);
         boolean shouldIntakeCorrection = this.driver.getDigital(Operation.ElevatorIntakeCorrection);
-        boolean shouldOuttake = this.driver.getDigital(Operation.ElevatorOuttake);
+        boolean shouldStrongOuttake = this.driver.getDigital(Operation.ElevatorStrongOuttake);
+        boolean shouldWeakOuttake = this.driver.getDigital(Operation.ElevatorWeakOuttake);
         if (shouldIntake || shouldIntakeCorrection)
         {
             this.shouldHold = true;
         }
-        else if (shouldOuttake)
+        else if (shouldStrongOuttake || shouldWeakOuttake)
         {
             this.shouldHold = false;
         }
@@ -612,12 +613,19 @@ public class ElevatorMechanism implements IMechanism
             topCarriageIntakePower = TuningConstants.ELEVATOR_TOP_CARRIAGE_INTAKE_POWER;
             bottomCarriageIntakePower = TuningConstants.ELEVATOR_BOTTOM_CARRIAGE_INTAKE_POWER;
         }
-        else if (shouldOuttake)
+        else if (shouldStrongOuttake)
         {
-            leftOuterIntakePower = TuningConstants.ELEVATOR_LEFT_OUTER_OUTTAKE_POWER;
-            rightOuterIntakePower = TuningConstants.ELEVATOR_RIGHT_OUTER_OUTTAKE_POWER;
-            topCarriageIntakePower = TuningConstants.ELEVATOR_TOP_CARRIAGE_OUTTAKE_POWER;
-            bottomCarriageIntakePower = TuningConstants.ELEVATOR_BOTTOM_CARRIAGE_OUTTAKE_POWER;
+            leftOuterIntakePower = TuningConstants.ELEVATOR_LEFT_OUTER_STRONG_OUTTAKE_POWER;
+            rightOuterIntakePower = TuningConstants.ELEVATOR_RIGHT_OUTER_STRONG_OUTTAKE_POWER;
+            topCarriageIntakePower = TuningConstants.ELEVATOR_TOP_CARRIAGE_STRONG_OUTTAKE_POWER;
+            bottomCarriageIntakePower = TuningConstants.ELEVATOR_BOTTOM_CARRIAGE_STRONG_OUTTAKE_POWER;
+        }
+        else if (shouldWeakOuttake)
+        {
+            leftOuterIntakePower = TuningConstants.ELEVATOR_LEFT_OUTER_WEAK_OUTTAKE_POWER;
+            rightOuterIntakePower = TuningConstants.ELEVATOR_RIGHT_OUTER_WEAK_OUTTAKE_POWER;
+            topCarriageIntakePower = TuningConstants.ELEVATOR_TOP_CARRIAGE_WEAK_OUTTAKE_POWER;
+            bottomCarriageIntakePower = TuningConstants.ELEVATOR_BOTTOM_CARRIAGE_WEAK_OUTTAKE_POWER;
         }
         else if (this.shouldHold)
         {

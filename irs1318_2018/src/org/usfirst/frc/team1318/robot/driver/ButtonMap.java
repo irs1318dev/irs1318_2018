@@ -202,10 +202,17 @@ public class ButtonMap implements IButtonMap
                     UserInputDeviceButton.NONE,
                     ButtonType.Simple));
             put(
-                Operation.ElevatorOuttake,
+                Operation.ElevatorStrongOuttake,
                 new DigitalOperationDescription(
                     UserInputDevice.Driver,
                     UserInputDeviceButton.JOYSTICK_STICK_TOP_LEFT_BUTTON,
+                    ButtonType.Simple));
+            put(
+                Operation.ElevatorWeakOuttake,
+                new DigitalOperationDescription(
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_STICK_TOP_LEFT_BUTTON,
+                    Shift.Debug,
                     ButtonType.Simple));
             put(
                 Operation.ElevatorIntakeArmsUp,
@@ -320,7 +327,7 @@ public class ButtonMap implements IButtonMap
                     {
                         Operation.ElevatorIntake,
                         Operation.ElevatorIntakeCorrection,
-                        Operation.ElevatorOuttake,
+                        Operation.ElevatorStrongOuttake,
                         Operation.ElevatorIntakeFingersIn,
                     }));
             put(
@@ -336,7 +343,7 @@ public class ButtonMap implements IButtonMap
                     {
                         Operation.ElevatorIntake,
                         Operation.ElevatorIntakeCorrection,
-                        Operation.ElevatorOuttake,
+                        Operation.ElevatorStrongOuttake,
                         Operation.ElevatorIntakeFingersIn,
                     }));
             put(
