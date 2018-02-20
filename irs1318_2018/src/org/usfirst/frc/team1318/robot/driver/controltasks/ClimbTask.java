@@ -1,9 +1,7 @@
 package org.usfirst.frc.team1318.robot.driver.controltasks;
 
-import org.usfirst.frc.team1318.robot.TuningConstants;
 import org.usfirst.frc.team1318.robot.driver.Operation;
 import org.usfirst.frc.team1318.robot.driver.common.IControlTask;
-import org.usfirst.frc.team1318.robot.elevator.ElevatorMechanism;
 
 /**
  * Task that holds multiple other tasks and executes them sequentially (in order).
@@ -11,8 +9,6 @@ import org.usfirst.frc.team1318.robot.elevator.ElevatorMechanism;
  */
 public class ClimbTask extends SequentialTask implements IControlTask
 {
-    private ElevatorMechanism elevator;
-
     /**
      * Initializes a new SequentialTask
      * @param tasks to run
@@ -20,25 +16,10 @@ public class ClimbTask extends SequentialTask implements IControlTask
     public ClimbTask()
     {
         super(new IControlTask[] {
+            new ElevatorMovementTask(1.0, Operation.ElevatorClimbPosition),
             new ReleaseServoTimedTask(2.5),
             new ElevatorMovementTask(1.0, Operation.ElevatorCarryPosition),
             new EnableWinchTimedTask(.2)
         });
-    }
-
-    /**
-    * Begin the current task
-    */
-    @Override
-    public void begin()
-    {
-        elevator = this.getInjector().getInstance(ElevatorMechanism.class);
-
-        if (elevator.getInnerPosition() + elevator.getOuterPosition() < TuningConstants.ELEVATOR_OUTER_CLIMB_POSITION
-            + TuningConstants.ELEVATOR_INNER_CLIMB_POSITION)
-        {
-            // Don't begin if elevator not high enough
-            end();
-        }
     }
 }
