@@ -34,9 +34,10 @@ public class ClimbTask extends SequentialTask implements IControlTask
     {
         elevator = this.getInjector().getInstance(ElevatorMechanism.class);
 
-        if (elevator.getInnerPosition() < TuningConstants.ELEVATOR_INNER_CLIMB_POSITION
-            && elevator.getOuterPosition() < TuningConstants.ELEVATOR_OUTER_CLIMB_POSITION)
+        if (elevator.getInnerPosition() + elevator.getOuterPosition() < TuningConstants.ELEVATOR_OUTER_CLIMB_POSITION
+            + TuningConstants.ELEVATOR_INNER_CLIMB_POSITION)
         {
+            // Don't begin if elevator not high enough
             end();
         }
     }
