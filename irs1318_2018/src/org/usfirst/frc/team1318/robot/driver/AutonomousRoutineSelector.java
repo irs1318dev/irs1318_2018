@@ -14,6 +14,7 @@ import org.usfirst.frc.team1318.robot.driver.controltasks.IntakeArmDownTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.OuttakeTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.SequentialTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.TurnTimedTask;
+import org.usfirst.frc.team1318.robot.driver.controltasks.WaitForeverTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.WaitTask;
 
 import com.google.inject.Inject;
@@ -59,8 +60,13 @@ public class AutonomousRoutineSelector
      */
     public IControlTask selectRoutine()
     {
-        boolean isOpportunistic = this.dipSwitchC.get();  // Opportunistic if third switch flipped, fixed routine if not
-        boolean prefersSwitch = this.dipSwitchD.get();  // Prefers switch if fourth switch flipped, prefers scale if not
+        boolean switchA = this.dipSwitchA.get();
+        boolean switchB = this.dipSwitchB.get();
+        boolean switchC = this.dipSwitchC.get();
+        boolean switchD = this.dipSwitchD.get();
+
+        boolean isOpportunistic = switchC;  // Opportunistic if third switch flipped, fixed routine if not
+        boolean prefersSwitch = switchD;  // Prefers switch if fourth switch flipped, prefers scale if not
 
         String rawSideData = DriverStation.getInstance().getGameSpecificMessage();
 
@@ -74,11 +80,11 @@ public class AutonomousRoutineSelector
 
         // add next base2 number (1, 2, 4, 8, 16, etc.) here based on number of dipswitches and which is on...
         int positionSelection = 0;
-        if (this.dipSwitchA.get())
+        if (switchA)
         {
             positionSelection += 1;
         }
-        if (this.dipSwitchB.get())
+        if (switchB)
         {
             positionSelection += 2;
         }
@@ -108,18 +114,25 @@ public class AutonomousRoutineSelector
         this.logger.logBoolean(AutonomousRoutineSelector.LogName, "isOpportunistic", isOpportunistic);
         this.logger.logBoolean(AutonomousRoutineSelector.LogName, "prefersSwitch", prefersSwitch);
 
-        if (position == Position.Special)
-        {
-            return specialRoutineSelection(isOpportunistic, prefersSwitch);
-        }
-        else if (isOpportunistic)
-        {
-            return opportunisticRoutineSelection(position, prefersSwitch, isSwitchSideLeft, isScaleSideLeft);
-        }
-        else
-        {
-            return setRoutineSelection(position, prefersSwitch, isSwitchSideLeft, isScaleSideLeft);
-        }
+        this.logger.logBoolean(AutonomousRoutineSelector.LogName, "switchA", switchA);
+        this.logger.logBoolean(AutonomousRoutineSelector.LogName, "switchB", switchB);
+        this.logger.logBoolean(AutonomousRoutineSelector.LogName, "switchC", switchC);
+        this.logger.logBoolean(AutonomousRoutineSelector.LogName, "switchD", switchD);
+
+        return new WaitForeverTask();
+
+        //        if (position == Position.Special)
+        //        {
+        //            return specialRoutineSelection(isOpportunistic, prefersSwitch);
+        //        }
+        //        else if (isOpportunistic)
+        //        {
+        //            return opportunisticRoutineSelection(position, prefersSwitch, isSwitchSideLeft, isScaleSideLeft);
+        //        }
+        //        else
+        //        {
+        //            return setRoutineSelection(position, prefersSwitch, isSwitchSideLeft, isScaleSideLeft);
+        //        }
     }
 
     /**

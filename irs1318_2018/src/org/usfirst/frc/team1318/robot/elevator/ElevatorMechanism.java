@@ -433,7 +433,7 @@ public class ElevatorMechanism implements IMechanism
         boolean shouldIntake = this.driver.getDigital(Operation.ElevatorIntake);
         boolean shouldIntakeCorrection = this.driver.getDigital(Operation.ElevatorIntakeCorrection);
         boolean shouldOuttake = this.driver.getDigital(Operation.ElevatorOuttake);
-        if (this.isInnerThroughBeamBlocked && (shouldIntake || shouldIntakeCorrection))
+        if (shouldIntake || shouldIntakeCorrection)
         {
             this.shouldHold = true;
         }
