@@ -155,7 +155,7 @@ public class TuningConstants
     public static final boolean ELEVATOR_INNER_INVERT_OUTPUT = true;
     public static final boolean ELEVATOR_INNER_INVERT_SENSOR = true;
     public static final boolean ELEVATOR_OUTER_INVERT_OUTPUT = true;
-    public static final boolean ELEVATOR_OUTER_INVERT_SENSOR = false;
+    public static final boolean ELEVATOR_OUTER_INVERT_SENSOR = true;
 
     public static final boolean ELEVATOR_TOP_CARRIAGE_INTAKE_INVERT_OUTPUT = true;
     public static final boolean ELEVATOR_BOTTOM_CARRIAGE_INTAKE_INVERT_OUTPUT = false;
@@ -165,7 +165,7 @@ public class TuningConstants
     public static final double ELEVATOR_THROUGH_BEAM_UNBLOCKED_VOLTAGE_THRESHOLD = 3.0;
 
     // Elevator positions (in inches)
-    public static final double ELEVATOR_INNER_CARRY_POSITION = 3.0; // note: inner elevator will be disabled after it is near the inner carry position - it will actually sink to 0.0...
+    public static final double ELEVATOR_INNER_CARRY_POSITION = 0.0;
     public static final double ELEVATOR_OUTER_CARRY_POSITION = 3.5;
     public static final double ELEVATOR_INNER_SWITCH_POSITION = 12.0; // Switch Fence Height: 19in. 
     public static final double ELEVATOR_OUTER_SWITCH_POSITION = 24.0;
