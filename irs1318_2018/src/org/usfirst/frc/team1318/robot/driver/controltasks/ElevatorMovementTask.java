@@ -114,7 +114,12 @@ public class ElevatorMovementTask extends TimedTask implements IControlTask
     @Override
     public boolean hasCompleted()
     {
-        if (this.completeWithTime && super.hasCompleted())
+        if (this.completeWithTime)
+        {
+            return super.hasCompleted();
+        }
+
+        if (super.hasCompleted())
         {
             return true;
         }

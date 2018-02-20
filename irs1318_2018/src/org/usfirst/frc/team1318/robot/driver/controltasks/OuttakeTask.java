@@ -52,15 +52,4 @@ public class OuttakeTask extends TimedTask implements IControlTask
         this.setDigitalOperationState(Operation.ElevatorIntakeCorrection, false);
         this.setDigitalOperationState(Operation.ElevatorStrongOuttake, false);
     }
-
-    @Override
-    public boolean hasCompleted()
-    {
-        if (super.hasCompleted())
-        {
-            return true;
-        }
-
-        return !this.elevator.getInnerThroughBeamStatus() && !this.elevator.getOuterThroughBeamStatus();
-    }
 }

@@ -14,7 +14,6 @@ import org.usfirst.frc.team1318.robot.driver.controltasks.IntakeArmDownTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.OuttakeTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.SequentialTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.TurnTimedTask;
-import org.usfirst.frc.team1318.robot.driver.controltasks.WaitForeverTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.WaitTask;
 
 import com.google.inject.Inject;
@@ -60,10 +59,10 @@ public class AutonomousRoutineSelector
      */
     public IControlTask selectRoutine()
     {
-        boolean switchA = this.dipSwitchA.get();
-        boolean switchB = this.dipSwitchB.get();
-        boolean switchC = this.dipSwitchC.get();
-        boolean switchD = this.dipSwitchD.get();
+        boolean switchA = !this.dipSwitchA.get();
+        boolean switchB = !this.dipSwitchB.get();
+        boolean switchC = !this.dipSwitchC.get();
+        boolean switchD = !this.dipSwitchD.get();
 
         boolean isOpportunistic = switchC;  // Opportunistic if third switch flipped, fixed routine if not
         boolean prefersSwitch = switchD;  // Prefers switch if fourth switch flipped, prefers scale if not
@@ -114,25 +113,18 @@ public class AutonomousRoutineSelector
         this.logger.logBoolean(AutonomousRoutineSelector.LogName, "isOpportunistic", isOpportunistic);
         this.logger.logBoolean(AutonomousRoutineSelector.LogName, "prefersSwitch", prefersSwitch);
 
-        this.logger.logBoolean(AutonomousRoutineSelector.LogName, "switchA", switchA);
-        this.logger.logBoolean(AutonomousRoutineSelector.LogName, "switchB", switchB);
-        this.logger.logBoolean(AutonomousRoutineSelector.LogName, "switchC", switchC);
-        this.logger.logBoolean(AutonomousRoutineSelector.LogName, "switchD", switchD);
-
-        return new WaitForeverTask();
-
-        //        if (position == Position.Special)
-        //        {
-        //            return specialRoutineSelection(isOpportunistic, prefersSwitch);
-        //        }
-        //        else if (isOpportunistic)
-        //        {
-        //            return opportunisticRoutineSelection(position, prefersSwitch, isSwitchSideLeft, isScaleSideLeft);
-        //        }
-        //        else
-        //        {
-        //            return setRoutineSelection(position, prefersSwitch, isSwitchSideLeft, isScaleSideLeft);
-        //        }
+        if (position == Position.Special)
+        {
+            return specialRoutineSelection(isOpportunistic, prefersSwitch);
+        }
+        else if (isOpportunistic)
+        {
+            return opportunisticRoutineSelection(position, prefersSwitch, isSwitchSideLeft, isScaleSideLeft);
+        }
+        else
+        {
+            return setRoutineSelection(position, prefersSwitch, isSwitchSideLeft, isScaleSideLeft);
+        }
     }
 
     /**
@@ -266,7 +258,7 @@ public class AutonomousRoutineSelector
         return ConcurrentTask.AllTasks(
             AutonomousRoutineSelector.InitialSetUp(),
             SequentialTask.Sequence(
-                new DriveDistanceTimedTask(147.75, 5.0),
+                new DriveDistanceTimedTask(127.75, 5.0), // 147.75
                 new TurnTimedTask(startingLeft ? 90.0 : -90.0, 1.5),
                 new DriveDistanceTimedTask(11.5, 0.5),
                 AutonomousRoutineSelector.DepositCube(false)));
@@ -358,7 +350,7 @@ public class AutonomousRoutineSelector
     private static IControlTask DepositCube(boolean isScale)
     {
         return SequentialTask.Sequence(
-            new ElevatorMovementTask(4.0, isScale ? Operation.ElevatorHighScalePosition : Operation.ElevatorSwitchPosition),
+            new ElevatorMovementTask(isScale ? 4.0 : 2.0, isScale ? Operation.ElevatorHighScalePosition : Operation.ElevatorSwitchPosition),
             new OuttakeTask(2.0));
     }
 }
