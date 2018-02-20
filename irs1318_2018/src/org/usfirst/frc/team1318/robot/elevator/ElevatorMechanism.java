@@ -55,6 +55,8 @@ public class ElevatorMechanism implements IMechanism
 
     private final ISolenoid collectedIndicatorLight;
 
+    private final TalonSRXControlMode pidControlMode;
+
     private Driver driver;
 
     private double innerElevatorVelocity;
@@ -98,6 +100,11 @@ public class ElevatorMechanism implements IMechanism
         this.logger = logger;
         this.timer = timer;
 
+        // determine our PID control methodology from settings...
+        this.pidControlMode = TuningConstants.ELEVATOR_USE_MOTION_MAGIC
+            ? TalonSRXControlMode.MotionMagicPosition
+            : TalonSRXControlMode.Position;
+
         this.innerElevatorMotor = provider.getTalonSRX(ElectronicsConstants.ELEVATOR_INNER_MOTOR_CAN_ID);
         this.innerElevatorMotor.setNeutralMode(TalonSRXNeutralMode.Brake);
         this.innerElevatorMotor.setInvertOutput(TuningConstants.ELEVATOR_INNER_INVERT_OUTPUT);
@@ -110,14 +117,30 @@ public class ElevatorMechanism implements IMechanism
         this.innerElevatorMotor.setReverseLimitSwitch(
             TuningConstants.ELEVATOR_INNER_REVERSE_LIMIT_SWITCH_ENABLED,
             TuningConstants.ELEVATOR_INNER_REVERSE_LIMIT_SWITCH_NORMALLY_OPEN);
-        this.innerElevatorMotor.setPIDF(
-            TuningConstants.ELEVATOR_POSITION_PID_INNER_KP,
-            TuningConstants.ELEVATOR_POSITION_PID_INNER_KI,
-            TuningConstants.ELEVATOR_POSITION_PID_INNER_KD,
-            TuningConstants.ELEVATOR_POSITION_PID_INNER_KF,
-            ElevatorMechanism.pidSlotId);
+
+        if (TuningConstants.ELEVATOR_USE_MOTION_MAGIC)
+        {
+            this.innerElevatorMotor.setMotionMagicPIDF(
+                TuningConstants.ELEVATOR_MM_POSITION_PID_INNER_KP,
+                TuningConstants.ELEVATOR_MM_POSITION_PID_INNER_KI,
+                TuningConstants.ELEVATOR_MM_POSITION_PID_INNER_KD,
+                TuningConstants.ELEVATOR_MM_POSITION_PID_INNER_KF,
+                TuningConstants.ELEVATOR_MM_POSITION_PID_INNER_CRUISE_VELOC,
+                TuningConstants.ELEVATOR_MM_POSITION_PID_INNER_ACCEL,
+                ElevatorMechanism.pidSlotId);
+        }
+        else
+        {
+            this.innerElevatorMotor.setPIDF(
+                TuningConstants.ELEVATOR_POSITION_PID_INNER_KP,
+                TuningConstants.ELEVATOR_POSITION_PID_INNER_KI,
+                TuningConstants.ELEVATOR_POSITION_PID_INNER_KD,
+                TuningConstants.ELEVATOR_POSITION_PID_INNER_KF,
+                ElevatorMechanism.pidSlotId);
+        }
+
+        this.innerElevatorMotor.setControlMode(this.pidControlMode);
         this.innerElevatorMotor.setSelectedSlot(ElevatorMechanism.pidSlotId);
-        this.innerElevatorMotor.setControlMode(TalonSRXControlMode.Position);
 
         this.outerElevatorMotor = provider.getTalonSRX(ElectronicsConstants.ELEVATOR_OUTER_MOTOR_CAN_ID);
         this.outerElevatorMotor.setNeutralMode(TalonSRXNeutralMode.Brake);
@@ -131,14 +154,30 @@ public class ElevatorMechanism implements IMechanism
         this.outerElevatorMotor.setReverseLimitSwitch(
             TuningConstants.ELEVATOR_OUTER_REVERSE_LIMIT_SWITCH_ENABLED,
             TuningConstants.ELEVATOR_OUTER_REVERSE_LIMIT_SWITCH_NORMALLY_OPEN);
-        this.outerElevatorMotor.setPIDF(
-            TuningConstants.ELEVATOR_POSITION_PID_OUTER_KP,
-            TuningConstants.ELEVATOR_POSITION_PID_OUTER_KI,
-            TuningConstants.ELEVATOR_POSITION_PID_OUTER_KD,
-            TuningConstants.ELEVATOR_POSITION_PID_OUTER_KF,
-            ElevatorMechanism.pidSlotId);
+
+        if (TuningConstants.ELEVATOR_USE_MOTION_MAGIC)
+        {
+            this.outerElevatorMotor.setMotionMagicPIDF(
+                TuningConstants.ELEVATOR_MM_POSITION_PID_OUTER_KP,
+                TuningConstants.ELEVATOR_MM_POSITION_PID_OUTER_KI,
+                TuningConstants.ELEVATOR_MM_POSITION_PID_OUTER_KD,
+                TuningConstants.ELEVATOR_MM_POSITION_PID_OUTER_KF,
+                TuningConstants.ELEVATOR_MM_POSITION_PID_OUTER_CRUISE_VELOC,
+                TuningConstants.ELEVATOR_MM_POSITION_PID_OUTER_ACCEL,
+                ElevatorMechanism.pidSlotId);
+        }
+        else
+        {
+            this.outerElevatorMotor.setPIDF(
+                TuningConstants.ELEVATOR_POSITION_PID_OUTER_KP,
+                TuningConstants.ELEVATOR_POSITION_PID_OUTER_KI,
+                TuningConstants.ELEVATOR_POSITION_PID_OUTER_KD,
+                TuningConstants.ELEVATOR_POSITION_PID_OUTER_KF,
+                ElevatorMechanism.pidSlotId);
+        }
+
+        this.outerElevatorMotor.setControlMode(this.pidControlMode);
         this.outerElevatorMotor.setSelectedSlot(ElevatorMechanism.pidSlotId);
-        this.outerElevatorMotor.setControlMode(TalonSRXControlMode.Position);
 
         this.topCarriageIntakeMotor = provider.getTalonSRX(ElectronicsConstants.ELEVATOR_TOP_CARRIAGE_INTAKE_MOTOR_CAN_ID);
         this.topCarriageIntakeMotor.setNeutralMode(TalonSRXNeutralMode.Brake);
@@ -505,8 +544,8 @@ public class ElevatorMechanism implements IMechanism
             this.logger.logNumber(ElevatorMechanism.LogName, "desiredInnerHeight", this.desiredInnerHeight);
             this.logger.logNumber(ElevatorMechanism.LogName, "desiredOuterHeight", this.desiredOuterHeight);
 
-            this.innerElevatorMotor.setControlMode(TalonSRXControlMode.Position);
-            this.outerElevatorMotor.setControlMode(TalonSRXControlMode.Position);
+            this.innerElevatorMotor.setControlMode(this.pidControlMode);
+            this.outerElevatorMotor.setControlMode(this.pidControlMode);
             if (TuningConstants.ELEVATOR_USE_CLUTCH
                 && Helpers.WithinDelta(this.innerElevatorHeight, this.desiredInnerHeight, TuningConstants.ELEVATOR_CLUTCH_POSITION_DELTA)
                 && Helpers.WithinDelta(this.outerElevatorHeight, this.desiredOuterHeight, TuningConstants.ELEVATOR_CLUTCH_POSITION_DELTA))
