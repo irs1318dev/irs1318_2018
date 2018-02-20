@@ -17,12 +17,10 @@ import org.usfirst.frc.team1318.robot.driver.common.descriptions.MacroOperationD
 import org.usfirst.frc.team1318.robot.driver.common.descriptions.OperationDescription;
 import org.usfirst.frc.team1318.robot.driver.common.descriptions.ShiftDescription;
 import org.usfirst.frc.team1318.robot.driver.common.descriptions.UserInputDevice;
-import org.usfirst.frc.team1318.robot.driver.controltasks.ElevatorMovementTask;
-import org.usfirst.frc.team1318.robot.driver.controltasks.EnableWinchTimedTask;
+import org.usfirst.frc.team1318.robot.driver.controltasks.ClimbTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.IntakeAndCorrectionTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.OuttakeTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.PIDBrakeTask;
-import org.usfirst.frc.team1318.robot.driver.controltasks.ReleaseServoTimedTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.SequentialTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.VisionAdvanceAndCenterTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.VisionCenteringTask;
@@ -348,11 +346,7 @@ public class ButtonMap implements IButtonMap
                     UserInputDevice.Driver,
                     UserInputDeviceButton.JOYSTICK_STICK_TOP_RIGHT_BUTTON,
                     ButtonType.Toggle,
-                    () -> SequentialTask.Sequence(
-                        new ElevatorMovementTask(5.0, Operation.ElevatorClimbPosition),
-                        new ReleaseServoTimedTask(2.5),
-                        new ElevatorMovementTask(1.0, Operation.ElevatorCarryPosition),
-                        new EnableWinchTimedTask(.2)),
+                    () -> new ClimbTask(),
                     new Operation[]
                     {
                         Operation.ElevatorBottomPosition,
