@@ -51,7 +51,7 @@ public class ButtonMap implements IButtonMap
             put(
                 Operation.EnableVision,
                 new DigitalOperationDescription(
-                    UserInputDevice.Driver,
+                    UserInputDevice.None,
                     90, // POV right
                     ButtonType.Toggle));
 
@@ -233,7 +233,7 @@ public class ButtonMap implements IButtonMap
             put(
                 Operation.ElevatorIntakeFingersIn,
                 new DigitalOperationDescription(
-                    UserInputDevice.Driver,
+                    UserInputDevice.None,
                     90, // POV right
                     ButtonType.Simple));
 
@@ -241,14 +241,14 @@ public class ButtonMap implements IButtonMap
             put(
                 Operation.ClimberRelease,
                 new DigitalOperationDescription(
-                    UserInputDevice.None,
+                    UserInputDevice.Driver,
                     270, // POV left
                     ButtonType.Click));
             put(
                 Operation.ClimberEnableWinch,
                 new DigitalOperationDescription(
-                    UserInputDevice.None,
-                    270, // POV left
+                    UserInputDevice.Driver,
+                    90, // POV right
                     ButtonType.Click));
             put(
                 Operation.ClimberDisableWinch,
