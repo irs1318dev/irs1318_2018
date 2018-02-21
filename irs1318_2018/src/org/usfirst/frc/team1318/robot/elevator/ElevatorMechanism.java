@@ -563,23 +563,26 @@ public class ElevatorMechanism implements IMechanism
 
             // only move to the selected new height if the intake arm is down (or we are putting it down)
             //  or if the new position is not within the restricted range and we won't move through the restricted range
-            double newDesiredTotalHeight = newDesiredInnerHeight + newDesiredOuterHeight;
-            boolean desiresBelowRestrictedRange = newDesiredTotalHeight <= TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MIN;
-            boolean desiresAboveRestrictedRange = newDesiredTotalHeight >= TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MAX;
-            desiresWithinRestrictedRange = Helpers.WithinRange(
-                newDesiredTotalHeight,
-                TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MIN,
-                TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MAX);
+            //            double newDesiredTotalHeight = newDesiredInnerHeight + newDesiredOuterHeight;
+            //            boolean desiresBelowRestrictedRange = newDesiredTotalHeight <= TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MIN;
+            //            boolean desiresAboveRestrictedRange = newDesiredTotalHeight >= TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MAX;
+            //            desiresWithinRestrictedRange = Helpers.WithinRange(
+            //                newDesiredTotalHeight,
+            //                TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MIN,
+            //                TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MAX);
+            //
+            //            if ((this.isIntakeArmDown && (!moveArmUp || moveArmDown))
+            //                || (!desiresWithinRestrictedRange
+            //                    && ((isBelowRestrictedRange && desiresBelowRestrictedRange)
+            //                        || (isAboveRestrictedRange && desiresAboveRestrictedRange))))
+            //            {
+            // Ensure that our desired inner and outer heights are within the permitted ranges:
+            //this.desiredInnerHeight = Helpers.EnforceRange(newDesiredInnerHeight, 0.0, HardwareConstants.ELEVATOR_INNER_MAX_HEIGHT);
+            //this.desiredOuterHeight = Helpers.EnforceRange(newDesiredOuterHeight, 0.0, HardwareConstants.ELEVATOR_OUTER_MAX_HEIGHT);
+            //}
 
-            if ((this.isIntakeArmDown && (!moveArmUp || moveArmDown))
-                || (!desiresWithinRestrictedRange
-                    && ((isBelowRestrictedRange && desiresBelowRestrictedRange)
-                        || (isAboveRestrictedRange && desiresAboveRestrictedRange))))
-            {
-                // Ensure that our desired inner and outer heights are within the permitted ranges:
-                this.desiredInnerHeight = Helpers.EnforceRange(newDesiredInnerHeight, 0.0, HardwareConstants.ELEVATOR_INNER_MAX_HEIGHT);
-                this.desiredOuterHeight = Helpers.EnforceRange(newDesiredOuterHeight, 0.0, HardwareConstants.ELEVATOR_OUTER_MAX_HEIGHT);
-            }
+            this.desiredInnerHeight = newDesiredInnerHeight;
+            this.desiredOuterHeight = newDesiredOuterHeight;
 
             this.logger.logNumber(ElevatorMechanism.LogName, "desiredInnerHeight", this.desiredInnerHeight);
             this.logger.logNumber(ElevatorMechanism.LogName, "desiredOuterHeight", this.desiredOuterHeight);

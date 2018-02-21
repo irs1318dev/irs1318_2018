@@ -173,8 +173,8 @@ public class TuningConstants
     public static final double ELEVATOR_OUTER_LOW_SCALE_POSITION = 24.0;
     public static final double ELEVATOR_INNER_HIGH_SCALE_POSITION = 32.0; // High Scale Height: 76in. 
     public static final double ELEVATOR_OUTER_HIGH_SCALE_POSITION = HardwareConstants.ELEVATOR_OUTER_MAX_HEIGHT;
-    public static final double ELEVATOR_INNER_CLIMB_POSITION = 34.0; // Bar Height: 84in. 
-    public static final double ELEVATOR_OUTER_CLIMB_POSITION = HardwareConstants.ELEVATOR_OUTER_MAX_HEIGHT;
+    public static final double ELEVATOR_INNER_CLIMB_POSITION = 27.0; // Bar Height: 84in. 
+    public static final double ELEVATOR_OUTER_CLIMB_POSITION = 0.0;
 
     public static final boolean ELEVATOR_USE_CLUTCH = true;
     public static final double ELEVATOR_CLUTCH_POSITION_DELTA = 1.0;
