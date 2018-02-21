@@ -1,6 +1,5 @@
 package org.usfirst.frc.team1318.robot.driver.common;
 
-import java.util.HashSet;
 import java.util.Map;
 
 import org.usfirst.frc.team1318.robot.driver.MacroOperation;

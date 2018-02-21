@@ -76,7 +76,7 @@ public class ElevatorMechanism implements IMechanism
     private double innerThroughBeamVoltage;
     private boolean isInnerThroughBeamBlocked;
 
-    private double outerThroughBeamVoltage;
+    //    private double outerThroughBeamVoltage;
     private boolean isOuterThroughBeamBlocked;
 
     private double desiredInnerHeight;
@@ -233,7 +233,7 @@ public class ElevatorMechanism implements IMechanism
 
         this.innerThroughBeamVoltage = 0.0;
         this.isInnerThroughBeamBlocked = false;
-        this.outerThroughBeamVoltage = 0.0;
+        //        this.outerThroughBeamVoltage = 0.0;
         this.isOuterThroughBeamBlocked = false;
 
         this.desiredInnerHeight = 0.0;
@@ -413,8 +413,8 @@ public class ElevatorMechanism implements IMechanism
         this.logger.logBoolean(ElevatorMechanism.LogName, "outerElevatorForwardLimitSwitch", this.outerElevatorForwardLimitSwitchStatus);
         this.logger.logNumber(ElevatorMechanism.LogName, "onnerThroughBeamSensorVoltage", this.innerThroughBeamVoltage);
         this.logger.logBoolean(ElevatorMechanism.LogName, "innerThroughBeamBlocked", this.isInnerThroughBeamBlocked);
-        this.logger.logNumber(ElevatorMechanism.LogName, "outerThroughBeamSensorVoltage", this.outerThroughBeamVoltage);
-        this.logger.logBoolean(ElevatorMechanism.LogName, "outerThroughBeamBlocked", this.isOuterThroughBeamBlocked);
+        //        this.logger.logNumber(ElevatorMechanism.LogName, "outerThroughBeamSensorVoltage", this.outerThroughBeamVoltage);
+        //        this.logger.logBoolean(ElevatorMechanism.LogName, "outerThroughBeamBlocked", this.isOuterThroughBeamBlocked);
     }
 
     /**
@@ -443,13 +443,13 @@ public class ElevatorMechanism implements IMechanism
             this.shouldHold = false;
         }
 
-        boolean isBelowRestrictedRange = currentTotalHeight <= TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MIN;
-        boolean isAboveRestrictedRange = currentTotalHeight >= TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MAX;
-        boolean isWithinRestrictedRange = Helpers.WithinRange(
-            currentTotalHeight,
-            TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MIN,
-            TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MAX);
-        boolean desiresWithinRestrictedRange = false;
+        //        boolean isBelowRestrictedRange = currentTotalHeight <= TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MIN;
+        //        boolean isAboveRestrictedRange = currentTotalHeight >= TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MAX;
+        //        boolean isWithinRestrictedRange = Helpers.WithinRange(
+        //            currentTotalHeight,
+        //            TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MIN,
+        //            TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MAX);
+        //        boolean desiresWithinRestrictedRange = false;
 
         boolean forceUp = this.driver.getDigital(Operation.ElevatorForceUp);
         boolean forceDown = this.driver.getDigital(Operation.ElevatorForceDown);
@@ -473,17 +473,17 @@ public class ElevatorMechanism implements IMechanism
             this.outerElevatorMotor.setControlMode(TalonSRXControlMode.PercentOutput);
             if (forceUp)
             {
-                this.innerElevatorMotor.set(this.innerElevatorForwardLimitSwitchStatus
-                    ? 0.0 : TuningConstants.ELEVATOR_DEBUG_UP_POWER_LEVEL);
-                this.outerElevatorMotor.set(this.outerElevatorForwardLimitSwitchStatus
-                    ? 0.0 : TuningConstants.ELEVATOR_DEBUG_UP_POWER_LEVEL);
+                this.innerElevatorMotor.set(
+                    this.innerElevatorForwardLimitSwitchStatus ? 0.0 : TuningConstants.ELEVATOR_DEBUG_UP_POWER_LEVEL);
+                this.outerElevatorMotor.set(
+                    this.outerElevatorForwardLimitSwitchStatus ? 0.0 : TuningConstants.ELEVATOR_DEBUG_UP_POWER_LEVEL);
             }
             else if (forceDown)
             {
-                this.innerElevatorMotor.set(this.innerElevatorReverseLimitSwitchStatus
-                    ? 0.0 : -TuningConstants.ELEVATOR_DEBUG_DOWN_POWER_LEVEL);
-                this.outerElevatorMotor.set(this.outerElevatorReverseLimitSwitchStatus
-                    ? 0.0 : -TuningConstants.ELEVATOR_DEBUG_DOWN_POWER_LEVEL);
+                this.innerElevatorMotor.set(
+                    this.innerElevatorReverseLimitSwitchStatus ? 0.0 : -TuningConstants.ELEVATOR_DEBUG_DOWN_POWER_LEVEL);
+                this.outerElevatorMotor.set(
+                    this.outerElevatorReverseLimitSwitchStatus ? 0.0 : -TuningConstants.ELEVATOR_DEBUG_DOWN_POWER_LEVEL);
             }
         }
         else
@@ -561,8 +561,8 @@ public class ElevatorMechanism implements IMechanism
                 }
             }
 
-            // only move to the selected new height if the intake arm is down (or we are putting it down)
-            //  or if the new position is not within the restricted range and we won't move through the restricted range
+            //            // only move to the selected new height if the intake arm is down (or we are putting it down)
+            //            //  or if the new position is not within the restricted range and we won't move through the restricted range
             //            double newDesiredTotalHeight = newDesiredInnerHeight + newDesiredOuterHeight;
             //            boolean desiresBelowRestrictedRange = newDesiredTotalHeight <= TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MIN;
             //            boolean desiresAboveRestrictedRange = newDesiredTotalHeight >= TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MAX;
@@ -576,13 +576,11 @@ public class ElevatorMechanism implements IMechanism
             //                    && ((isBelowRestrictedRange && desiresBelowRestrictedRange)
             //                        || (isAboveRestrictedRange && desiresAboveRestrictedRange))))
             //            {
-            // Ensure that our desired inner and outer heights are within the permitted ranges:
-            //this.desiredInnerHeight = Helpers.EnforceRange(newDesiredInnerHeight, 0.0, HardwareConstants.ELEVATOR_INNER_MAX_HEIGHT);
-            //this.desiredOuterHeight = Helpers.EnforceRange(newDesiredOuterHeight, 0.0, HardwareConstants.ELEVATOR_OUTER_MAX_HEIGHT);
-            //}
+            //                // Ensure that our desired inner and outer heights are within the permitted ranges:
+            //            }
 
-            this.desiredInnerHeight = newDesiredInnerHeight;
-            this.desiredOuterHeight = newDesiredOuterHeight;
+            this.desiredInnerHeight = Helpers.EnforceRange(newDesiredInnerHeight, 0.0, HardwareConstants.ELEVATOR_INNER_MAX_HEIGHT);
+            this.desiredOuterHeight = Helpers.EnforceRange(newDesiredOuterHeight, 0.0, HardwareConstants.ELEVATOR_OUTER_MAX_HEIGHT);
 
             this.logger.logNumber(ElevatorMechanism.LogName, "desiredInnerHeight", this.desiredInnerHeight);
             this.logger.logNumber(ElevatorMechanism.LogName, "desiredOuterHeight", this.desiredOuterHeight);
@@ -663,13 +661,12 @@ public class ElevatorMechanism implements IMechanism
                 this.desiredInnerHeight + this.desiredOuterHeight,
                 TuningConstants.ELEVATOR_POSITION_REACHED_DELTA));
 
-        // block moving arm up unless the carriage is outside the restricted range
         if (moveArmDown)
         {
             this.isIntakeArmDown = true;
             this.intakeArmExtender.set(DoubleSolenoidValue.kForward);
         }
-        else if (moveArmUp && !isWithinRestrictedRange && !desiresWithinRestrictedRange)
+        else if (moveArmUp) //&& !isWithinRestrictedRange && !desiresWithinRestrictedRange)
         {
             this.isIntakeArmDown = false;
             this.intakeArmExtender.set(DoubleSolenoidValue.kReverse);

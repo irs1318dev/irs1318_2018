@@ -187,8 +187,8 @@ public class TuningConstants
     public static final double ELEVATOR_MAXIMUM_OUTER_INTAKE_USE_HEIGHT = 12.0;
 
     // Range of carriage locations where we disallow raising/lowering intake arm
-    public static final double ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MIN = 5.0;
-    public static final double ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MAX = 30.0;
+    //    public static final double ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MIN = 5.0;
+    //    public static final double ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MAX = 30.0;
 
     // Elevator velocities
     public static final double ELEVATOR_MOVE_VELOCITY = 4.0; // inches per second

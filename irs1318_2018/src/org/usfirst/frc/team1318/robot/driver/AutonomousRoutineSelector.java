@@ -9,7 +9,6 @@ import org.usfirst.frc.team1318.robot.driver.controltasks.ConcurrentTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.DriveDistancePositionTimedTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.DriveDistanceTimedTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.ElevatorMovementTask;
-import org.usfirst.frc.team1318.robot.driver.controltasks.IntakeAndCorrectionTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.IntakeArmDownTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.OuttakeTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.SequentialTask;
@@ -256,7 +255,7 @@ public class AutonomousRoutineSelector
     private static IControlTask PlaceCubeOnSameSideSwitch(boolean startingLeft)
     {
         return ConcurrentTask.AllTasks(
-            AutonomousRoutineSelector.InitialSetUp(),
+            AutonomousRoutineSelector.InitialSetUp(false),
             SequentialTask.Sequence(
                 new DriveDistanceTimedTask(145.0, 5.0), // 147.75
                 new TurnTimedTask(startingLeft ? 90.0 : -90.0, 1.5),
@@ -267,7 +266,7 @@ public class AutonomousRoutineSelector
     private static IControlTask PlaceCubeOnSameSideScale(boolean startingLeft)
     {
         return ConcurrentTask.AllTasks(
-            AutonomousRoutineSelector.InitialSetUp(),
+            AutonomousRoutineSelector.InitialSetUp(true),
             SequentialTask.Sequence(
                 new DriveDistanceTimedTask(250.0, 9.0),
                 new TurnTimedTask(startingLeft ? 45.0 : -45.0, 1.5),
@@ -280,7 +279,7 @@ public class AutonomousRoutineSelector
         //general distance: 30 inches/sec
         //general turn speed: 45 degrees/sec
         return ConcurrentTask.AllTasks(
-            AutonomousRoutineSelector.InitialSetUp(),
+            AutonomousRoutineSelector.InitialSetUp(false),
             SequentialTask.Sequence(
                 new DriveDistanceTimedTask(205.0, 4.5),
                 new TurnTimedTask(startingLeft ? 90.0 : -90.0, 1.0),
@@ -295,7 +294,7 @@ public class AutonomousRoutineSelector
     private static IControlTask PlaceCubeOnOppositeSideScale(boolean startingLeft)
     {
         return ConcurrentTask.AllTasks(
-            AutonomousRoutineSelector.InitialSetUp(),
+            AutonomousRoutineSelector.InitialSetUp(true),
             SequentialTask.Sequence(
                 new DriveDistanceTimedTask(205.0, 4.5),
                 new TurnTimedTask(startingLeft ? 90.0 : -90.0, 1.0),
@@ -310,7 +309,7 @@ public class AutonomousRoutineSelector
     private static IControlTask PlaceCubeOnSwitchFromMiddle(boolean switchIsLeft)
     {
         return ConcurrentTask.AllTasks(
-            AutonomousRoutineSelector.InitialSetUp(),
+            AutonomousRoutineSelector.InitialSetUp(false),
             SequentialTask.Sequence(
                 new DriveDistanceTimedTask(24.0, 1.0),
                 new TurnTimedTask(switchIsLeft ? -50.0 : 50.0, 0.75),
@@ -325,37 +324,44 @@ public class AutonomousRoutineSelector
         return new WaitTask(0);
     }
 
-    private static IControlTask PlaceSecondCubeOnScaleFromScale(boolean scaleIsLeft)
-    {
-        return SequentialTask.Sequence(
-            new ElevatorMovementTask(2, Operation.ElevatorCarryPosition),
-            new DriveDistanceTimedTask(-11, 0.5),
-            new TurnTimedTask(scaleIsLeft ? 105 : -105, 1.5),
-            new DriveDistanceTimedTask(61, 2),
-            new IntakeAndCorrectionTask(),
-            new TurnTimedTask(scaleIsLeft ? 150 : -150, 2.0),
-            new DriveDistanceTimedTask(76, 2),
-            AutonomousRoutineSelector.DepositCube(true));
-    }
+    //    private static IControlTask PlaceSecondCubeOnScaleFromScale(boolean scaleIsLeft)
+    //    {
+    //        return SequentialTask.Sequence(
+    //            new ElevatorMovementTask(2, Operation.ElevatorCarryPosition),
+    //            new DriveDistanceTimedTask(-11, 0.5),
+    //            new TurnTimedTask(scaleIsLeft ? 105 : -105, 1.5),
+    //            new DriveDistanceTimedTask(61, 2),
+    //            new IntakeAndCorrectionTask(),
+    //            new TurnTimedTask(scaleIsLeft ? 150 : -150, 2.0),
+    //            new DriveDistanceTimedTask(76, 2),
+    //            AutonomousRoutineSelector.DepositCube(true));
+    //    }
 
     private static IControlTask CrossBaseLine()
     {
         return ConcurrentTask.AllTasks(
-            AutonomousRoutineSelector.InitialSetUp(),
+            AutonomousRoutineSelector.InitialSetUp(true),
             new DriveDistancePositionTimedTask(0.5, 100, 5.0));
     }
 
-    private static IControlTask InitialSetUp()
+    private static IControlTask InitialSetUp(boolean putArmDown)
     {
-        return ConcurrentTask.AllTasks(
-            new IntakeArmDownTask(0.25),
-            new ElevatorMovementTask(0.25, Operation.ElevatorCarryPosition));
+        if (putArmDown)
+        {
+            return ConcurrentTask.AllTasks(
+                new IntakeArmDownTask(0.25),
+                new ElevatorMovementTask(0.25, Operation.ElevatorCarryPosition));
+        }
+
+        return new ElevatorMovementTask(0.25, Operation.ElevatorCarryPosition);
     }
 
     private static IControlTask DepositCube(boolean isScale)
     {
         return SequentialTask.Sequence(
-            new ElevatorMovementTask(isScale ? 1.75 : 1.25, isScale ? Operation.ElevatorHighScalePosition : Operation.ElevatorSwitchPosition),
+            new ElevatorMovementTask(
+                isScale ? 1.75 : 1.25,
+                isScale ? Operation.ElevatorHighScalePosition : Operation.ElevatorSwitchPosition),
             new OuttakeTask(2.0));
     }
 }
