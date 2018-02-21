@@ -206,6 +206,7 @@ public class ButtonMap implements IButtonMap
                 new DigitalOperationDescription(
                     UserInputDevice.Driver,
                     UserInputDeviceButton.JOYSTICK_STICK_TOP_LEFT_BUTTON,
+                    Shift.None,
                     ButtonType.Simple));
             put(
                 Operation.ElevatorWeakOuttake,
