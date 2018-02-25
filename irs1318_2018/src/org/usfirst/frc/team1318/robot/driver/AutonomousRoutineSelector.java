@@ -312,8 +312,8 @@ public class AutonomousRoutineSelector
             AutonomousRoutineSelector.InitialSetUp(false),
             SequentialTask.Sequence(
                 new DriveDistanceTimedTask(24.0, 1.0),
-                new TurnTimedTask(switchIsLeft ? -50.0 : 50.0, 0.75),
-                new DriveDistanceTimedTask(75.0, 3.0),
+                new TurnTimedTask(switchIsLeft ? -55.0 : 55.0, 0.75),
+                new DriveDistanceTimedTask(85.0, 3.0),
                 new TurnTimedTask(switchIsLeft ? 40.0 : -40.0, 0.75),
                 new DriveDistanceTimedTask(24.0, 1.0),
                 AutonomousRoutineSelector.DepositCube(false)));

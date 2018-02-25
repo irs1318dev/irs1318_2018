@@ -490,7 +490,11 @@ public class ElevatorMechanism implements IMechanism
         {
             double newDesiredInnerHeight = this.desiredInnerHeight;
             double newDesiredOuterHeight = this.desiredOuterHeight;
-            if (this.driver.getDigital(Operation.ElevatorBottomPosition) || shouldIntake || shouldIntakeCorrection)
+            if (this.driver.getDigital(Operation.ElevatorBottomPosition)
+                || shouldIntake || shouldIntakeCorrection
+                || ((shouldWeakOuttake || shouldStrongOuttake)
+                    && this.desiredInnerHeight == TuningConstants.ELEVATOR_INNER_CARRY_POSITION
+                    && this.desiredOuterHeight == TuningConstants.ELEVATOR_OUTER_CARRY_POSITION))
             {
                 newDesiredInnerHeight = 0;
                 newDesiredOuterHeight = 0;
@@ -525,8 +529,10 @@ public class ElevatorMechanism implements IMechanism
                 newDesiredInnerHeight = HardwareConstants.ELEVATOR_INNER_MAX_HEIGHT;
                 newDesiredOuterHeight = HardwareConstants.ELEVATOR_OUTER_MAX_HEIGHT;
             }
-            else if (this.desiredInnerHeight < TuningConstants.ELEVATOR_INNER_CARRY_POSITION
+            else if ((this.desiredInnerHeight < TuningConstants.ELEVATOR_INNER_CARRY_POSITION
                 || this.desiredOuterHeight < TuningConstants.ELEVATOR_OUTER_CARRY_POSITION)
+                && !shouldStrongOuttake && !shouldWeakOuttake
+                && !shouldIntake && !shouldIntakeCorrection)
             {
                 newDesiredInnerHeight = TuningConstants.ELEVATOR_INNER_CARRY_POSITION;
                 newDesiredOuterHeight = TuningConstants.ELEVATOR_OUTER_CARRY_POSITION;

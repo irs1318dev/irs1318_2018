@@ -198,7 +198,7 @@ public class TuningConstants
     public static final double ELEVATOR_BOTTOM_CARRIAGE_HOLD_POWER = 0.10;
 
     public static final double ELEVATOR_LEFT_OUTER_INTAKE_POWER = 1.0;
-    public static final double ELEVATOR_RIGHT_OUTER_INTAKE_POWER = 0.8;
+    public static final double ELEVATOR_RIGHT_OUTER_INTAKE_POWER = 0.6;
     public static final double ELEVATOR_TOP_CARRIAGE_INTAKE_POWER = 1.0;
     public static final double ELEVATOR_BOTTOM_CARRIAGE_INTAKE_POWER = 1.0;
 

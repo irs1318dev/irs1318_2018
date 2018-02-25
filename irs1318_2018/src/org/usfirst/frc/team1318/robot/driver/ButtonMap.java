@@ -139,7 +139,7 @@ public class ButtonMap implements IButtonMap
                 new DigitalOperationDescription(
                     UserInputDevice.Driver,
                     UserInputDeviceButton.JOYSTICK_BASE_MIDDLE_LEFT_BUTTON,
-                    Shift.None,
+                    Shift.Debug,
                     ButtonType.Click));
             put(
                 Operation.ElevatorLowScalePosition,
@@ -359,7 +359,7 @@ public class ButtonMap implements IButtonMap
                     true,
                     UserInputDevice.Driver,
                     UserInputDeviceButton.JOYSTICK_BASE_MIDDLE_LEFT_BUTTON,
-                    Shift.Debug,
+                    Shift.None,
                     ButtonType.Toggle,
                     () -> ConcurrentTask.AllTasks(
                         new IntakeArmUpTask(.3),
