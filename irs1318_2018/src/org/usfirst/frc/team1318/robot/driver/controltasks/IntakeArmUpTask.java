@@ -15,6 +15,7 @@ public class IntakeArmUpTask extends TimedTask implements IControlTask
     {
         super.begin();
         this.setDigitalOperationState(Operation.ElevatorIntakeArmsUp, true);
+        this.setDigitalOperationState(Operation.ElevatorIntakeArmsDown, false);
     }
 
     @Override
@@ -26,11 +27,13 @@ public class IntakeArmUpTask extends TimedTask implements IControlTask
     {
         super.stop();
         this.setDigitalOperationState(Operation.ElevatorIntakeArmsUp, false);
+        this.setDigitalOperationState(Operation.ElevatorIntakeArmsDown, false);
     }
 
     public void end()
     {
         super.end();
         this.setDigitalOperationState(Operation.ElevatorIntakeArmsUp, false);
+        this.setDigitalOperationState(Operation.ElevatorIntakeArmsDown, false);
     }
 }
