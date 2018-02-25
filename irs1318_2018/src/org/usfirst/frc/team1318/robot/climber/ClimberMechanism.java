@@ -48,7 +48,7 @@ public class ClimberMechanism implements IMechanism
         this.logger = logger;
 
         this.winch = provider.getVictorSPX(ElectronicsConstants.CLIMBER_WINCH_MOTOR_CAN_ID);
-        this.winch.setInvertOutput(false);
+        this.winch.setInvertOutput(true);
 
         IVictorSPX winchFollower = provider.getVictorSPX(ElectronicsConstants.CLIMBER_WINCH_FOLLOWER_CAN_ID);
         winchFollower.setInvertOutput(true);

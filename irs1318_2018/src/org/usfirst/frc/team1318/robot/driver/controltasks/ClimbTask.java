@@ -10,16 +10,17 @@ import org.usfirst.frc.team1318.robot.driver.common.IControlTask;
 public class ClimbTask extends SequentialTask implements IControlTask
 {
     /**
-     * Initializes a new SequentialTask
-     * @param tasks to run
+     * Initializes a new ClimbTask
      */
     public ClimbTask()
     {
-        super(new IControlTask[] {
-            new ElevatorMovementTask(1.0, Operation.ElevatorClimbPosition),
-            new ReleaseServoTimedTask(2.5),
-            new ElevatorMovementTask(1.0, Operation.ElevatorCarryPosition),
-            new EnableWinchTimedTask(.2)
-        });
+        super(
+            new IControlTask[]
+            {
+                new ElevatorMovementTask(1.0, Operation.ElevatorClimbPosition),
+                new ReleaseServoTimedTask(2.5),
+                new ElevatorMovementTask(1.0, Operation.ElevatorCarryPosition),
+                new EnableWinchTimedTask(.2)
+            });
     }
 }

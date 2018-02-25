@@ -18,10 +18,7 @@ import org.usfirst.frc.team1318.robot.driver.common.descriptions.OperationDescri
 import org.usfirst.frc.team1318.robot.driver.common.descriptions.ShiftDescription;
 import org.usfirst.frc.team1318.robot.driver.common.descriptions.UserInputDevice;
 import org.usfirst.frc.team1318.robot.driver.controltasks.ClimbTask;
-import org.usfirst.frc.team1318.robot.driver.controltasks.ConcurrentTask;
-import org.usfirst.frc.team1318.robot.driver.controltasks.ElevatorMovementTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.IntakeAndCorrectionTask;
-import org.usfirst.frc.team1318.robot.driver.controltasks.IntakeArmUpTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.OuttakeTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.PIDBrakeTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.SequentialTask;
@@ -137,8 +134,8 @@ public class ButtonMap implements IButtonMap
             put(
                 Operation.ElevatorSwitchPosition,
                 new DigitalOperationDescription(
-                    UserInputDevice.None,
-                    UserInputDeviceButton.NONE,
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_BASE_MIDDLE_LEFT_BUTTON,
                     ButtonType.Click));
             put(
                 Operation.ElevatorLowScalePosition,
@@ -243,12 +240,14 @@ public class ButtonMap implements IButtonMap
                 new DigitalOperationDescription(
                     UserInputDevice.Driver,
                     270, // POV left
+                    Shift.Debug,
                     ButtonType.Click));
             put(
                 Operation.ClimberEnableWinch,
                 new DigitalOperationDescription(
                     UserInputDevice.Driver,
                     90, // POV right
+                    Shift.Debug,
                     ButtonType.Click));
             put(
                 Operation.ClimberDisableWinch,
@@ -350,22 +349,22 @@ public class ButtonMap implements IButtonMap
                         Operation.ElevatorStrongOuttake,
                         Operation.ElevatorIntakeFingersIn,
                     }));
-            put(
-                MacroOperation.ArmsUpSwitchPosition,
-                new MacroOperationDescription(
-                    true,
-                    UserInputDevice.Driver,
-                    UserInputDeviceButton.JOYSTICK_BASE_MIDDLE_LEFT_BUTTON,
-                    Shift.None,
-                    ButtonType.Click,
-                    () -> ConcurrentTask.AllTasks(
-                        new IntakeArmUpTask(.3),
-                        new ElevatorMovementTask(Operation.ElevatorSwitchPosition)),
-                    new Operation[]
-                    {
-                        Operation.ElevatorSwitchPosition,
-                        Operation.ElevatorIntakeArmsUp
-                    }));
+            //            put(
+            //                MacroOperation.ArmsUpSwitchPosition,
+            //                new MacroOperationDescription(
+            //                    true,
+            //                    UserInputDevice.Driver,
+            //                    UserInputDeviceButton.JOYSTICK_BASE_MIDDLE_LEFT_BUTTON,
+            //                    Shift.None,
+            //                    ButtonType.Click,
+            //                    () -> ConcurrentTask.AllTasks(
+            //                        new IntakeArmUpTask(.3),
+            //                        new ElevatorMovementTask(Operation.ElevatorSwitchPosition)),
+            //                    new Operation[]
+            //                    {
+            //                        Operation.ElevatorSwitchPosition,
+            //                        Operation.ElevatorIntakeArmsUp
+            //                    }));
             put(
                 MacroOperation.HookClimber,
                 new MacroOperationDescription(
