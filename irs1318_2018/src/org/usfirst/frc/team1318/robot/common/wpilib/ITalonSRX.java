@@ -15,6 +15,7 @@ public interface ITalonSRX extends IMotor
     void setNeutralMode(TalonSRXNeutralMode neutralMode);
     void setVoltageCompensation(boolean enabled, double maxVoltage);
     void stop();
+    void setPosition(int position);
     void reset();
     int getPosition();
     double getVelocity();
