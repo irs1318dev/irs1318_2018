@@ -164,28 +164,36 @@ public class AutonomousRoutineSelector
                 {
                     return prefersSwitch ? PlaceCubeOnSameSideSwitch(true) : PlaceCubeOnSameSideScale(true);
                 }
-                else if (isScaleSideLeft)
+
+                if (isScaleSideLeft)
                 {
                     return PlaceCubeOnSameSideScale(true);
                 }
-                else
+
+                if (isSwitchSideLeft)
                 {
                     return PlaceCubeOnSameSideSwitch(true);
                 }
+
+                return CrossBaseLine(); // prefersSwitch ? PlaceCubeOnOppositeSideSwitch(true) : PlaceCubeOnOppositeSideScale(true);
 
             case Right:
                 if (!isSwitchSideLeft && !isScaleSideLeft)
                 {
                     return prefersSwitch ? PlaceCubeOnSameSideSwitch(false) : PlaceCubeOnSameSideScale(false);
                 }
-                else if (!isScaleSideLeft)
+
+                if (!isScaleSideLeft)
                 {
                     return PlaceCubeOnSameSideScale(false);
                 }
-                else
+
+                if (!isSwitchSideLeft)
                 {
                     return PlaceCubeOnSameSideSwitch(false);
                 }
+
+                return CrossBaseLine(); // prefersSwitch ? PlaceCubeOnOppositeSideSwitch(false) : PlaceCubeOnOppositeSideScale(false);
 
             case Special:
             default:
@@ -341,7 +349,7 @@ public class AutonomousRoutineSelector
     {
         return ConcurrentTask.AllTasks(
             AutonomousRoutineSelector.InitialSetUp(true),
-            new DriveDistancePositionTimedTask(0.5, 100, 5.0));
+            new DriveDistancePositionTimedTask(0.5, 145.0, 5.0));
     }
 
     private static IControlTask InitialSetUp(boolean putArmDown)
