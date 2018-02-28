@@ -54,14 +54,14 @@ public class TuningConstants
     public static final boolean DRIVETRAIN_USE_PID = true;
 
     // Velocity PID (right)
-    public static final double DRIVETRAIN_VELOCITY_PID_RIGHT_KP = 0.2; // 0.65
+    public static final double DRIVETRAIN_VELOCITY_PID_RIGHT_KP = TuningConstants.COMPETITION_ROBOT ? 0.2 : 0.65;
     public static final double DRIVETRAIN_VELOCITY_PID_RIGHT_KI = 0.0;
     public static final double DRIVETRAIN_VELOCITY_PID_RIGHT_KD = 0.0;
     public static final double DRIVETRAIN_VELOCITY_PID_RIGHT_KF = 0.15;
     public static final double DRIVETRAIN_VELOCITY_PID_RIGHT_KS = 3800.0;
 
     // Velocity PID (left)
-    public static final double DRIVETRAIN_VELOCITY_PID_LEFT_KP = 0.2; // 0.65
+    public static final double DRIVETRAIN_VELOCITY_PID_LEFT_KP = TuningConstants.COMPETITION_ROBOT ? 0.2 : 0.65;
     public static final double DRIVETRAIN_VELOCITY_PID_LEFT_KI = 0.0;
     public static final double DRIVETRAIN_VELOCITY_PID_LEFT_KD = 0.0;
     public static final double DRIVETRAIN_VELOCITY_PID_LEFT_KF = 0.15;
@@ -111,7 +111,7 @@ public class TuningConstants
 
     //================================================== Elevator ==============================================================
 
-    public static final boolean ELEVATOR_USE_MOTION_MAGIC = true;
+    public static final boolean ELEVATOR_USE_MOTION_MAGIC = TuningConstants.COMPETITION_ROBOT;
 
     // MotionMagic Position PID (inner)
     public static final double ELEVATOR_MM_POSITION_PID_INNER_KP = 0.133;
@@ -153,9 +153,9 @@ public class TuningConstants
 
     // Elevator motor/sensor orientations
     public static final boolean ELEVATOR_INNER_INVERT_OUTPUT = true;
-    public static final boolean ELEVATOR_INNER_INVERT_SENSOR = true;
-    public static final boolean ELEVATOR_OUTER_INVERT_OUTPUT = true;
-    public static final boolean ELEVATOR_OUTER_INVERT_SENSOR = true;
+    public static final boolean ELEVATOR_INNER_INVERT_SENSOR = TuningConstants.COMPETITION_ROBOT ? true : false;
+    public static final boolean ELEVATOR_OUTER_INVERT_OUTPUT = TuningConstants.COMPETITION_ROBOT ? true : false;
+    public static final boolean ELEVATOR_OUTER_INVERT_SENSOR = TuningConstants.COMPETITION_ROBOT ? true : false;
 
     public static final boolean ELEVATOR_TOP_CARRIAGE_INTAKE_INVERT_OUTPUT = true;
     public static final boolean ELEVATOR_BOTTOM_CARRIAGE_INTAKE_INVERT_OUTPUT = true;

@@ -3,6 +3,7 @@ package org.usfirst.frc.team1318.robot.climber;
 import javax.inject.Singleton;
 
 import org.usfirst.frc.team1318.robot.ElectronicsConstants;
+import org.usfirst.frc.team1318.robot.TuningConstants;
 import org.usfirst.frc.team1318.robot.common.IDashboardLogger;
 import org.usfirst.frc.team1318.robot.common.IMechanism;
 import org.usfirst.frc.team1318.robot.common.wpilib.IServo;
@@ -50,10 +51,13 @@ public class ClimberMechanism implements IMechanism
         this.winch = provider.getVictorSPX(ElectronicsConstants.CLIMBER_WINCH_MOTOR_CAN_ID);
         this.winch.setInvertOutput(true);
 
-        IVictorSPX winchFollower = provider.getVictorSPX(ElectronicsConstants.CLIMBER_WINCH_FOLLOWER_CAN_ID);
-        winchFollower.setInvertOutput(true);
-        winchFollower.setControlMode(TalonSRXControlMode.Follower);
-        winchFollower.set(ElectronicsConstants.CLIMBER_WINCH_MOTOR_CAN_ID);
+        if (TuningConstants.COMPETITION_ROBOT)
+        {
+            IVictorSPX winchFollower = provider.getVictorSPX(ElectronicsConstants.CLIMBER_WINCH_FOLLOWER_CAN_ID);
+            winchFollower.setInvertOutput(true);
+            winchFollower.setControlMode(TalonSRXControlMode.Follower);
+            winchFollower.set(ElectronicsConstants.CLIMBER_WINCH_MOTOR_CAN_ID);
+        }
 
         this.releaser = provider.getServo(ElectronicsConstants.CLIMBER_RELEASER_SERVO_PWM_CHANNEL);
 
