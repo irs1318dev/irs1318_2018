@@ -18,6 +18,19 @@ public class TuningConstants
     // Acceptable vision centering range values in degrees
     public static final double MAX_VISION_CENTERING_RANGE_DEGREES = 5.0;
 
+    // Navx Turn Constants
+    public static final double MAX_NAVX_TURN_RANGE_DEGREES = 4.0;
+    public static final double NAVX_TURN_COMPLETE_TIME = 0.5;
+
+    // Navx Turn PID Constants
+    public static final double NAVX_TURN_PID_KP = 0.165;
+    public static final double NAVX_TURN_PID_KI = 0.0;
+    public static final double NAVX_TURN_PID_KD = 1.0;
+    public static final double NAVX_TURN_PID_KF = 0.0;
+    public static final double NAVX_TURN_PID_KS = 1.0;
+    public static final double NAVX_TURN_PID_MIN = -0.8;
+    public static final double NAVX_TURN_PID_MAX = 0.8;
+
     // Acceptable vision distance from tape in inches
     public static final double MAX_VISION_ACCEPTABLE_FORWARD_DISTANCE = 30.0;
 
@@ -173,8 +186,8 @@ public class TuningConstants
     public static final double ELEVATOR_OUTER_LOW_SCALE_POSITION = 24.0;
     public static final double ELEVATOR_INNER_HIGH_SCALE_POSITION = 32.0; // High Scale Height: 76in. 
     public static final double ELEVATOR_OUTER_HIGH_SCALE_POSITION = HardwareConstants.ELEVATOR_OUTER_MAX_HEIGHT;
-    public static final double ELEVATOR_INNER_CLIMB_POSITION = 27.0; // Bar Height: 84in. 
-    public static final double ELEVATOR_OUTER_CLIMB_POSITION = 0.0;
+    public static final double ELEVATOR_INNER_CLIMB_POSITION = 29.0; // Bar Height: 84in. 
+    public static final double ELEVATOR_OUTER_CLIMB_POSITION = TuningConstants.ELEVATOR_OUTER_CARRY_POSITION;
 
     public static final boolean ELEVATOR_USE_CLUTCH = true;
     public static final double ELEVATOR_CLUTCH_POSITION_DELTA = 1.0;
@@ -198,7 +211,7 @@ public class TuningConstants
     public static final double ELEVATOR_BOTTOM_CARRIAGE_HOLD_POWER = 0.10;
 
     public static final double ELEVATOR_LEFT_OUTER_INTAKE_POWER = 1.0;
-    public static final double ELEVATOR_RIGHT_OUTER_INTAKE_POWER = 0.6;
+    public static final double ELEVATOR_RIGHT_OUTER_INTAKE_POWER = 0.8;
     public static final double ELEVATOR_TOP_CARRIAGE_INTAKE_POWER = 1.0;
     public static final double ELEVATOR_BOTTOM_CARRIAGE_INTAKE_POWER = 1.0;
 
@@ -220,7 +233,7 @@ public class TuningConstants
     // Elevator intake correction time thresholds (in seconds)
     public static final double ELEVATOR_INTAKE_CORRECTION_TRIGGER_TIME_THRESHOLD = 1.0;
     public static final double ELEVATOR_INTAKE_CORRECTION_OPERATION_TIME_THRESHOLD = 1.0;
-    public static final double ELEVATOR_FINGER_OUT_TIME_THRESHOLD = 0.25;
+    public static final double ELEVATOR_FINGER_OUT_TIME_THRESHOLD = 0.0;
 
     public static final double ELEVATOR_CLIMBING_MOVEMENT_DISTANCE_THRESHOLD = 1500.0; // in ticks
     public static final double ELEVATOR_CLIMBING_MOVEMENT_TIME_THRESHOLD = 4.0;
@@ -228,4 +241,5 @@ public class TuningConstants
     //================================================== Climber ==============================================================
 
     public static final double CLIMBER_WINCH_DEAD_ZONE = .1;
+
 }

@@ -38,7 +38,6 @@ public enum Operation
     ElevatorIntakeFingersIn,
 
     // Climber operations
-    ClimberRelease, 
     ClimberWinch, 
     ClimberEnableWinch,
     ClimberDisableWinch, 

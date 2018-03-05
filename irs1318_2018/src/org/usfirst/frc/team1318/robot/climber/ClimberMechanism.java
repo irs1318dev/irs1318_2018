@@ -6,7 +6,6 @@ import org.usfirst.frc.team1318.robot.ElectronicsConstants;
 import org.usfirst.frc.team1318.robot.TuningConstants;
 import org.usfirst.frc.team1318.robot.common.IDashboardLogger;
 import org.usfirst.frc.team1318.robot.common.IMechanism;
-import org.usfirst.frc.team1318.robot.common.wpilib.IServo;
 import org.usfirst.frc.team1318.robot.common.wpilib.IVictorSPX;
 import org.usfirst.frc.team1318.robot.common.wpilib.IWpilibProvider;
 import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXControlMode;
@@ -28,13 +27,12 @@ public class ClimberMechanism implements IMechanism
 
     private final IDashboardLogger logger;
 
-    private final IServo releaser;
     private final IVictorSPX winch;
 
     private Driver driver;
 
+    private boolean waitingToRewinch;
     private boolean winchEnabled;
-    private boolean hookReleased;
 
     /**
      * Initializes a new DriveTrainMechanism
@@ -59,10 +57,8 @@ public class ClimberMechanism implements IMechanism
             winchFollower.set(ElectronicsConstants.CLIMBER_WINCH_MOTOR_CAN_ID);
         }
 
-        this.releaser = provider.getServo(ElectronicsConstants.CLIMBER_RELEASER_SERVO_PWM_CHANNEL);
-
+        this.waitingToRewinch = false;
         this.winchEnabled = false;
-        this.hookReleased = false;
     }
 
     /**
@@ -89,35 +85,33 @@ public class ClimberMechanism implements IMechanism
     @Override
     public void update()
     {
-        if (this.driver.getDigital(Operation.ClimberEnableWinch))
+        double winchSpeed = this.driver.getAnalog(Operation.ClimberWinch);
+        if (this.driver.getDigital(Operation.ClimberEnableWinch)
+            || this.driver.getDigital(Operation.ElevatorClimbPosition))
         {
-            this.winchEnabled = true;
+            if (winchSpeed > 0.0)
+            {
+                this.waitingToRewinch = true;
+            }
+            else
+            {
+                this.winchEnabled = true;
+            }
         }
         else if (this.driver.getDigital(Operation.ClimberDisableWinch))
         {
             this.winchEnabled = false;
         }
 
-        if (this.driver.getDigital(Operation.ClimberRelease))
+        if (this.waitingToRewinch && winchSpeed <= 0.0)
         {
-            this.hookReleased = true;
+            this.winchEnabled = true;
         }
 
         this.logger.logBoolean(ClimberMechanism.LogName, "winchEnabled", this.winchEnabled);
-        this.logger.logBoolean(ClimberMechanism.LogName, "hookReleased", this.hookReleased);
-
-        if (this.hookReleased)
-        {
-            this.releaser.set(1.0);
-        }
-        else
-        {
-            this.releaser.set(0.0);
-        }
 
         if (this.winchEnabled)
         {
-            double winchSpeed = driver.getAnalog(Operation.ClimberWinch);
             if (winchSpeed > 0)
             {
                 this.winch.set(winchSpeed);

@@ -17,7 +17,6 @@ import org.usfirst.frc.team1318.robot.driver.common.descriptions.MacroOperationD
 import org.usfirst.frc.team1318.robot.driver.common.descriptions.OperationDescription;
 import org.usfirst.frc.team1318.robot.driver.common.descriptions.ShiftDescription;
 import org.usfirst.frc.team1318.robot.driver.common.descriptions.UserInputDevice;
-import org.usfirst.frc.team1318.robot.driver.controltasks.ClimbTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.ConcurrentTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.ElevatorMovementTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.IntakeAndCorrectionTask;
@@ -156,8 +155,8 @@ public class ButtonMap implements IButtonMap
             put(
                 Operation.ElevatorClimbPosition,
                 new DigitalOperationDescription(
-                    UserInputDevice.None,
-                    UserInputDeviceButton.NONE,
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_STICK_TOP_RIGHT_BUTTON,
                     ButtonType.Click));
             put(
                 Operation.ElevatorTopPosition,
@@ -239,13 +238,6 @@ public class ButtonMap implements IButtonMap
                     ButtonType.Simple));
 
             // Operations for the climber
-            put(
-                Operation.ClimberRelease,
-                new DigitalOperationDescription(
-                    UserInputDevice.Driver,
-                    270, // POV left
-                    Shift.Debug,
-                    ButtonType.Click));
             put(
                 Operation.ClimberEnableWinch,
                 new DigitalOperationDescription(
@@ -375,28 +367,6 @@ public class ButtonMap implements IButtonMap
                         Operation.ElevatorHighScalePosition,
                         Operation.ElevatorClimbPosition,
                         Operation.ElevatorTopPosition,
-                    }));
-            put(
-                MacroOperation.HookClimber,
-                new MacroOperationDescription(
-                    true,
-                    UserInputDevice.Driver,
-                    UserInputDeviceButton.JOYSTICK_STICK_TOP_RIGHT_BUTTON,
-                    Shift.Debug,
-                    ButtonType.Toggle,
-                    () -> new ClimbTask(),
-                    new Operation[]
-                    {
-                        Operation.ElevatorBottomPosition,
-                        Operation.ElevatorCarryPosition,
-                        Operation.ElevatorSwitchPosition,
-                        Operation.ElevatorLowScalePosition,
-                        Operation.ElevatorHighScalePosition,
-                        Operation.ElevatorClimbPosition,
-                        Operation.ElevatorTopPosition,
-                        Operation.ClimberEnableWinch,
-                        Operation.ClimberDisableWinch,
-                        Operation.ClimberRelease,
                     }));
         }
     };
