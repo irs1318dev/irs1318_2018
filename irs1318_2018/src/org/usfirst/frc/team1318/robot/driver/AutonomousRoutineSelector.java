@@ -14,7 +14,6 @@ import org.usfirst.frc.team1318.robot.driver.controltasks.NavxTurnTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.OuttakeTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.PIDBrakeTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.SequentialTask;
-import org.usfirst.frc.team1318.robot.driver.controltasks.TurnTimedTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.WaitTask;
 
 import com.google.inject.Inject;
@@ -342,9 +341,9 @@ public class AutonomousRoutineSelector
             AutonomousRoutineSelector.InitialSetUp(false),
             SequentialTask.Sequence(
                 new DriveDistanceTimedTask(24.0, 1.0),
-                new TurnTimedTask(switchIsLeft ? -55.0 : 47.5, 1.25),
+                new NavxTurnTask(switchIsLeft ? -55.0 : 47.5),
                 new DriveDistanceTimedTask(switchIsLeft ? 85.0 : 80.0, 3.0),
-                new TurnTimedTask(switchIsLeft ? 40.0 : -40.0, 1.25),
+                new NavxTurnTask(false, 0.0),
                 ConcurrentTask.AllTasks(
                     new DriveDistanceTimedTask(switchIsLeft ? 24.0 : 30.0, 1.25),
                     new ElevatorMovementTask(1.25, Operation.ElevatorSwitchPosition)),

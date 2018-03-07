@@ -20,6 +20,14 @@ public class NavxTurnTask extends ControlTaskBase implements IControlTask
     private double desiredAngle;
 
     /**
+    * Initializes a new NavxTurnTask using time to make sure we completed turn
+    */
+    public NavxTurnTask(double desiredAngle)
+    {
+        this(true, desiredAngle);
+    }
+
+    /**
     * Initializes a new NavxTurnTask
     * @param useTime whether to make sure we completed turn for a second or not
     */
