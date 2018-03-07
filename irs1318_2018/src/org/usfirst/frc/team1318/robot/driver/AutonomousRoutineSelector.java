@@ -271,7 +271,7 @@ public class AutonomousRoutineSelector
             AutonomousRoutineSelector.InitialSetUp(false),
             SequentialTask.Sequence(
                 new DriveDistanceTimedTask(145.0, 3.5), // 147.75
-                new NavxTurnTask(true, startingLeft ? 90.0 : -90.0),
+                new NavxTurnTask(startingLeft ? 90.0 : -90.0),
                 ConcurrentTask.AllTasks(
                     new DriveDistanceTimedTask(18, 0.5),
                     new ElevatorMovementTask(
@@ -287,7 +287,7 @@ public class AutonomousRoutineSelector
             AutonomousRoutineSelector.InitialSetUp(true),
             SequentialTask.Sequence(
                 new DriveDistanceTimedTask(250.0, 5.5),
-                new NavxTurnTask(true, startingLeft ? 45.0 : -45.0),
+                new NavxTurnTask(startingLeft ? 45.0 : -45.0),
                 ConcurrentTask.AllTasks(
                     new DriveDistanceTimedTask(4.0, 0.75),
                     new ElevatorMovementTask(
@@ -305,11 +305,11 @@ public class AutonomousRoutineSelector
             AutonomousRoutineSelector.InitialSetUp(false),
             SequentialTask.Sequence(
                 new DriveDistanceTimedTask(205.0, 3.5),
-                new NavxTurnTask(true, startingLeft ? 90.0 : -90.0),
+                new NavxTurnTask(startingLeft ? 90.0 : -90.0),
                 new DriveDistanceTimedTask(225.0, 4.0),
-                new NavxTurnTask(true, startingLeft ? 180.0 : -180.0),
+                new NavxTurnTask(startingLeft ? 180.0 : -180.0),
                 new DriveDistanceTimedTask(45.0, 1.5),
-                new NavxTurnTask(true, startingLeft ? 270.0 : -270.0),
+                new NavxTurnTask(startingLeft ? 270.0 : -270.0),
                 ConcurrentTask.AllTasks(
                     new DriveDistanceTimedTask(12.0, 0.5),
                     new ElevatorMovementTask(0.5, Operation.ElevatorSwitchPosition)),
@@ -323,11 +323,11 @@ public class AutonomousRoutineSelector
             AutonomousRoutineSelector.InitialSetUp(true),
             SequentialTask.Sequence(
                 new DriveDistanceTimedTask(205.0, 3.5),
-                new NavxTurnTask(true, startingLeft ? 90.0 : -90.0),
+                new NavxTurnTask(startingLeft ? 90.0 : -90.0),
                 new DriveDistanceTimedTask(225.0, 4.0),
-                new NavxTurnTask(true, startingLeft ? 0.0 : 0.0),
+                new NavxTurnTask(startingLeft ? 0.0 : 0.0),
                 new DriveDistanceTimedTask(22.0, 1.0),
-                new NavxTurnTask(true, startingLeft ? -45.0 : 45.0),
+                new NavxTurnTask(startingLeft ? -45.0 : 45.0),
                 ConcurrentTask.AllTasks(
                     new DriveDistanceTimedTask(12.0, 0.75),
                     new ElevatorMovementTask(0.75, Operation.ElevatorHighScalePosition)),
@@ -340,15 +340,28 @@ public class AutonomousRoutineSelector
         return ConcurrentTask.AllTasks(
             AutonomousRoutineSelector.InitialSetUp(false),
             SequentialTask.Sequence(
-                new DriveDistanceTimedTask(24.0, 1.0),
-                new NavxTurnTask(switchIsLeft ? -55.0 : 47.5),
+                new DriveDistanceTimedTask(20.0, 1.0),
+                new NavxTurnTask(switchIsLeft ? -45.0 : 37.5),
                 new DriveDistanceTimedTask(switchIsLeft ? 85.0 : 80.0, 3.0),
                 new NavxTurnTask(false, 0.0),
                 ConcurrentTask.AllTasks(
-                    new DriveDistanceTimedTask(switchIsLeft ? 24.0 : 30.0, 1.25),
+                    new DriveDistanceTimedTask(switchIsLeft ? 20.0 : 18.0, 1.25),
                     new ElevatorMovementTask(1.25, Operation.ElevatorSwitchPosition)),
                 AutonomousRoutineSelector.DepositCubeOnly(),
                 AutonomousRoutineSelector.PostRoutineBackUp()));
+
+        // return ConcurrentTask.AllTasks(
+        //     AutonomousRoutineSelector.InitialSetUp(false),
+        //     SequentialTask.Sequence(
+        //         new DriveDistanceTimedTask(24.0, 1.0),
+        //         new TurnTimedTask(switchIsLeft ? -55.0 : 47.5, 1.25),
+        //         new DriveDistanceTimedTask(switchIsLeft ? 85.0 : 80.0, 3.0),
+        //         new TurnTimedTask(switchIsLeft ? 40.0 : -40.0, 1.25),
+        //         ConcurrentTask.AllTasks(
+        //             new DriveDistanceTimedTask(switchIsLeft ? 24.0 : 30.0, 1.25), 
+        //             new ElevatorMovementTask(1.25, Operation.ElevatorSwitchPosition)),
+        //         AutonomousRoutineSelector.DepositCubeOnly(),
+        //         AutonomousRoutineSelector.PostRoutineBackUp()));
     }
 
     private static IControlTask PlaceCubeOnScaleFromMiddle(boolean scaleIsLeft)
