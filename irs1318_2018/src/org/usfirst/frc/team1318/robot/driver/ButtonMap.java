@@ -17,9 +17,9 @@ import org.usfirst.frc.team1318.robot.driver.common.descriptions.MacroOperationD
 import org.usfirst.frc.team1318.robot.driver.common.descriptions.OperationDescription;
 import org.usfirst.frc.team1318.robot.driver.common.descriptions.ShiftDescription;
 import org.usfirst.frc.team1318.robot.driver.common.descriptions.UserInputDevice;
+import org.usfirst.frc.team1318.robot.driver.controltasks.AdvancedIntakeOuttakeTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.ConcurrentTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.ElevatorMovementTask;
-import org.usfirst.frc.team1318.robot.driver.controltasks.IntakeAndCorrectionTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.IntakeArmUpTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.OuttakeTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.PIDBrakeTask;
@@ -208,14 +208,14 @@ public class ButtonMap implements IButtonMap
                 Operation.ElevatorStrongOuttake,
                 new DigitalOperationDescription(
                     UserInputDevice.Driver,
-                    UserInputDeviceButton.JOYSTICK_STICK_TOP_LEFT_BUTTON,
+                    UserInputDeviceButton.NONE, // JOYSTICK_STICK_TOP_LEFT_BUTTON,
                     Shift.None,
                     ButtonType.Simple));
             put(
                 Operation.ElevatorWeakOuttake,
                 new DigitalOperationDescription(
                     UserInputDevice.Driver,
-                    UserInputDeviceButton.JOYSTICK_STICK_TOP_LEFT_BUTTON,
+                    UserInputDeviceButton.NONE, // JOYSTICK_STICK_TOP_LEFT_BUTTON,
                     Shift.Debug,
                     ButtonType.Simple));
             put(
@@ -316,16 +316,49 @@ public class ButtonMap implements IButtonMap
                     }));
 
             put(
-                MacroOperation.IntakeAndCorrection,
+                MacroOperation.Intake,
                 new MacroOperationDescription(
                     UserInputDevice.Driver,
                     UserInputDeviceButton.JOYSTICK_STICK_BOTTOM_LEFT_BUTTON,
                     ButtonType.Simple,
-                    () -> new IntakeAndCorrectionTask(),
+                    () -> new AdvancedIntakeOuttakeTask(Operation.ElevatorIntake),
                     new Operation[]
                     {
                         Operation.ElevatorIntake,
                         Operation.ElevatorIntakeCorrection,
+                        Operation.ElevatorWeakOuttake,
+                        Operation.ElevatorStrongOuttake,
+                        Operation.ElevatorIntakeFingersIn,
+                    }));
+            put(
+                MacroOperation.Outtake,
+                new MacroOperationDescription(
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_STICK_TOP_LEFT_BUTTON,
+                    Shift.None,
+                    ButtonType.Simple,
+                    () -> new AdvancedIntakeOuttakeTask(Operation.ElevatorStrongOuttake),
+                    new Operation[]
+                    {
+                        Operation.ElevatorIntake,
+                        Operation.ElevatorIntakeCorrection,
+                        Operation.ElevatorWeakOuttake,
+                        Operation.ElevatorStrongOuttake,
+                        Operation.ElevatorIntakeFingersIn,
+                    }));
+            put(
+                MacroOperation.WeakOuttake,
+                new MacroOperationDescription(
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_STICK_TOP_LEFT_BUTTON,
+                    Shift.Debug,
+                    ButtonType.Simple,
+                    () -> new AdvancedIntakeOuttakeTask(Operation.ElevatorWeakOuttake),
+                    new Operation[]
+                    {
+                        Operation.ElevatorIntake,
+                        Operation.ElevatorIntakeCorrection,
+                        Operation.ElevatorWeakOuttake,
                         Operation.ElevatorStrongOuttake,
                         Operation.ElevatorIntakeFingersIn,
                     }));
@@ -337,7 +370,7 @@ public class ButtonMap implements IButtonMap
                     ButtonType.Simple,
                     () -> SequentialTask.Sequence(
                         new OuttakeTask(0.1),
-                        new IntakeAndCorrectionTask()),
+                        new AdvancedIntakeOuttakeTask(Operation.ElevatorIntake)),
                     new Operation[]
                     {
                         Operation.ElevatorIntake,

@@ -6,7 +6,7 @@ public enum MacroOperation
     PIDBrake, VisionCenter, VisionCenterAndAdvance,
 
     // Elevator operations:
-    IntakeAndCorrection, ReIntake, ArmsUpSwitchPosition,
+    Intake, Outtake, WeakOuttake, ReIntake, ArmsUpSwitchPosition,
 
     // Climber operations:
     HookClimber,
