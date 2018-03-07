@@ -10,7 +10,7 @@ import org.usfirst.frc.team1318.robot.ai.Range;
  */
 public class TuningConstants
 {
-    public static final boolean COMPETITION_ROBOT = false;
+    public static final boolean COMPETITION_ROBOT = true;
     public static final boolean THROW_EXCEPTIONS = !TuningConstants.COMPETITION_ROBOT;
 
     //================================================== Autonomous ==============================================================
@@ -19,6 +19,19 @@ public class TuningConstants
 
     // Acceptable vision centering range values in degrees
     public static final double MAX_VISION_CENTERING_RANGE_DEGREES = 5.0;
+
+    // Navx Turn Constants
+    public static final double MAX_NAVX_TURN_RANGE_DEGREES = 4.0;
+    public static final double NAVX_TURN_COMPLETE_TIME = 0.5;
+
+    // Navx Turn PID Constants
+    public static final double NAVX_TURN_PID_KP = 0.165;
+    public static final double NAVX_TURN_PID_KI = 0.0;
+    public static final double NAVX_TURN_PID_KD = 1.0;
+    public static final double NAVX_TURN_PID_KF = 0.0;
+    public static final double NAVX_TURN_PID_KS = 1.0;
+    public static final double NAVX_TURN_PID_MIN = -0.8;
+    public static final double NAVX_TURN_PID_MAX = 0.8;
 
     // Acceptable vision distance from tape in inches
     public static final double MAX_VISION_ACCEPTABLE_FORWARD_DISTANCE = 30.0;
@@ -52,34 +65,46 @@ public class TuningConstants
 
     //================================================== DriveTrain ==============================================================
 
-    // PID keys/default values:
+    // Drivetrain PID keys/default values:
     public static final boolean DRIVETRAIN_USE_PID = true;
 
     // Velocity PID (right)
-    public static final double DRIVETRAIN_VELOCITY_PID_RIGHT_KP = 0.55;
+    public static final double DRIVETRAIN_VELOCITY_PID_RIGHT_KP = TuningConstants.COMPETITION_ROBOT ? 0.2 : 0.65;
     public static final double DRIVETRAIN_VELOCITY_PID_RIGHT_KI = 0.0;
     public static final double DRIVETRAIN_VELOCITY_PID_RIGHT_KD = 0.0;
-    public static final double DRIVETRAIN_VELOCITY_PID_RIGHT_KF = 0.1;
-    public static final double DRIVETRAIN_VELOCITY_PID_RIGHT_KS = 5600.0;
+    public static final double DRIVETRAIN_VELOCITY_PID_RIGHT_KF = 0.15;
+    public static final double DRIVETRAIN_VELOCITY_PID_RIGHT_KS = 3800.0;
 
     // Velocity PID (left)
-    public static final double DRIVETRAIN_VELOCITY_PID_LEFT_KP = 0.55;
+    public static final double DRIVETRAIN_VELOCITY_PID_LEFT_KP = TuningConstants.COMPETITION_ROBOT ? 0.2 : 0.65;
     public static final double DRIVETRAIN_VELOCITY_PID_LEFT_KI = 0.0;
     public static final double DRIVETRAIN_VELOCITY_PID_LEFT_KD = 0.0;
-    public static final double DRIVETRAIN_VELOCITY_PID_LEFT_KF = 0.1;
-    public static final double DRIVETRAIN_VELOCITY_PID_LEFT_KS = 5600.0;
+    public static final double DRIVETRAIN_VELOCITY_PID_LEFT_KF = 0.15;
+    public static final double DRIVETRAIN_VELOCITY_PID_LEFT_KS = 3800.0;
 
     // Position PID (right)
-    public static final double DRIVETRAIN_POSITION_PID_RIGHT_KP = 0.35;
+    public static final double DRIVETRAIN_POSITION_PID_RIGHT_KP = 0.0002;
     public static final double DRIVETRAIN_POSITION_PID_RIGHT_KI = 0.0;
     public static final double DRIVETRAIN_POSITION_PID_RIGHT_KD = 0.0;
     public static final double DRIVETRAIN_POSITION_PID_RIGHT_KF = 0.0;
 
     // Position PID (left)
-    public static final double DRIVETRAIN_POSITION_PID_LEFT_KP = 0.35;
+    public static final double DRIVETRAIN_POSITION_PID_LEFT_KP = 0.0002;
     public static final double DRIVETRAIN_POSITION_PID_LEFT_KI = 0.0;
     public static final double DRIVETRAIN_POSITION_PID_LEFT_KD = 0.0;
     public static final double DRIVETRAIN_POSITION_PID_LEFT_KF = 0.0;
+
+    // Brake PID (right)
+    public static final double DRIVETRAIN_BRAKE_PID_RIGHT_KP = 0.0012;
+    public static final double DRIVETRAIN_BRAKE_PID_RIGHT_KI = 0.0;
+    public static final double DRIVETRAIN_BRAKE_PID_RIGHT_KD = 0.0;
+    public static final double DRIVETRAIN_BRAKE_PID_RIGHT_KF = 0.0;
+
+    // Brake PID (left)
+    public static final double DRIVETRAIN_BRAKE_PID_LEFT_KP = 0.0012;
+    public static final double DRIVETRAIN_BRAKE_PID_LEFT_KI = 0.0;
+    public static final double DRIVETRAIN_BRAKE_PID_LEFT_KD = 0.0;
+    public static final double DRIVETRAIN_BRAKE_PID_LEFT_KF = 0.0;
 
     // Drivetrain choices for one-stick drive
     public static final double DRIVETRAIN_K1 = 1.4;
@@ -94,6 +119,7 @@ public class TuningConstants
     public static final double DRIVETRAIN_MAX_POWER_POSITIONAL_NON_PID = 0.2;// max power level (positional, non-PID)
 
     public static final double DRIVETRAIN_POSITIONAL_MAX_POWER_LEVEL = 0.6;
+    public static final double DRIVETRAIN_BRAKE_MAX_POWER_LEVEL = 0.6;
     public static final double DRIVETRAIN_VELOCITY_MAX_POWER_LEVEL = 1.0;
 
     public static final double DRIVETRAIN_ENCODER_ODOMETRY_ANGLE_CORRECTION = 1.0; // account for turning weirdness (any degree offset in the angle)
@@ -112,20 +138,38 @@ public class TuningConstants
     public static final int AI_BOTTLENECK_SIZE = 24; // Number of organisms to kill in each generation (MUST BE LESS THAN POPULATION SIZE)
     public static final double AI_MAX_STABILIZATION_ERROR = 100; // Maximum deviation from expected position to count as stabilized
     public static final double AI_STABILIZATION_TIME = 0.5; // Time (in seconds) that mechanism must remain stable 
-    public static final double[] TRIAL_POSITIONS = { 0.5, 0.8, 0.2 }; // Positions the motor should be set to for each trial
+    public static final double[] TRIAL_POSITIONS = { 0.5, 0.8, 0.2 }; // Positions to test against
     public static final double AI_OVERSHOOT_WEIGHT = 0; // Reward function is of the form:
     // 100 / (Overshoot (in ticks) * OVERSHOOT_WEIGHT + Stabilization_Time (in seconds))
 
     //================================================== Elevator ==============================================================
 
-    // Position PID (right)
-    public static final double ELEVATOR_POSITION_PID_INNER_KP = 0.0;
+    public static final boolean ELEVATOR_USE_MOTION_MAGIC = TuningConstants.COMPETITION_ROBOT;
+
+    // MotionMagic Position PID (inner)
+    public static final double ELEVATOR_MM_POSITION_PID_INNER_KP = 0.133;
+    public static final double ELEVATOR_MM_POSITION_PID_INNER_KI = 0.0;
+    public static final double ELEVATOR_MM_POSITION_PID_INNER_KD = 0.0;
+    public static final double ELEVATOR_MM_POSITION_PID_INNER_KF = 0.276;
+    public static final int ELEVATOR_MM_POSITION_PID_INNER_CRUISE_VELOC = 3500;
+    public static final int ELEVATOR_MM_POSITION_PID_INNER_ACCEL = 2500;
+
+    // MotionMagic Position PID (outer)
+    public static final double ELEVATOR_MM_POSITION_PID_OUTER_KP = 0.133;
+    public static final double ELEVATOR_MM_POSITION_PID_OUTER_KI = 0.0;
+    public static final double ELEVATOR_MM_POSITION_PID_OUTER_KD = 0.0;
+    public static final double ELEVATOR_MM_POSITION_PID_OUTER_KF = 0.378;
+    public static final int ELEVATOR_MM_POSITION_PID_OUTER_CRUISE_VELOC = 2500;
+    public static final int ELEVATOR_MM_POSITION_PID_OUTER_ACCEL = 5000;
+
+    // Position PID (inner)
+    public static final double ELEVATOR_POSITION_PID_INNER_KP = 0.3;
     public static final double ELEVATOR_POSITION_PID_INNER_KI = 0.0;
     public static final double ELEVATOR_POSITION_PID_INNER_KD = 0.0;
     public static final double ELEVATOR_POSITION_PID_INNER_KF = 0.0;
 
-    // Position PID (left)
-    public static final double ELEVATOR_POSITION_PID_OUTER_KP = 0.0;
+    // Position PID (outer)
+    public static final double ELEVATOR_POSITION_PID_OUTER_KP = 0.3;
     public static final double ELEVATOR_POSITION_PID_OUTER_KI = 0.0;
     public static final double ELEVATOR_POSITION_PID_OUTER_KD = 0.0;
     public static final double ELEVATOR_POSITION_PID_OUTER_KF = 0.0;
@@ -142,12 +186,80 @@ public class TuningConstants
 
     // Elevator motor/sensor orientations
     public static final boolean ELEVATOR_INNER_INVERT_OUTPUT = true;
-    public static final boolean ELEVATOR_INNER_INVERT_SENSOR = true;
-    public static final boolean ELEVATOR_OUTER_INVERT_OUTPUT = false;
-    public static final boolean ELEVATOR_OUTER_INVERT_SENSOR = false;
+    public static final boolean ELEVATOR_INNER_INVERT_SENSOR = TuningConstants.COMPETITION_ROBOT ? true : false;
+    public static final boolean ELEVATOR_OUTER_INVERT_OUTPUT = TuningConstants.COMPETITION_ROBOT ? true : false;
+    public static final boolean ELEVATOR_OUTER_INVERT_SENSOR = TuningConstants.COMPETITION_ROBOT ? true : false;
 
-    public static final boolean ELEVATOR_LEFT_CARRIAGE_INTAKE_INVERT_OUTPUT = false;
-    public static final boolean ELEVATOR_RIGHT_CARRIAGE_INTAKE_INVERT_OUTPUT = false;
-    public static final boolean ELEVATOR_LEFT_OUTER_INTAKE_INVERT_OUTPUT = false;
+    public static final boolean ELEVATOR_TOP_CARRIAGE_INTAKE_INVERT_OUTPUT = true;
+    public static final boolean ELEVATOR_BOTTOM_CARRIAGE_INTAKE_INVERT_OUTPUT = true;
+    public static final boolean ELEVATOR_LEFT_OUTER_INTAKE_INVERT_OUTPUT = true;
     public static final boolean ELEVATOR_RIGHT_OUTER_INTAKE_INVERT_OUTPUT = false;
+
+    public static final double ELEVATOR_THROUGH_BEAM_UNBLOCKED_VOLTAGE_THRESHOLD = 3.0;
+
+    // Elevator positions (in inches)
+    public static final double ELEVATOR_INNER_CARRY_POSITION = 0.0;
+    public static final double ELEVATOR_OUTER_CARRY_POSITION = 3.5;
+    public static final double ELEVATOR_INNER_SWITCH_POSITION = 0; // Switch Fence Height: 19in. 
+    public static final double ELEVATOR_OUTER_SWITCH_POSITION = 22.0;
+    public static final double ELEVATOR_INNER_LOW_SCALE_POSITION = 24.0; // Low Scale Height: 52in.
+    public static final double ELEVATOR_OUTER_LOW_SCALE_POSITION = 24.0;
+    public static final double ELEVATOR_INNER_HIGH_SCALE_POSITION = 32.0; // High Scale Height: 76in. 
+    public static final double ELEVATOR_OUTER_HIGH_SCALE_POSITION = HardwareConstants.ELEVATOR_OUTER_MAX_HEIGHT;
+    public static final double ELEVATOR_INNER_CLIMB_POSITION = 29.0; // Bar Height: 84in. 
+    public static final double ELEVATOR_OUTER_CLIMB_POSITION = TuningConstants.ELEVATOR_OUTER_CARRY_POSITION;
+
+    public static final boolean ELEVATOR_USE_CLUTCH = true;
+    public static final double ELEVATOR_CLUTCH_POSITION_DELTA = 1.0;
+    public static final double ELEVATOR_POSITION_REACHED_DELTA = 2.0;
+
+    public static final double ELEVATOR_DEBUG_DOWN_POWER_LEVEL = 0.5;
+    public static final double ELEVATOR_DEBUG_UP_POWER_LEVEL = 0.3;
+
+    // Height below which we won't run the outer intake wheels
+    public static final double ELEVATOR_MAXIMUM_OUTER_INTAKE_USE_HEIGHT = 12.0;
+
+    // Range of carriage locations where we disallow raising/lowering intake arm
+    //    public static final double ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MIN = 5.0;
+    //    public static final double ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MAX = 30.0;
+
+    // Elevator velocities
+    public static final double ELEVATOR_MOVE_VELOCITY = 4.0; // inches per second
+
+    // Elevator intake powers
+    public static final double ELEVATOR_TOP_CARRIAGE_HOLD_POWER = 0.15;
+    public static final double ELEVATOR_BOTTOM_CARRIAGE_HOLD_POWER = 0.10;
+
+    public static final double ELEVATOR_LEFT_OUTER_INTAKE_POWER = 1.0;
+    public static final double ELEVATOR_RIGHT_OUTER_INTAKE_POWER = 0.8;
+    public static final double ELEVATOR_TOP_CARRIAGE_INTAKE_POWER = 1.0;
+    public static final double ELEVATOR_BOTTOM_CARRIAGE_INTAKE_POWER = 1.0;
+
+    // Elevator outtake powers
+    public static final double ELEVATOR_LEFT_OUTER_STRONG_OUTTAKE_POWER = -0.3;
+    public static final double ELEVATOR_RIGHT_OUTER_STRONG_OUTTAKE_POWER = -0.3;
+    public static final double ELEVATOR_TOP_CARRIAGE_STRONG_OUTTAKE_POWER = -0.9;
+    public static final double ELEVATOR_BOTTOM_CARRIAGE_STRONG_OUTTAKE_POWER = -0.9;
+
+    public static final double ELEVATOR_LEFT_OUTER_WEAK_OUTTAKE_POWER = -0.2;
+    public static final double ELEVATOR_RIGHT_OUTER_WEAK_OUTTAKE_POWER = -0.2;
+    public static final double ELEVATOR_TOP_CARRIAGE_WEAK_OUTTAKE_POWER = -0.4;
+    public static final double ELEVATOR_BOTTOM_CARRIAGE_WEAK_OUTTAKE_POWER = -0.4;
+
+    // Elevator intake correction powers
+    public static final double ELEVATOR_LEFT_OUTER_INTAKE_CORRECTION_POWER = 0.2;
+    public static final double ELEVATOR_RIGHT_OUTER_INTAKE_CORRECTION_POWER = 0.6;
+
+    // Elevator intake correction time thresholds (in seconds)
+    public static final double ELEVATOR_INTAKE_CORRECTION_TRIGGER_TIME_THRESHOLD = 1.0;
+    public static final double ELEVATOR_INTAKE_CORRECTION_OPERATION_TIME_THRESHOLD = 1.0;
+    public static final double ELEVATOR_FINGER_OUT_TIME_THRESHOLD = 0.0;
+
+    public static final double ELEVATOR_CLIMBING_MOVEMENT_DISTANCE_THRESHOLD = 1500.0; // in ticks
+    public static final double ELEVATOR_CLIMBING_MOVEMENT_TIME_THRESHOLD = 4.0;
+
+    //================================================== Climber ==============================================================
+
+    public static final double CLIMBER_WINCH_DEAD_ZONE = .1;
+
 }

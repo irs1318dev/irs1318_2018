@@ -50,7 +50,7 @@ public abstract class MoveDistanceOneShotTaskBase extends ControlTaskBase implem
     protected void setStartEncoderDistance()
     {
         this.startLeftTicks = this.driveTrain.getLeftPosition();
-        this.startRightTicks = this.driveTrain.getRightTicks();
+        this.startRightTicks = this.driveTrain.getRightPosition();
     }
 
     /**
@@ -112,7 +112,7 @@ public abstract class MoveDistanceOneShotTaskBase extends ControlTaskBase implem
     public boolean hasCompleted()
     {
         double leftTicks = this.driveTrain.getLeftPosition();
-        double rightTicks = this.driveTrain.getRightTicks();
+        double rightTicks = this.driveTrain.getRightPosition();
 
         // check how far away we are from the desired end location
         double leftDelta = Math.abs(this.desiredFinalLeftTicks - leftTicks);

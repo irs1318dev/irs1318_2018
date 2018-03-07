@@ -15,14 +15,33 @@ import org.usfirst.frc.team1318.robot.driver.common.descriptions.AnalogOperation
 import org.usfirst.frc.team1318.robot.driver.common.descriptions.DigitalOperationDescription;
 import org.usfirst.frc.team1318.robot.driver.common.descriptions.MacroOperationDescription;
 import org.usfirst.frc.team1318.robot.driver.common.descriptions.OperationDescription;
+import org.usfirst.frc.team1318.robot.driver.common.descriptions.ShiftDescription;
 import org.usfirst.frc.team1318.robot.driver.common.descriptions.UserInputDevice;
+import org.usfirst.frc.team1318.robot.driver.controltasks.ConcurrentTask;
+import org.usfirst.frc.team1318.robot.driver.controltasks.ElevatorMovementTask;
+import org.usfirst.frc.team1318.robot.driver.controltasks.IntakeAndCorrectionTask;
+import org.usfirst.frc.team1318.robot.driver.controltasks.IntakeArmUpTask;
+import org.usfirst.frc.team1318.robot.driver.controltasks.OuttakeTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.PIDBrakeTask;
+import org.usfirst.frc.team1318.robot.driver.controltasks.SequentialTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.VisionAdvanceAndCenterTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.VisionCenteringTask;
 
 @Singleton
 public class ButtonMap implements IButtonMap
 {
+    @SuppressWarnings("serial")
+    private static Map<Shift, ShiftDescription> ShiftButtons = new HashMap<Shift, ShiftDescription>()
+    {
+        {
+            put(
+                Shift.Debug,
+                new ShiftDescription(
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_STICK_TRIGGER_BUTTON));
+        }
+    };
+
     @SuppressWarnings("serial")
     public static Map<Operation, OperationDescription> OperationSchema = new HashMap<Operation, OperationDescription>()
     {
@@ -32,7 +51,7 @@ public class ButtonMap implements IButtonMap
                 Operation.EnableVision,
                 new DigitalOperationDescription(
                     UserInputDevice.None,
-                    UserInputDeviceButton.JOYSTICK_STICK_TOP_RIGHT_BUTTON,
+                    90, // POV right
                     ButtonType.Toggle));
 
             // Operations for the drive train
@@ -75,6 +94,12 @@ public class ButtonMap implements IButtonMap
                     UserInputDeviceButton.NONE,
                     ButtonType.Toggle));
             put(
+                Operation.DriveTrainUseBrakeMode,
+                new DigitalOperationDescription(
+                    UserInputDevice.None,
+                    UserInputDeviceButton.NONE,
+                    ButtonType.Toggle));
+            put(
                 Operation.DriveTrainLeftPosition,
                 new AnalogOperationDescription(
                     UserInputDevice.None,
@@ -94,6 +119,145 @@ public class ButtonMap implements IButtonMap
                     UserInputDevice.None,
                     UserInputDeviceButton.NONE,
                     ButtonType.Toggle));
+
+            // Operations for the elevator
+            put(
+                Operation.ElevatorBottomPosition,
+                new DigitalOperationDescription(
+                    UserInputDevice.None,
+                    UserInputDeviceButton.NONE,
+                    ButtonType.Click));
+            put(
+                Operation.ElevatorCarryPosition,
+                new DigitalOperationDescription(
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_BASE_BOTTOM_LEFT_BUTTON,
+                    ButtonType.Click));
+            put(
+                Operation.ElevatorSwitchPosition,
+                new DigitalOperationDescription(
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_BASE_MIDDLE_LEFT_BUTTON,
+                    Shift.Debug,
+                    ButtonType.Click));
+            put(
+                Operation.ElevatorLowScalePosition,
+                new DigitalOperationDescription(
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_BASE_TOP_LEFT_BUTTON,
+                    ButtonType.Click));
+            put(
+                Operation.ElevatorHighScalePosition,
+                new DigitalOperationDescription(
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_BASE_TOP_RIGHT_BUTTON,
+                    ButtonType.Click));
+            put(
+                Operation.ElevatorClimbPosition,
+                new DigitalOperationDescription(
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_STICK_TOP_RIGHT_BUTTON,
+                    ButtonType.Click));
+            put(
+                Operation.ElevatorTopPosition,
+                new DigitalOperationDescription(
+                    UserInputDevice.None,
+                    UserInputDeviceButton.NONE,
+                    ButtonType.Click));
+            put(
+                Operation.ElevatorMoveUp,
+                new DigitalOperationDescription(
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_BASE_MIDDLE_RIGHT_BUTTON,
+                    Shift.None,
+                    ButtonType.Simple));
+            put(
+                Operation.ElevatorMoveDown,
+                new DigitalOperationDescription(
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_BASE_BOTTOM_RIGHT_BUTTON,
+                    Shift.None,
+                    ButtonType.Simple));
+            put(
+                Operation.ElevatorForceUp,
+                new DigitalOperationDescription(
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_BASE_MIDDLE_RIGHT_BUTTON,
+                    Shift.Debug,
+                    ButtonType.Simple));
+            put(
+                Operation.ElevatorForceDown,
+                new DigitalOperationDescription(
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_BASE_BOTTOM_RIGHT_BUTTON,
+                    Shift.Debug,
+                    ButtonType.Simple));
+            put(
+                Operation.ElevatorIntake,
+                new DigitalOperationDescription(
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.NONE, // JOYSTICK_STICK_BOTTOM_LEFT_BUTTON,
+                    ButtonType.Simple));
+            put(
+                Operation.ElevatorIntakeCorrection,
+                new DigitalOperationDescription(
+                    UserInputDevice.None,
+                    UserInputDeviceButton.NONE,
+                    ButtonType.Simple));
+            put(
+                Operation.ElevatorStrongOuttake,
+                new DigitalOperationDescription(
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_STICK_TOP_LEFT_BUTTON,
+                    Shift.None,
+                    ButtonType.Simple));
+            put(
+                Operation.ElevatorWeakOuttake,
+                new DigitalOperationDescription(
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_STICK_TOP_LEFT_BUTTON,
+                    Shift.Debug,
+                    ButtonType.Simple));
+            put(
+                Operation.ElevatorIntakeArmsUp,
+                new DigitalOperationDescription(
+                    UserInputDevice.Driver,
+                    180, // POV down
+                    ButtonType.Click));
+            put(
+                Operation.ElevatorIntakeArmsDown,
+                new DigitalOperationDescription(
+                    UserInputDevice.Driver,
+                    0, // POV up
+                    ButtonType.Click));
+            put(
+                Operation.ElevatorIntakeFingersIn,
+                new DigitalOperationDescription(
+                    UserInputDevice.None,
+                    90, // POV right
+                    ButtonType.Simple));
+
+            // Operations for the climber
+            put(
+                Operation.ClimberEnableWinch,
+                new DigitalOperationDescription(
+                    UserInputDevice.Driver,
+                    90, // POV right
+                    Shift.Debug,
+                    ButtonType.Click));
+            put(
+                Operation.ClimberDisableWinch,
+                new DigitalOperationDescription(
+                    UserInputDevice.None,
+                    UserInputDeviceButton.NONE,
+                    ButtonType.Click));
+            put(
+                Operation.ClimberWinch,
+                new AnalogOperationDescription(
+                    UserInputDevice.Driver,
+                    AnalogAxis.Throttle,
+                    ElectronicsConstants.INVERT_THROTTLE_AXIS,
+                    TuningConstants.CLIMBER_WINCH_DEAD_ZONE));
         }
     };
 
@@ -112,6 +276,7 @@ public class ButtonMap implements IButtonMap
                     new Operation[]
                     {
                         Operation.DriveTrainUsePositionalMode,
+                        Operation.DriveTrainUseBrakeMode,
                         Operation.DriveTrainLeftPosition,
                         Operation.DriveTrainRightPosition,
                     }));
@@ -120,8 +285,8 @@ public class ButtonMap implements IButtonMap
             put(
                 MacroOperation.VisionCenter,
                 new MacroOperationDescription(
-                    UserInputDevice.Driver,
-                    UserInputDeviceButton.JOYSTICK_BASE_MIDDLE_LEFT_BUTTON,
+                    UserInputDevice.None,
+                    UserInputDeviceButton.NONE,
                     ButtonType.Toggle,
                     () -> new VisionCenteringTask(),
                     new Operation[]
@@ -136,8 +301,8 @@ public class ButtonMap implements IButtonMap
             put(
                 MacroOperation.VisionCenterAndAdvance,
                 new MacroOperationDescription(
-                    UserInputDevice.Driver,
-                    UserInputDeviceButton.JOYSTICK_STICK_TOP_RIGHT_BUTTON,
+                    UserInputDevice.None,
+                    UserInputDeviceButton.NONE,
                     ButtonType.Toggle,
                     () -> new VisionAdvanceAndCenterTask(),
                     new Operation[]
@@ -149,8 +314,68 @@ public class ButtonMap implements IButtonMap
                         Operation.DriveTrainTurn,
                         Operation.DriveTrainMoveForward,
                     }));
+
+            put(
+                MacroOperation.IntakeAndCorrection,
+                new MacroOperationDescription(
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_STICK_BOTTOM_LEFT_BUTTON,
+                    ButtonType.Simple,
+                    () -> new IntakeAndCorrectionTask(),
+                    new Operation[]
+                    {
+                        Operation.ElevatorIntake,
+                        Operation.ElevatorIntakeCorrection,
+                        Operation.ElevatorStrongOuttake,
+                        Operation.ElevatorIntakeFingersIn,
+                    }));
+            put(
+                MacroOperation.ReIntake,
+                new MacroOperationDescription(
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_STICK_BOTTOM_RIGHT_BUTTON,
+                    ButtonType.Simple,
+                    () -> SequentialTask.Sequence(
+                        new OuttakeTask(0.1),
+                        new IntakeAndCorrectionTask()),
+                    new Operation[]
+                    {
+                        Operation.ElevatorIntake,
+                        Operation.ElevatorIntakeCorrection,
+                        Operation.ElevatorStrongOuttake,
+                        Operation.ElevatorIntakeFingersIn,
+                    }));
+            put(
+                MacroOperation.ArmsUpSwitchPosition,
+                new MacroOperationDescription(
+                    true,
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_BASE_MIDDLE_LEFT_BUTTON,
+                    Shift.None,
+                    ButtonType.Toggle,
+                    () -> ConcurrentTask.AllTasks(
+                        new IntakeArmUpTask(.3),
+                        new ElevatorMovementTask(Operation.ElevatorSwitchPosition)),
+                    new Operation[]
+                    {
+                        Operation.ElevatorIntakeArmsUp,
+                        Operation.ElevatorIntakeArmsDown,
+                        Operation.ElevatorBottomPosition,
+                        Operation.ElevatorCarryPosition,
+                        Operation.ElevatorSwitchPosition,
+                        Operation.ElevatorLowScalePosition,
+                        Operation.ElevatorHighScalePosition,
+                        Operation.ElevatorClimbPosition,
+                        Operation.ElevatorTopPosition,
+                    }));
         }
     };
+
+    @Override
+    public Map<Shift, ShiftDescription> getShiftMap()
+    {
+        return ButtonMap.ShiftButtons;
+    }
 
     @Override
     public Map<Operation, OperationDescription> getOperationSchema()

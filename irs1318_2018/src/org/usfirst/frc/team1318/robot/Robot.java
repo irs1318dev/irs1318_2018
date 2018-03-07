@@ -13,8 +13,8 @@ import com.google.inject.Injector;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 /**
- * Main class for the FRC ? [competition name] Competition
- * Robot for IRS1318 - [robot name]
+ * Main class for the FRC 2018 Power Up! Competition
+ * Robot for IRS1318 - Cube*rt
  * 
  * 
  * The VM is configured to automatically run this class, and to call the
