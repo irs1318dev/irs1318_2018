@@ -2,6 +2,7 @@ package org.usfirst.frc.team1318.robot.driver;
 
 import org.usfirst.frc.team1318.robot.ElectronicsConstants;
 import org.usfirst.frc.team1318.robot.TuningConstants;
+import org.usfirst.frc.team1318.robot.ai.Device;
 import org.usfirst.frc.team1318.robot.ai.RAPIDSettings;
 import org.usfirst.frc.team1318.robot.common.IDashboardLogger;
 import org.usfirst.frc.team1318.robot.common.wpilib.IDigitalInput;
@@ -205,18 +206,18 @@ public class AutonomousRoutineSelector
                 return CrossBaseLine(); // prefersSwitch ? PlaceCubeOnOppositeSideSwitch(false) : PlaceCubeOnOppositeSideScale(false);
 
             case Special:
-                // return RAPIDTuneTurn();
+                // return RAPIDTune(--some sort of device--);
             default:
                 return GetFillerRoutine();
         }
     }
 
-    private static IControlTask RAPIDTuneTurn(int talonPort)
+    private static IControlTask RAPIDTune(Device device)
     {
         RAPIDSettings settings = new RAPIDSettings(TuningConstants.AI_INITIAL, TuningConstants.AI_MUTATION_RATE,
             TuningConstants.AI_ACCELERATED_MUTATION_RATE, TuningConstants.AI_STAGNATION_ERROR, TuningConstants.AI_GENERATIONS,
             TuningConstants.AI_POPULATION_SIZE, TuningConstants.AI_BOTTLENECK_SIZE, TuningConstants.AI_GENE_BOUNDS);
-        return new RAPIDElevatorTask(settings, talonPort, TuningConstants.TRIAL_POSITIONS);
+        return new RAPIDElevatorTask(settings, device, TuningConstants.TRIAL_POSITIONS);
     }
 
     /**

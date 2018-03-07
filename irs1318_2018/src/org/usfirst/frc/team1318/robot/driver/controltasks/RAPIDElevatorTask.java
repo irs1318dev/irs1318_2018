@@ -2,46 +2,32 @@ package org.usfirst.frc.team1318.robot.driver.controltasks;
 
 import java.util.Arrays;
 
+import org.usfirst.frc.team1318.robot.ai.Device;
 import org.usfirst.frc.team1318.robot.ai.Organism;
 import org.usfirst.frc.team1318.robot.ai.RAPID;
 import org.usfirst.frc.team1318.robot.ai.RAPIDSettings;
 import org.usfirst.frc.team1318.robot.ai.Range;
-import org.usfirst.frc.team1318.robot.common.wpilib.ITalonSRX;
-import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXFeedbackDevice;
-import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXNeutralMode;
-import org.usfirst.frc.team1318.robot.common.wpilib.WpilibProvider;
 import org.usfirst.frc.team1318.robot.driver.common.IControlTask;
 
 public class RAPIDElevatorTask extends RAPID
 {
     private RAPIDSettings settings;
-    private int deviceNumber;
-    private ITalonSRX talon;
+    private Device device;
     private IControlTask currentTask;
     private double[] trialPositions;
     private int curOrganism = -1;
 
-    public RAPIDElevatorTask(RAPIDSettings settings, int deviceNumber, double[] trialPositions)
+    public RAPIDElevatorTask(RAPIDSettings settings, Device device, double[] trialPositions)
     {
         super(settings);
         this.currentTask = null;
-        this.deviceNumber = deviceNumber;
+        this.device = device;
         this.trialPositions = trialPositions;
     }
 
     @Override
     public void begin()
     {
-        // TODO Auto-generated method stub
-        WpilibProvider provider = this.getInjector().getInstance(WpilibProvider.class);
-        talon = provider.getTalonSRX(deviceNumber);
-
-        this.talon.setSensorType(TalonSRXFeedbackDevice.QuadEncoder);
-        this.talon.setNeutralMode(TalonSRXNeutralMode.Brake);
-        this.talon.setInvertOutput(true);
-        this.talon.setInvertSensor(true);
-        this.talon.setForwardLimitSwitch(true, true);
-        this.talon.setReverseLimitSwitch(true, true);
 
         // Initialize population
         sample = new PIDAutoTuneTask[settings.populationSize];
@@ -124,12 +110,12 @@ public class RAPIDElevatorTask extends RAPID
     protected Organism getNewOrganism()
     {
         // TODO Auto-generated method stub
-        return new PIDAutoTuneTask(talon, null, trialPositions);
+        return new PIDAutoTuneTask(device, null, trialPositions);
     }
 
     @Override
     protected Organism getNewOrganism(Range[] initialValues, Range[] geneBounds)
     {
-        return new PIDAutoTuneTask(talon, initialValues, settings.geneBounds, trialPositions);
+        return new PIDAutoTuneTask(device, initialValues, settings.geneBounds, trialPositions);
     }
 }

@@ -1,11 +1,10 @@
 package org.usfirst.frc.team1318.robot.driver.controltasks;
 
 import org.usfirst.frc.team1318.robot.TuningConstants;
+import org.usfirst.frc.team1318.robot.ai.Device;
 import org.usfirst.frc.team1318.robot.ai.Genome;
 import org.usfirst.frc.team1318.robot.ai.Organism;
 import org.usfirst.frc.team1318.robot.ai.Range;
-import org.usfirst.frc.team1318.robot.common.wpilib.ITalonSRX;
-import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXControlMode;
 
 import edu.wpi.first.wpilibj.Timer;
 
@@ -15,9 +14,7 @@ public class PIDAutoTuneTask extends Organism
 
     private double cumulativeError; // Cumulative error over time
     private double lastTime; // Last time this update loop was run
-    private ITalonSRX talon; // Talon to test
-    private boolean limitSwitchTop; // Status of top limit switch
-    private boolean limitSwitchBottom; // Status of bottom limit switch
+    private Device device; // Talon to test
 
     private double[] overshoot; // Contains maximum overshoot for each trial
     private double[] stableTimes; // Contains time for talon to stabilize for each trial
@@ -38,21 +35,21 @@ public class PIDAutoTuneTask extends Organism
 
     // Initialize this organism with a set of initial ranges to choose from
     public PIDAutoTuneTask(
-        ITalonSRX talon,
+        Device device,
         Range[] initial, Range[] geneBounds, double[] trialPositions)
     {
         super(initial, geneBounds);
-        this.talon = talon;
+        this.device = device;
         this.trialPositions = trialPositions;
     }
 
     // Initialize this organism with a genome
     public PIDAutoTuneTask(
-        ITalonSRX talon,
+        Device device,
         Genome genome, double[] trialPositions)
     {
         super(genome);
-        this.talon = talon;
+        this.device = device;
         this.trialPositions = trialPositions;
     }
 
@@ -68,7 +65,7 @@ public class PIDAutoTuneTask extends Organism
         stabilityTimer.reset();
         stabilityTimer.start();
 
-        this.talon.setControlMode(TalonSRXControlMode.PercentOutput);
+        this.device.usePID(false);
         this.cumulativeError = 0;
         this.curTrial = 0;
 
@@ -79,25 +76,16 @@ public class PIDAutoTuneTask extends Organism
     @Override
     public void update()
     {
-        this.limitSwitchBottom = this.getLimitReverse();
-        this.limitSwitchTop = this.getLimitForward();
-
-        // Every time the elevator hits the bottom switch, reset the talon.
-        if (limitSwitchBottom)
-        {
-            talon.reset();
-        }
-
         // If the elevator hits the bottom or top while not in setup, reject this organism
-        if ((limitSwitchBottom || limitSwitchTop)
-            && this.currentStage != Stage.SETUP)
-        {
-            this.endStep();
-            talon.stop();
+        // if ((limitSwitchBottom || limitSwitchTop)
+        //      && this.currentStage != Stage.SETUP)
+        // {
+        //      this.endStep();
+        //    device.stop();
 
-            // This organism is not fit
-            this.unfit = true;
-        }
+        // This organism is not fit
+        //   this.unfit = true;
+        //  }
 
         switch (currentStage)
         {
@@ -116,12 +104,12 @@ public class PIDAutoTuneTask extends Organism
 
     private void setup()
     {
-        talon.set(-0.2); // Set talon to bottom
-        if (limitSwitchBottom || limitSwitchTop)
+        device.setTarget(0); // Set target to 0
+        if (Math.abs(device.getError()) < TuningConstants.AI_MAX_STABILIZATION_ERROR)
         {
-            talon.setControlMode(TalonSRXControlMode.Position);
+            device.usePID(true);
             Genome g = this.getGenome();
-            talon.setPIDF(g.getGene(0), g.getGene(1), g.getGene(2), g.getGene(3), 0);
+            device.setPIDF(g.getGene(0), g.getGene(1), g.getGene(2), g.getGene(3));
 
             currentStage = Stage.RUN_TRIALS;
             timer.reset();
@@ -135,10 +123,10 @@ public class PIDAutoTuneTask extends Organism
     private void runTrial()
     {
         // Set the talon to the current trial position
-        talon.set(this.trialPositions[curTrial]);
+        device.setTarget(this.trialPositions[curTrial]);
 
         // Calculate the cumulative error for fitness calculations
-        this.cumulativeError += Math.abs(talon.getError()) * (timer.get() - lastTime);
+        this.cumulativeError += Math.abs(device.getError()) * (timer.get() - lastTime);
         lastTime = timer.get();
 
         // OVERSHOOT CHECK:
@@ -158,17 +146,24 @@ public class PIDAutoTuneTask extends Organism
         }
         else
         {
-            positiveOvershootCheck();
+            if (this.trialPositions[curTrial] > 0)
+            {
+                positiveOvershootCheck();
+            }
+            else
+            {
+                negativeOvershootCheck();
+            }
         }
         // STABILIZATION CHECK:
         // If the motor has stabilized, set the stabilization flag to true.
-        if (talon.getError() < TuningConstants.AI_MAX_STABILIZATION_ERROR)
+        if (Math.abs(device.getError()) < TuningConstants.AI_MAX_STABILIZATION_ERROR)
         {
             stable = true;
         }
 
         // If the motor is not stabilized, set the stabilization flag to false and move the firstStableTime
-        if (talon.getError() > TuningConstants.AI_MAX_STABILIZATION_ERROR)
+        if (Math.abs(device.getError()) > TuningConstants.AI_MAX_STABILIZATION_ERROR)
         {
             stableTimes[curTrial] = stabilityTimer.get();
             stable = false;
@@ -191,16 +186,16 @@ public class PIDAutoTuneTask extends Organism
 
     private void endStep()
     {
-        talon.stop();
+        device.stop();
         this.hasCompleted = true;
     }
 
     // Find maximum negative error
     private void negativeOvershootCheck()
     {
-        if (talon.getError() < overshoot[curTrial])
+        if (device.getError() < overshoot[curTrial])
         {
-            overshoot[curTrial] = talon.getError();
+            overshoot[curTrial] = device.getError();
         }
 
     }
@@ -208,9 +203,9 @@ public class PIDAutoTuneTask extends Organism
     // Find maximum positive error
     private void positiveOvershootCheck()
     {
-        if (talon.getError() > overshoot[curTrial])
+        if (device.getError() > overshoot[curTrial])
         {
-            overshoot[curTrial] = talon.getError();
+            overshoot[curTrial] = device.getError();
         }
     }
 
@@ -234,7 +229,7 @@ public class PIDAutoTuneTask extends Organism
     {
         // TODO Auto-generated method stub
         currentStage = Stage.ENDSTEP;
-        talon.stop();
+        device.stop();
     }
 
     @Override
@@ -286,16 +281,6 @@ public class PIDAutoTuneTask extends Organism
             // If this organism is unfit, kill it. Let the past die. It's the only way you can become who you were meant to be.
             this.fitness = -Double.MAX_VALUE;
         }
-    }
-
-    private boolean getLimitForward()
-    {
-        return this.talon.getLimitSwitchStatus().isForwardClosed;
-    }
-
-    private boolean getLimitReverse()
-    {
-        return this.talon.getLimitSwitchStatus().isReverseClosed;
     }
 
 }
