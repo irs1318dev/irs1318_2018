@@ -374,10 +374,10 @@ public class AutonomousRoutineSelector
     //        return SequentialTask.Sequence(
     //            new ElevatorMovementTask(2, Operation.ElevatorCarryPosition),
     //            new DriveDistanceTimedTask(-11, 0.5),
-    //            new TurnTimedTask(scaleIsLeft ? 105 : -105, 1.5),
+    //            new NavxTurnTask(false, scaleIsLeft ? 105 : -105),
     //            new DriveDistanceTimedTask(61, 2),
     //            new IntakeAndCorrectionTask(),
-    //            new TurnTimedTask(scaleIsLeft ? 150 : -150, 2.0),
+    //            new NavxTurnTask(false, scaleIsLeft ? 150 : -150),
     //            new DriveDistanceTimedTask(76, 2),
     //            AutonomousRoutineSelector.DepositCube(true));
     //    }
