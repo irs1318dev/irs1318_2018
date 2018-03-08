@@ -127,7 +127,7 @@ public class AutonomousRoutineSelector
         }
         else
         {
-            return setRoutineSelection(position, prefersSwitch, isSwitchSideLeft, isScaleSideLeft);
+            return fixedRoutineSelection(position, prefersSwitch, isSwitchSideLeft, isScaleSideLeft);
         }
     }
 
@@ -211,7 +211,7 @@ public class AutonomousRoutineSelector
      * 
      * @return routine for either scale or switch, whichever was selected with the fourth switch
      */
-    private static IControlTask setRoutineSelection(
+    private static IControlTask fixedRoutineSelection(
         Position position,
         boolean prefersSwitch,
         boolean isSwitchSideLeft,
