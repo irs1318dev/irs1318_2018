@@ -65,6 +65,7 @@ public class TuningConstants
 
     // Drivetrain PID keys/default values:
     public static final boolean DRIVETRAIN_USE_PID = true;
+    public static final boolean DRIVETRAIN_USE_CROSS_COUPLING = true;
 
     // Velocity PID (right)
     public static final double DRIVETRAIN_VELOCITY_PID_RIGHT_KP = TuningConstants.COMPETITION_ROBOT ? 0.2 : 0.65;
@@ -85,12 +86,14 @@ public class TuningConstants
     public static final double DRIVETRAIN_POSITION_PID_RIGHT_KI = 0.0;
     public static final double DRIVETRAIN_POSITION_PID_RIGHT_KD = 0.0;
     public static final double DRIVETRAIN_POSITION_PID_RIGHT_KF = 0.0;
+    public static final double DRIVETRAIN_POSITION_PID_RIGHT_KCC = 0.00005;
 
     // Position PID (left)
     public static final double DRIVETRAIN_POSITION_PID_LEFT_KP = 0.0002;
     public static final double DRIVETRAIN_POSITION_PID_LEFT_KI = 0.0;
     public static final double DRIVETRAIN_POSITION_PID_LEFT_KD = 0.0;
     public static final double DRIVETRAIN_POSITION_PID_LEFT_KF = 0.0;
+    public static final double DRIVETRAIN_POSITION_PID_LEFT_KCC = 0.00005;
 
     // Brake PID (right)
     public static final double DRIVETRAIN_BRAKE_PID_RIGHT_KP = 0.0012;
@@ -116,7 +119,8 @@ public class TuningConstants
     public static final double DRIVETRAIN_RIGHT_POSITIONAL_NON_PID_MULTIPLICAND = HardwareConstants.DRIVETRAIN_RIGHT_PULSE_DISTANCE / 60.0;
     public static final double DRIVETRAIN_MAX_POWER_POSITIONAL_NON_PID = 0.2;// max power level (positional, non-PID)
 
-    public static final double DRIVETRAIN_POSITIONAL_MAX_POWER_LEVEL = 0.6;
+    public static final double DRIVETRAIN_CROSS_COUPLING_ZERO_ERROR_RANGE = 100.0; // (in ticks)
+    public static final double DRIVETRAIN_POSITIONAL_MAX_POWER_LEVEL = 0.75; // 0.6
     public static final double DRIVETRAIN_BRAKE_MAX_POWER_LEVEL = 0.6;
     public static final double DRIVETRAIN_VELOCITY_MAX_POWER_LEVEL = 1.0;
 
@@ -241,5 +245,4 @@ public class TuningConstants
     //================================================== Climber ==============================================================
 
     public static final double CLIMBER_WINCH_DEAD_ZONE = .1;
-
 }

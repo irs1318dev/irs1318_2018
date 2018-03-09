@@ -197,7 +197,8 @@ public class PIDHandler
             // store error
             this.prevError = error;
 
-            double result = this.kp * error +      // proportional
+            double result = this.kp * error
+                +      // proportional
                 this.ki * this.integral +   // integral
                 this.kd * derivative + // derivative
                 this.kf * setpoint;    // feed-forward
@@ -274,7 +275,8 @@ public class PIDHandler
             // store error
             this.prevError = error;
 
-            double result = this.kp * error +      // proportional
+            double result = this.kp * error
+                +      // proportional
                 this.ki * this.integral +   // integral
                 this.kd * derivative + // derivative
                 this.kf * setpoint;    // feed-forward
@@ -300,6 +302,11 @@ public class PIDHandler
     public double getCurrentOutput()
     {
         return this.output;
+    }
+
+    public double getError()
+    {
+        return this.prevError;
     }
 
     public void setKp(double kp)
