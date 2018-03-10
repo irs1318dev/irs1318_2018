@@ -370,11 +370,12 @@ public class ButtonMap implements IButtonMap
                     ButtonType.Simple,
                     () -> SequentialTask.Sequence(
                         new OuttakeTask(0.1),
-                        new AdvancedIntakeOuttakeTask(Operation.ElevatorIntake)),
+                        new AdvancedIntakeOuttakeTask(Operation.ElevatorIntakeCorrection)),
                     new Operation[]
                     {
                         Operation.ElevatorIntake,
                         Operation.ElevatorIntakeCorrection,
+                        Operation.ElevatorWeakOuttake,
                         Operation.ElevatorStrongOuttake,
                         Operation.ElevatorIntakeFingersIn,
                     }));
