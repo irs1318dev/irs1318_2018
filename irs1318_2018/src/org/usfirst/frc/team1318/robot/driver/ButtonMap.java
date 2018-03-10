@@ -382,7 +382,6 @@ public class ButtonMap implements IButtonMap
             put(
                 MacroOperation.ArmsUpSwitchPosition,
                 new MacroOperationDescription(
-                    true,
                     UserInputDevice.Driver,
                     UserInputDeviceButton.JOYSTICK_BASE_MIDDLE_LEFT_BUTTON,
                     Shift.None,
