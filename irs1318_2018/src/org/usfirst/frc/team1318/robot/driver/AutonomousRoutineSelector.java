@@ -321,10 +321,10 @@ public class AutonomousRoutineSelector
                 new NavxTurnTask(startingLeft ? 90.0 : -90.0),
                 new DriveDistanceTimedTask(225.0, 4.0),
                 new NavxTurnTask(startingLeft ? 180.0 : -180.0),
-                new DriveDistanceTimedTask(45.0, 1.5),
+                new DriveDistanceTimedTask(42.0, 1.5),
                 new NavxTurnTask(startingLeft ? 270.0 : -270.0),
                 ConcurrentTask.AllTasks(
-                    new DriveDistanceTimedTask(12.0, 0.5),
+                    new DriveDistanceTimedTask(14.5, 0.5),
                     new ElevatorMovementTask(0.5, Operation.ElevatorSwitchPosition)),
                 AutonomousRoutineSelector.DepositCube(false),
                 AutonomousRoutineSelector.PostRoutineBackUp()));
@@ -335,11 +335,11 @@ public class AutonomousRoutineSelector
         return ConcurrentTask.AllTasks(
             AutonomousRoutineSelector.InitialSetUp(true),
             SequentialTask.Sequence(
-                new DriveDistanceTimedTask(205.0, 3.5),
+                new DriveDistanceTimedTask(210.0, 3.5),
                 new NavxTurnTask(startingLeft ? 90.0 : -90.0),
                 new DriveDistanceTimedTask(225.0, 4.0),
                 new NavxTurnTask(startingLeft ? 0.0 : 0.0),
-                new DriveDistanceTimedTask(22.0, 1.0),
+                new DriveDistanceTimedTask(49.0, 1.75), // 22.0 ??
                 new NavxTurnTask(startingLeft ? -45.0 : 45.0),
                 ConcurrentTask.AllTasks(
                     new DriveDistanceTimedTask(12.0, 0.75),
