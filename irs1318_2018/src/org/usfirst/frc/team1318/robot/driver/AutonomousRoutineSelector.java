@@ -422,14 +422,14 @@ public class AutonomousRoutineSelector
                 new ElevatorMovementTask(
                     isScale ? 0.5 : 0.5,
                     isScale ? Operation.ElevatorHighScalePosition : Operation.ElevatorSwitchPosition),
-                new OuttakeTask(2.0)));
+                new OuttakeTask(2.0, true)));
     }
 
     private static IControlTask DepositCubeOnly()
     {
         return ConcurrentTask.AnyTasks(
             new PIDBrakeTask(),
-            new OuttakeTask(2.0));
+            new OuttakeTask(2.0, true));
     }
 
     private static IControlTask PostRoutineBackUp()

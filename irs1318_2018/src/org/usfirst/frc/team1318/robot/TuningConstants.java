@@ -220,8 +220,8 @@ public class TuningConstants
     public static final double ELEVATOR_BOTTOM_CARRIAGE_INTAKE_POWER = 1.0;
 
     // Elevator outtake powers
-    public static final double ELEVATOR_LEFT_OUTER_STRONG_OUTTAKE_POWER = -0.3;
-    public static final double ELEVATOR_RIGHT_OUTER_STRONG_OUTTAKE_POWER = -0.3;
+    public static final double ELEVATOR_LEFT_OUTER_STRONG_OUTTAKE_POWER = -0.9;
+    public static final double ELEVATOR_RIGHT_OUTER_STRONG_OUTTAKE_POWER = -0.9;
     public static final double ELEVATOR_TOP_CARRIAGE_STRONG_OUTTAKE_POWER = -0.9;
     public static final double ELEVATOR_BOTTOM_CARRIAGE_STRONG_OUTTAKE_POWER = -0.9;
 
@@ -237,7 +237,7 @@ public class TuningConstants
     // Elevator intake correction time thresholds (in seconds)
     public static final double ELEVATOR_INTAKE_CORRECTION_TRIGGER_TIME_THRESHOLD = 1.0;
     public static final double ELEVATOR_INTAKE_CORRECTION_OPERATION_TIME_THRESHOLD = 1.0;
-    public static final double ELEVATOR_FINGER_OUT_TIME_THRESHOLD = 0.0;
+    public static final double ELEVATOR_FINGER_IN_INTAKE_TIME_THRESHOLD = 0.25;
 
     public static final double ELEVATOR_CLIMBING_MOVEMENT_DISTANCE_THRESHOLD = 1500.0; // in ticks
     public static final double ELEVATOR_CLIMBING_MOVEMENT_TIME_THRESHOLD = 4.0;

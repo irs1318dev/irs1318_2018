@@ -40,8 +40,8 @@ public class AdvancedIntakeOuttakeTask extends ControlTaskBase implements IContr
         this.timer = this.getInjector().getInstance(ITimer.class);
         this.startTime = this.timer.get();
 
-        this.setOperation(false);
-        this.setDigitalOperationState(Operation.ElevatorIntakeFingersIn, false);
+        this.setOperation(true);
+        this.setDigitalOperationState(Operation.ElevatorIntakeFingersIn, true);
     }
 
     /**
@@ -52,10 +52,12 @@ public class AdvancedIntakeOuttakeTask extends ControlTaskBase implements IContr
     {
         double currentTime = this.timer.get();
         double timeSinceStart = currentTime - this.startTime;
-        boolean shouldFingerIn = timeSinceStart >= TuningConstants.ELEVATOR_FINGER_OUT_TIME_THRESHOLD;
+        if (timeSinceStart >= TuningConstants.ELEVATOR_FINGER_IN_INTAKE_TIME_THRESHOLD)
+        {
+            this.setOperation(false);
+        }
 
-        this.setOperation(false);
-        this.setDigitalOperationState(Operation.ElevatorIntakeFingersIn, shouldFingerIn);
+        this.setDigitalOperationState(Operation.ElevatorIntakeFingersIn, true);
     }
 
     /**

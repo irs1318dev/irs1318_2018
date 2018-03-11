@@ -5,9 +5,12 @@ import org.usfirst.frc.team1318.robot.driver.common.IControlTask;
 
 public class OuttakeTask extends TimedTask implements IControlTask
 {
-    public OuttakeTask(double duration)
+    public final boolean strong;
+
+    public OuttakeTask(double duration, boolean strong)
     {
         super(duration);
+        this.strong = strong;
     }
 
     @Override
@@ -17,7 +20,8 @@ public class OuttakeTask extends TimedTask implements IControlTask
 
         this.setDigitalOperationState(Operation.ElevatorIntake, false);
         this.setDigitalOperationState(Operation.ElevatorIntakeCorrection, false);
-        this.setDigitalOperationState(Operation.ElevatorStrongOuttake, true);
+        this.setDigitalOperationState(Operation.ElevatorWeakOuttake, !this.strong);
+        this.setDigitalOperationState(Operation.ElevatorStrongOuttake, this.strong);
     }
 
     @Override
@@ -25,7 +29,8 @@ public class OuttakeTask extends TimedTask implements IControlTask
     {
         this.setDigitalOperationState(Operation.ElevatorIntake, false);
         this.setDigitalOperationState(Operation.ElevatorIntakeCorrection, false);
-        this.setDigitalOperationState(Operation.ElevatorStrongOuttake, true);
+        this.setDigitalOperationState(Operation.ElevatorWeakOuttake, !this.strong);
+        this.setDigitalOperationState(Operation.ElevatorStrongOuttake, this.strong);
     }
 
     @Override
@@ -35,6 +40,7 @@ public class OuttakeTask extends TimedTask implements IControlTask
 
         this.setDigitalOperationState(Operation.ElevatorIntake, false);
         this.setDigitalOperationState(Operation.ElevatorIntakeCorrection, false);
+        this.setDigitalOperationState(Operation.ElevatorWeakOuttake, false);
         this.setDigitalOperationState(Operation.ElevatorStrongOuttake, false);
     }
 
@@ -45,6 +51,7 @@ public class OuttakeTask extends TimedTask implements IControlTask
 
         this.setDigitalOperationState(Operation.ElevatorIntake, false);
         this.setDigitalOperationState(Operation.ElevatorIntakeCorrection, false);
+        this.setDigitalOperationState(Operation.ElevatorWeakOuttake, false);
         this.setDigitalOperationState(Operation.ElevatorStrongOuttake, false);
     }
 }

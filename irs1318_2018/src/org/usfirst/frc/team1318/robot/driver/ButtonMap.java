@@ -369,7 +369,7 @@ public class ButtonMap implements IButtonMap
                     UserInputDeviceButton.JOYSTICK_STICK_BOTTOM_RIGHT_BUTTON,
                     ButtonType.Simple,
                     () -> SequentialTask.Sequence(
-                        new OuttakeTask(0.1),
+                        new OuttakeTask(0.1, false),
                         new AdvancedIntakeOuttakeTask(Operation.ElevatorIntakeCorrection)),
                     new Operation[]
                     {
