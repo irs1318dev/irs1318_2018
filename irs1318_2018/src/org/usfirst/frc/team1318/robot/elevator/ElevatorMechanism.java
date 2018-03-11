@@ -652,11 +652,22 @@ public class ElevatorMechanism implements IMechanism
         {
             this.leftOuterIntakeMotor.set(leftOuterIntakePower);
             this.rightOuterIntakeMotor.set(rightOuterIntakePower);
+
+            if (this.driver.getDigital(Operation.ElevatorIntakeFingersIn))
+            {
+                this.intakeFingerExtender.set(DoubleSolenoidValue.kReverse);
+            }
+            else
+            {
+                this.intakeFingerExtender.set(DoubleSolenoidValue.kForward);
+            }
         }
         else
         {
             this.leftOuterIntakeMotor.set(0);
             this.rightOuterIntakeMotor.set(0);
+
+            this.intakeFingerExtender.set(DoubleSolenoidValue.kForward);
         }
 
         this.topCarriageIntakeMotor.set(topCarriageIntakePower);
@@ -678,15 +689,6 @@ public class ElevatorMechanism implements IMechanism
         {
             this.isIntakeArmDown = false;
             this.intakeArmExtender.set(DoubleSolenoidValue.kReverse);
-        }
-
-        if (this.isIntakeArmDown && this.driver.getDigital(Operation.ElevatorIntakeFingersIn))
-        {
-            this.intakeFingerExtender.set(DoubleSolenoidValue.kReverse);
-        }
-        else
-        {
-            this.intakeFingerExtender.set(DoubleSolenoidValue.kForward);
         }
 
         this.lastUpdateTime = currentTime;

@@ -273,7 +273,7 @@ public class AutonomousRoutineSelector
                 new DriveDistanceTimedTask(148.0, 3.5),
                 new NavxTurnTask(startingLeft ? 90.0 : -90.0),
                 ConcurrentTask.AllTasks(
-                    new DriveDistanceTimedTask(18.5, 0.75),
+                    new DriveDistanceTimedTask(24.0, 0.75), // 18.5
                     new ElevatorMovementTask(
                         0.75,
                         Operation.ElevatorSwitchPosition)),
@@ -289,10 +289,11 @@ public class AutonomousRoutineSelector
                 new DriveDistanceTimedTask(255.25, 5.5),
                 new NavxTurnTask(startingLeft ? 45.0 : -45.0),
                 ConcurrentTask.AllTasks(
-                    new DriveDistanceTimedTask(14.5, 0.75),
+                    new DriveDistanceTimedTask(14.5, 1.0),
                     new ElevatorMovementTask(
-                        0.75,
+                        1.0,
                         Operation.ElevatorHighScalePosition)),
+                new NavxTurnTask(false, startingLeft ? 60.0 : -60.0),
                 AutonomousRoutineSelector.DepositCube(true),
                 AutonomousRoutineSelector.PostRoutineBackUp()));
 
@@ -321,7 +322,7 @@ public class AutonomousRoutineSelector
                 new NavxTurnTask(startingLeft ? 90.0 : -90.0),
                 new DriveDistanceTimedTask(225.0, 4.0),
                 new NavxTurnTask(startingLeft ? 180.0 : -180.0),
-                new DriveDistanceTimedTask(42.0, 1.5),
+                new DriveDistanceTimedTask(18.0, 1.0), // 42.0
                 new NavxTurnTask(startingLeft ? 270.0 : -270.0),
                 ConcurrentTask.AllTasks(
                     new DriveDistanceTimedTask(14.5, 0.5),
@@ -420,7 +421,7 @@ public class AutonomousRoutineSelector
             new PIDBrakeTask(),
             SequentialTask.Sequence(
                 new ElevatorMovementTask(
-                    isScale ? 0.5 : 0.5,
+                    isScale ? 0.75 : 0.5,
                     isScale ? Operation.ElevatorHighScalePosition : Operation.ElevatorSwitchPosition),
                 new OuttakeTask(2.0, true)));
     }
