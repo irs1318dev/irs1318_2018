@@ -320,7 +320,9 @@ public class AutonomousRoutineSelector
             SequentialTask.Sequence(
                 new DriveDistanceTimedTask(210.0, 3.5),
                 new NavxTurnTask(startingLeft ? 90.0 : -90.0),
-                new DriveDistanceTimedTask(225.0, 4.0),
+                new DriveDistanceTimedTask(135.0, 2.25),
+                new NavxTurnTask(startingLeft ? 90.0 : -90.0), // over the bump, let's re-attain our desired angle
+                new DriveDistanceTimedTask(90.0, 2.0),
                 new NavxTurnTask(startingLeft ? 180.0 : -180.0),
                 new DriveDistanceTimedTask(18.0, 1.0), // 42.0
                 new NavxTurnTask(startingLeft ? 270.0 : -270.0),
@@ -338,7 +340,9 @@ public class AutonomousRoutineSelector
             SequentialTask.Sequence(
                 new DriveDistanceTimedTask(210.0, 3.5),
                 new NavxTurnTask(startingLeft ? 90.0 : -90.0),
-                new DriveDistanceTimedTask(225.0, 4.0),
+                new DriveDistanceTimedTask(135.0, 2.25),
+                new NavxTurnTask(startingLeft ? 90.0 : -90.0), // over the bump, let's re-attain our desired angle
+                new DriveDistanceTimedTask(90.0, 2.0),
                 new NavxTurnTask(startingLeft ? 0.0 : 0.0),
                 new DriveDistanceTimedTask(49.0, 1.75), // 22.0 ??
                 new NavxTurnTask(startingLeft ? -45.0 : 45.0),
