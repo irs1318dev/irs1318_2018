@@ -362,6 +362,15 @@ public class ElevatorMechanism implements IMechanism
     }
 
     /**
+     * get a value showing if the arms are up or down
+     * @return a value indicating whether the arms are up or down
+     */
+    public boolean getArmDownStatus()
+    {
+        return this.isIntakeArmDown;
+    }
+
+    /**
      * set the driver that the mechanism should use
      * @param driver to use
      */

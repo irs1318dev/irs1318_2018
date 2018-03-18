@@ -286,13 +286,16 @@ public class AutonomousRoutineSelector
         return ConcurrentTask.AllTasks(
             AutonomousRoutineSelector.InitialSetUp(true),
             SequentialTask.Sequence(
-                new DriveDistanceTimedTask(255.25, 5.5),
-                new NavxTurnTask(startingLeft ? 45.0 : -45.0),
                 ConcurrentTask.AllTasks(
-                    new DriveDistanceTimedTask(14.5, 1.0),
-                    new ElevatorMovementTask(
-                        1.0,
-                        Operation.ElevatorHighScalePosition)),
+                    SequentialTask.Sequence(
+                        new DriveDistanceTimedTask(255.25, 5.5),
+                        new NavxTurnTask(startingLeft ? 45.0 : -45.0)),
+                    SequentialTask.Sequence(
+                        new WaitTask(4.75),
+                        new ElevatorMovementTask(
+                            1.75,
+                            Operation.ElevatorHighScalePosition))),
+                new DriveDistanceTimedTask(14.5, 1.0),
                 new NavxTurnTask(false, startingLeft ? 60.0 : -60.0),
                 AutonomousRoutineSelector.DepositCube(true),
                 AutonomousRoutineSelector.PostRoutineBackUp()));
@@ -324,11 +327,11 @@ public class AutonomousRoutineSelector
                 new NavxTurnTask(startingLeft ? 90.0 : -90.0), // over the bump, let's re-attain our desired angle
                 new DriveDistanceTimedTask(90.0, 2.0),
                 new NavxTurnTask(startingLeft ? 180.0 : -180.0),
-                new DriveDistanceTimedTask(18.0, 1.0), // 42.0
-                new NavxTurnTask(startingLeft ? 270.0 : -270.0),
                 ConcurrentTask.AllTasks(
-                    new DriveDistanceTimedTask(14.5, 0.5),
+                    new DriveDistanceTimedTask(18.0, 1.0), // 42.0
                     new ElevatorMovementTask(0.5, Operation.ElevatorSwitchPosition)),
+                new NavxTurnTask(startingLeft ? 270.0 : -270.0),
+                new DriveDistanceTimedTask(14.5, 0.5),
                 AutonomousRoutineSelector.DepositCube(false),
                 AutonomousRoutineSelector.PostRoutineBackUp()));
     }

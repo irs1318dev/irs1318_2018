@@ -4,6 +4,7 @@ import org.usfirst.frc.team1318.robot.TuningConstants;
 import org.usfirst.frc.team1318.robot.common.wpilib.ITimer;
 import org.usfirst.frc.team1318.robot.driver.Operation;
 import org.usfirst.frc.team1318.robot.driver.common.IControlTask;
+import org.usfirst.frc.team1318.robot.elevator.ElevatorMechanism;
 
 /**
  * Class defining a task that intakes or outtakes a power cube
@@ -22,6 +23,7 @@ public class AdvancedIntakeOuttakeTask extends ControlTaskBase implements IContr
 
     private ITimer timer;
     private double startTime;
+    private boolean areElevatorArmsDown;
 
     /**
      * Initializes a new AdvancedIntakeOuttakeTask
@@ -40,6 +42,9 @@ public class AdvancedIntakeOuttakeTask extends ControlTaskBase implements IContr
         this.timer = this.getInjector().getInstance(ITimer.class);
         this.startTime = this.timer.get();
 
+        ElevatorMechanism elevator = this.getInjector().getInstance(ElevatorMechanism.class);
+        this.areElevatorArmsDown = elevator.getArmDownStatus();
+
         this.setOperation(true);
         this.setDigitalOperationState(Operation.ElevatorIntakeFingersIn, true);
     }
@@ -52,7 +57,8 @@ public class AdvancedIntakeOuttakeTask extends ControlTaskBase implements IContr
     {
         double currentTime = this.timer.get();
         double timeSinceStart = currentTime - this.startTime;
-        if (timeSinceStart >= TuningConstants.ELEVATOR_FINGER_IN_INTAKE_TIME_THRESHOLD)
+        if (!this.areElevatorArmsDown
+            || timeSinceStart >= TuningConstants.ELEVATOR_FINGER_IN_INTAKE_TIME_THRESHOLD)
         {
             this.setOperation(false);
         }

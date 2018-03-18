@@ -190,15 +190,15 @@ public class TuningConstants
     public static final double ELEVATOR_OUTER_LOW_SCALE_POSITION = 24.0;
     public static final double ELEVATOR_INNER_HIGH_SCALE_POSITION = 32.0; // High Scale Height: 76in. 
     public static final double ELEVATOR_OUTER_HIGH_SCALE_POSITION = HardwareConstants.ELEVATOR_OUTER_MAX_HEIGHT;
-    public static final double ELEVATOR_INNER_CLIMB_POSITION = 29.0; // Bar Height: 84in. 
+    public static final double ELEVATOR_INNER_CLIMB_POSITION = 28.0; // Bar Height: 84in. 
     public static final double ELEVATOR_OUTER_CLIMB_POSITION = TuningConstants.ELEVATOR_OUTER_CARRY_POSITION;
 
     public static final boolean ELEVATOR_USE_CLUTCH = true;
     public static final double ELEVATOR_CLUTCH_POSITION_DELTA = 1.0;
     public static final double ELEVATOR_POSITION_REACHED_DELTA = 2.0;
 
-    public static final double ELEVATOR_DEBUG_DOWN_POWER_LEVEL = 0.5;
-    public static final double ELEVATOR_DEBUG_UP_POWER_LEVEL = 0.3;
+    public static final double ELEVATOR_DEBUG_DOWN_POWER_LEVEL = 0.6;
+    public static final double ELEVATOR_DEBUG_UP_POWER_LEVEL = 0.4;
 
     // Height below which we won't run the outer intake wheels
     public static final double ELEVATOR_MAXIMUM_OUTER_INTAKE_USE_HEIGHT = 12.0;
