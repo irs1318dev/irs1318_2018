@@ -12,16 +12,21 @@ import org.usfirst.frc.team1318.robot.elevator.ElevatorMechanism;
  */
 public class AdvancedIntakeOuttakeTask extends ControlTaskBase implements IControlTask
 {
-    private static final Operation[] allOperations = new Operation[] {
-        Operation.ElevatorIntake,
-        Operation.ElevatorIntakeCorrection,
-        Operation.ElevatorWeakOuttake,
-        Operation.ElevatorStrongOuttake,
-    };
+    private static final Operation[] allOperations =
+        new Operation[]
+        {
+            Operation.ElevatorIntake,
+            Operation.ElevatorIntakeCorrection,
+            Operation.ElevatorWeakOuttake,
+            Operation.ElevatorStrongOuttake,
+        };
 
     private final Operation intakeOuttakeOperation;
+    private final boolean completeWhenThroughBeamBroken;
 
     private ITimer timer;
+    private ElevatorMechanism elevator;
+
     private double startTime;
     private boolean areElevatorArmsDown;
 
@@ -30,7 +35,16 @@ public class AdvancedIntakeOuttakeTask extends ControlTaskBase implements IContr
      */
     public AdvancedIntakeOuttakeTask(Operation intakeOuttakeOperation)
     {
+        this(intakeOuttakeOperation, false);
+    }
+
+    /**
+     * Initializes a new AdvancedIntakeOuttakeTask
+     */
+    public AdvancedIntakeOuttakeTask(Operation intakeOuttakeOperation, boolean completeWhenThroughBeamBroken)
+    {
         this.intakeOuttakeOperation = intakeOuttakeOperation;
+        this.completeWhenThroughBeamBroken = completeWhenThroughBeamBroken;
     }
 
     /**
@@ -42,8 +56,8 @@ public class AdvancedIntakeOuttakeTask extends ControlTaskBase implements IContr
         this.timer = this.getInjector().getInstance(ITimer.class);
         this.startTime = this.timer.get();
 
-        ElevatorMechanism elevator = this.getInjector().getInstance(ElevatorMechanism.class);
-        this.areElevatorArmsDown = elevator.getArmDownStatus();
+        this.elevator = this.getInjector().getInstance(ElevatorMechanism.class);
+        this.areElevatorArmsDown = this.elevator.getArmDownStatus();
 
         this.setOperation(true);
         this.setDigitalOperationState(Operation.ElevatorIntakeFingersIn, true);
@@ -103,7 +117,7 @@ public class AdvancedIntakeOuttakeTask extends ControlTaskBase implements IContr
     @Override
     public boolean hasCompleted()
     {
-        return false;
+        return this.completeWhenThroughBeamBroken && this.elevator.getThroughBeamStatus();
     }
 
     private void setOperation(boolean clear)

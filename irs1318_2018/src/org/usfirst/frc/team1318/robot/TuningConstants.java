@@ -19,6 +19,8 @@ public class TuningConstants
     public static final double MAX_VISION_CENTERING_RANGE_DEGREES = 5.0;
 
     // Navx Turn Constants
+    public static final double NAVX_TURN_MIN_ACCEPTABLE_ANGLE_VALUE = -720.0;
+    public static final double NAVX_TURN_MAX_ACCEPTABLE_ANGLE_VALUE = 720.0;
     public static final double MAX_NAVX_TURN_RANGE_DEGREES = 4.0;
     public static final double NAVX_TURN_COMPLETE_TIME = 0.5;
 
@@ -120,7 +122,7 @@ public class TuningConstants
     public static final double DRIVETRAIN_MAX_POWER_POSITIONAL_NON_PID = 0.2;// max power level (positional, non-PID)
 
     public static final double DRIVETRAIN_CROSS_COUPLING_ZERO_ERROR_RANGE = 100.0; // (in ticks)
-    public static final double DRIVETRAIN_POSITIONAL_MAX_POWER_LEVEL = 0.75; // 0.6
+    public static final double DRIVETRAIN_POSITIONAL_MAX_POWER_LEVEL = 0.85; // 0.75
     public static final double DRIVETRAIN_BRAKE_MAX_POWER_LEVEL = 0.6;
     public static final double DRIVETRAIN_VELOCITY_MAX_POWER_LEVEL = 1.0;
 

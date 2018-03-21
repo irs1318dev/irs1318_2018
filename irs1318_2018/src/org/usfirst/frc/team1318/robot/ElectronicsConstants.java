@@ -52,7 +52,7 @@ public class ElectronicsConstants
     public static final int ELEVATOR_RIGHT_OUTER_INTAKE_MOTOR_CAN_ID = 10;
 
     // Analog I/O:
-    public static final int ELEVATOR_INNER_THROUGH_BEAM_SENSOR_ANALOG_CHANNEL = 0;
+    public static final int ELEVATOR_THROUGH_BEAM_SENSOR_ANALOG_CHANNEL = 0;
     public static final int ELEVATOR_OUTER_THROUGH_BEAM_SENSOR_ANALOG_CHANNEL = 1;
 
     // PCM:

@@ -34,7 +34,7 @@ public class ElevatorMechanismTest
         ITalonSRX rightCarriageIntakeMotor = testProvider.getTalonSRX(ElectronicsConstants.ELEVATOR_BOTTOM_CARRIAGE_INTAKE_MOTOR_CAN_ID);
         ITalonSRX leftOuterIntakeMotor = testProvider.getTalonSRX(ElectronicsConstants.ELEVATOR_LEFT_OUTER_INTAKE_MOTOR_CAN_ID);
         ITalonSRX rightOuterIntakeMotor = testProvider.getTalonSRX(ElectronicsConstants.ELEVATOR_RIGHT_OUTER_INTAKE_MOTOR_CAN_ID);
-        IAnalogInput innerThroughBeamSensor = testProvider.getAnalogInput(ElectronicsConstants.ELEVATOR_INNER_THROUGH_BEAM_SENSOR_ANALOG_CHANNEL);
+        IAnalogInput innerThroughBeamSensor = testProvider.getAnalogInput(ElectronicsConstants.ELEVATOR_THROUGH_BEAM_SENSOR_ANALOG_CHANNEL);
         IAnalogInput outerThroughBeamSensor = testProvider.getAnalogInput(ElectronicsConstants.ELEVATOR_OUTER_THROUGH_BEAM_SENSOR_ANALOG_CHANNEL);
         Driver driver = mock(Driver.class);
 

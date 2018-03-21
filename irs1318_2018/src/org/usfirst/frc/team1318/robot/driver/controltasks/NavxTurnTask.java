@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1318.robot.driver.controltasks;
 
 import org.usfirst.frc.team1318.robot.TuningConstants;
+import org.usfirst.frc.team1318.robot.common.Helpers;
 import org.usfirst.frc.team1318.robot.common.PIDHandler;
 import org.usfirst.frc.team1318.robot.common.wpilib.ITimer;
 import org.usfirst.frc.team1318.robot.driver.Operation;
@@ -13,14 +14,17 @@ import org.usfirst.frc.team1318.robot.general.PositionManager;
 public class NavxTurnTask extends ControlTaskBase implements IControlTask
 {
     private final boolean useTime;
+    private final double desiredAngle;
+    private final double minRange;
+    private final double maxRange;
 
     private PIDHandler turnPidHandler;
     private Double completeTime;
     protected PositionManager pManager;
-    private double desiredAngle;
 
     /**
     * Initializes a new NavxTurnTask using time to make sure we completed turn
+    * @param desiredAngle the desired angle
     */
     public NavxTurnTask(double desiredAngle)
     {
@@ -30,11 +34,31 @@ public class NavxTurnTask extends ControlTaskBase implements IControlTask
     /**
     * Initializes a new NavxTurnTask
     * @param useTime whether to make sure we completed turn for a second or not
+    * @param desiredAngle the desired angle
     */
     public NavxTurnTask(boolean useTime, double desiredAngle)
     {
+        this(
+            useTime,
+            desiredAngle,
+            TuningConstants.NAVX_TURN_MIN_ACCEPTABLE_ANGLE_VALUE,
+            TuningConstants.NAVX_TURN_MAX_ACCEPTABLE_ANGLE_VALUE);
+    }
+
+    /**
+    * Initializes a new NavxTurnTask
+    * @param useTime whether to make sure we completed turn for a second or not
+    * @param desiredAngle the desired angle
+    * @param minRange the minimum of the measured angle range that we accept from the navx
+    * @param maxRange the maximum of the measured angle range that we accept from the navx
+    */
+    public NavxTurnTask(boolean useTime, double desiredAngle, double minRange, double maxRange)
+    {
         this.useTime = useTime;
         this.desiredAngle = desiredAngle;
+        this.minRange = minRange;
+        this.maxRange = maxRange;
+
         this.turnPidHandler = null;
         this.completeTime = null;
     }
@@ -58,6 +82,12 @@ public class NavxTurnTask extends ControlTaskBase implements IControlTask
         this.setDigitalOperationState(Operation.DriveTrainUsePositionalMode, false);
 
         double currentMeasuredAngle = this.pManager.getNavxAngle();
+
+        // if we are not within the expected range, let's fall back to using odometry
+        if (Helpers.WithinRange(currentMeasuredAngle, this.minRange, this.maxRange))
+        {
+            currentMeasuredAngle = this.pManager.getOdometryAngle();
+        }
 
         this.setAnalogOperationState(
             Operation.DriveTrainTurn,
@@ -94,7 +124,7 @@ public class NavxTurnTask extends ControlTaskBase implements IControlTask
     {
         double currentMeasuredAngle = this.pManager.getNavxAngle();
 
-        double centerAngleDifference = Math.abs(currentMeasuredAngle - desiredAngle);
+        double centerAngleDifference = Math.abs(currentMeasuredAngle - this.desiredAngle);
         if (centerAngleDifference > TuningConstants.MAX_NAVX_TURN_RANGE_DEGREES)
         {
             return false;

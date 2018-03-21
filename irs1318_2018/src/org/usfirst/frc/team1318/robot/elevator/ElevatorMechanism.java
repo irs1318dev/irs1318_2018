@@ -47,8 +47,7 @@ public class ElevatorMechanism implements IMechanism
     private final ITalonSRX leftOuterIntakeMotor;
     private final ITalonSRX rightOuterIntakeMotor;
 
-    private final IAnalogInput innerThroughBeamSensor;
-    //    private final IAnalogInput outerThroughBeamSensor;
+    private final IAnalogInput throughBeamSensor;
 
     private final IDoubleSolenoid intakeArmExtender;
     private final IDoubleSolenoid intakeFingerExtender;
@@ -73,11 +72,8 @@ public class ElevatorMechanism implements IMechanism
     private boolean outerElevatorForwardLimitSwitchStatus;
     private boolean outerElevatorReverseLimitSwitchStatus;
 
-    private double innerThroughBeamVoltage;
-    private boolean isInnerThroughBeamBlocked;
-
-    //    private double outerThroughBeamVoltage;
-    private boolean isOuterThroughBeamBlocked;
+    private double throughBeamVoltage;
+    private boolean isThroughBeamBlocked;
 
     private double desiredInnerHeight;
     private double desiredOuterHeight;
@@ -209,8 +205,7 @@ public class ElevatorMechanism implements IMechanism
             ElectronicsConstants.ELEVATOR_INTAKE_FINGER_PCM_CHANNEL_A,
             ElectronicsConstants.ELEVATOR_INTAKE_FINGER_PCM_CHANNEL_B);
 
-        this.innerThroughBeamSensor = provider.getAnalogInput(ElectronicsConstants.ELEVATOR_INNER_THROUGH_BEAM_SENSOR_ANALOG_CHANNEL);
-        //        this.outerThroughBeamSensor = provider.getAnalogInput(ElectronicsConstants.ELEVATOR_OUTER_THROUGH_BEAM_SENSOR_ANALOG_CHANNEL);
+        this.throughBeamSensor = provider.getAnalogInput(ElectronicsConstants.ELEVATOR_THROUGH_BEAM_SENSOR_ANALOG_CHANNEL);
 
         this.collectedIndicatorLight = provider.getSolenoid(
             ElectronicsConstants.PCM_A_MODULE,
@@ -233,10 +228,8 @@ public class ElevatorMechanism implements IMechanism
         this.outerElevatorForwardLimitSwitchStatus = false;
         this.outerElevatorReverseLimitSwitchStatus = false;
 
-        this.innerThroughBeamVoltage = 0.0;
-        this.isInnerThroughBeamBlocked = false;
-        //        this.outerThroughBeamVoltage = 0.0;
-        this.isOuterThroughBeamBlocked = false;
+        this.throughBeamVoltage = 0.0;
+        this.isThroughBeamBlocked = false;
 
         this.desiredInnerHeight = 0.0;
         this.desiredOuterHeight = 0.0;
@@ -347,18 +340,9 @@ public class ElevatorMechanism implements IMechanism
      * get the status from the inner through beam sensor
      * @return a value indicating whether the inner through beam sensor is blocked 
      */
-    public boolean getInnerThroughBeamStatus()
+    public boolean getThroughBeamStatus()
     {
-        return this.isInnerThroughBeamBlocked;
-    }
-
-    /**
-     * get the status from the outer through beam sensor
-     * @return a value indicating whether the outer through beam sensor is blocked 
-     */
-    public boolean getOuterThroughBeamStatus()
-    {
-        return this.isOuterThroughBeamBlocked;
+        return this.isThroughBeamBlocked;
     }
 
     /**
@@ -386,11 +370,8 @@ public class ElevatorMechanism implements IMechanism
     @Override
     public void readSensors()
     {
-        this.innerThroughBeamVoltage = this.innerThroughBeamSensor.getVoltage();
-        this.isInnerThroughBeamBlocked = this.innerThroughBeamVoltage < TuningConstants.ELEVATOR_THROUGH_BEAM_UNBLOCKED_VOLTAGE_THRESHOLD;
-
-        //        this.outerThroughBeamVoltage = this.outerThroughBeamSensor.getVoltage();
-        //        this.isOuterThroughBeamBlocked = this.outerThroughBeamVoltage < TuningConstants.ELEVATOR_THROUGH_BEAM_UNBLOCKED_VOLTAGE_THRESHOLD;
+        this.throughBeamVoltage = this.throughBeamSensor.getVoltage();
+        this.isThroughBeamBlocked = this.throughBeamVoltage < TuningConstants.ELEVATOR_THROUGH_BEAM_UNBLOCKED_VOLTAGE_THRESHOLD;
 
         this.innerElevatorVelocity = this.innerElevatorMotor.getVelocity();
         this.innerElevatorError = this.innerElevatorMotor.getError();
@@ -422,10 +403,8 @@ public class ElevatorMechanism implements IMechanism
         this.logger.logNumber(ElevatorMechanism.LogName, "outerElevatorHeight", this.outerElevatorHeight);
         this.logger.logBoolean(ElevatorMechanism.LogName, "outerElevatorReverseLimitSwitch", this.outerElevatorReverseLimitSwitchStatus);
         this.logger.logBoolean(ElevatorMechanism.LogName, "outerElevatorForwardLimitSwitch", this.outerElevatorForwardLimitSwitchStatus);
-        this.logger.logNumber(ElevatorMechanism.LogName, "onnerThroughBeamSensorVoltage", this.innerThroughBeamVoltage);
-        this.logger.logBoolean(ElevatorMechanism.LogName, "innerThroughBeamBlocked", this.isInnerThroughBeamBlocked);
-        //        this.logger.logNumber(ElevatorMechanism.LogName, "outerThroughBeamSensorVoltage", this.outerThroughBeamVoltage);
-        //        this.logger.logBoolean(ElevatorMechanism.LogName, "outerThroughBeamBlocked", this.isOuterThroughBeamBlocked);
+        this.logger.logNumber(ElevatorMechanism.LogName, "throughBeamSensorVoltage", this.throughBeamVoltage);
+        this.logger.logBoolean(ElevatorMechanism.LogName, "throughBeamBlocked", this.isThroughBeamBlocked);
     }
 
     /**
@@ -453,14 +432,6 @@ public class ElevatorMechanism implements IMechanism
         {
             this.shouldHold = false;
         }
-
-        //        boolean isBelowRestrictedRange = currentTotalHeight <= TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MIN;
-        //        boolean isAboveRestrictedRange = currentTotalHeight >= TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MAX;
-        //        boolean isWithinRestrictedRange = Helpers.WithinRange(
-        //            currentTotalHeight,
-        //            TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MIN,
-        //            TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MAX);
-        //        boolean desiresWithinRestrictedRange = false;
 
         boolean forceUp = this.driver.getDigital(Operation.ElevatorForceUp);
         boolean forceDown = this.driver.getDigital(Operation.ElevatorForceDown);
@@ -578,24 +549,6 @@ public class ElevatorMechanism implements IMechanism
                 }
             }
 
-            //            // only move to the selected new height if the intake arm is down (or we are putting it down)
-            //            //  or if the new position is not within the restricted range and we won't move through the restricted range
-            //            double newDesiredTotalHeight = newDesiredInnerHeight + newDesiredOuterHeight;
-            //            boolean desiresBelowRestrictedRange = newDesiredTotalHeight <= TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MIN;
-            //            boolean desiresAboveRestrictedRange = newDesiredTotalHeight >= TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MAX;
-            //            desiresWithinRestrictedRange = Helpers.WithinRange(
-            //                newDesiredTotalHeight,
-            //                TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MIN,
-            //                TuningConstants.ELEVATOR_DISALLOW_INTAKE_ARM_HEIGHT_MAX);
-            //
-            //            if ((this.isIntakeArmDown && (!moveArmUp || moveArmDown))
-            //                || (!desiresWithinRestrictedRange
-            //                    && ((isBelowRestrictedRange && desiresBelowRestrictedRange)
-            //                        || (isAboveRestrictedRange && desiresAboveRestrictedRange))))
-            //            {
-            //                // Ensure that our desired inner and outer heights are within the permitted ranges:
-            //            }
-
             this.desiredInnerHeight = Helpers.EnforceRange(newDesiredInnerHeight, 0.0, HardwareConstants.ELEVATOR_INNER_MAX_HEIGHT);
             this.desiredOuterHeight = Helpers.EnforceRange(newDesiredOuterHeight, 0.0, HardwareConstants.ELEVATOR_OUTER_MAX_HEIGHT);
 
@@ -682,7 +635,7 @@ public class ElevatorMechanism implements IMechanism
         this.topCarriageIntakeMotor.set(topCarriageIntakePower);
         this.bottomCarriageIntakeMotor.set(bottomCarriageIntakePower);
 
-        this.collectedIndicatorLight.set(this.isInnerThroughBeamBlocked);
+        this.collectedIndicatorLight.set(this.isThroughBeamBlocked);
         this.positionReachedIndicatorLight.set(
             Helpers.WithinDelta(
                 currentTotalHeight,
@@ -738,7 +691,6 @@ public class ElevatorMechanism implements IMechanism
         this.desiredInnerHeight = 0.0;
         this.desiredOuterHeight = 0.0;
 
-        this.isInnerThroughBeamBlocked = false;
-        this.isOuterThroughBeamBlocked = false;
+        this.isThroughBeamBlocked = false;
     }
 }
