@@ -33,6 +33,7 @@ public class AutonomousRoutineSelector
     private final IDigitalInput dipSwitchC;
     private final IDigitalInput dipSwitchD;
     private final IDigitalInput jumperE;
+    private final IDigitalInput jumperF;
 
     private enum Position
     {
@@ -55,6 +56,7 @@ public class AutonomousRoutineSelector
         this.dipSwitchD = provider.getDigitalInput(ElectronicsConstants.AUTO_DIP_SWITCH_D_DIGITAL_CHANNEL);
 
         this.jumperE = provider.getDigitalInput(ElectronicsConstants.AUTO_DIP_JUMPER_E_DIGITAL_CHANNEL);
+        this.jumperF = provider.getDigitalInput(ElectronicsConstants.AUTO_DIP_JUMPER_F_DIGITAL_CHANNEL);
     }
 
     /**
@@ -69,10 +71,12 @@ public class AutonomousRoutineSelector
         boolean switchD = !this.dipSwitchD.get();
 
         boolean jumperE = !this.jumperE.get();
+        boolean jumperF = !this.jumperF.get();
 
         boolean isOpportunistic = switchC;  // Opportunistic if third switch flipped, fixed routine if not
         boolean prefersSwitch = switchD;  // Prefers switch if fourth switch flipped, prefers scale if not
-        boolean twoCubeMode = jumperE; // attempt 2-cube mode if the jumper is in
+        boolean twoCubePreferScaleMode = jumperE; // attempt 2-cube mode if the jumper is in, prefer the scale
+        boolean twoCubePreferSwitchMode = jumperF; // attempt 2-cube mode if the jumper is in, prefer the switch
 
         // add next base2 number (1, 2, 4, 8, 16, etc.) here based on number of dipswitches and which is on...
         int positionSelection = 0;
@@ -111,7 +115,8 @@ public class AutonomousRoutineSelector
         this.logger.logString(AutonomousRoutineSelector.LogName, "position", position.toString());
         this.logger.logBoolean(AutonomousRoutineSelector.LogName, "isOpportunistic", isOpportunistic);
         this.logger.logBoolean(AutonomousRoutineSelector.LogName, "prefersSwitch", prefersSwitch);
-        this.logger.logBoolean(AutonomousRoutineSelector.LogName, "twoCubeMode", twoCubeMode);
+        this.logger.logBoolean(AutonomousRoutineSelector.LogName, "twoCubePreferScaleMode", twoCubePreferScaleMode);
+        this.logger.logBoolean(AutonomousRoutineSelector.LogName, "twoCubePreferSwitchMode", twoCubePreferSwitchMode);
 
         boolean isSwitchSideLeft = false;
         boolean isScaleSideLeft = false;
@@ -127,110 +132,20 @@ public class AutonomousRoutineSelector
 
         if (position == Position.Special)
         {
-            return specialRoutineSelection(isOpportunistic, prefersSwitch);
-        }
-        else if (isOpportunistic)
-        {
-            return opportunisticRoutineSelection(position, prefersSwitch, twoCubeMode, isSwitchSideLeft, isScaleSideLeft);
-        }
-        else
-        {
-            return fixedRoutineSelection(position, prefersSwitch, twoCubeMode, isSwitchSideLeft, isScaleSideLeft);
-        }
-    }
-
-    /**
-     * Special selection from both position switches being flipped
-     * 
-     * @return special routine non-dependent on position
-     */
-    private static IControlTask specialRoutineSelection(boolean switchC, boolean switchD)
-    {
-        if (switchC && switchD)
-        {
-            return CrossBaseLine();
-        }
-        else
-        {
-            return GetFillerRoutine();
-        }
-    }
-
-    /**
-     * Opportunistic selection from third, opportunistic switch being flipped
-     * 
-     * @return most efficient routine (in-line with starting side)
-     */
-    private static IControlTask opportunisticRoutineSelection(
-        Position position,
-        boolean prefersSwitch,
-        boolean twoCubeMode,
-        boolean isSwitchSideLeft,
-        boolean isScaleSideLeft)
-    {
-        switch (position)
-        {
-            case Center:
-                return PlaceCubeOnSwitchFromMiddle(isSwitchSideLeft);
-
-            case Left:
-                if (isSwitchSideLeft && isScaleSideLeft)
-                {
-                    return prefersSwitch ? PlaceCubeOnSameSideSwitch(true, twoCubeMode) : PlaceCubeOnSameSideScale(true, twoCubeMode);
-                }
-
-                if (isScaleSideLeft)
-                {
-                    return PlaceCubeOnSameSideScale(true, twoCubeMode);
-                }
-
-                if (isSwitchSideLeft)
-                {
-                    return PlaceCubeOnSameSideSwitch(true, twoCubeMode);
-                }
-
-                return CrossBaseLine(); // prefersSwitch ? PlaceCubeOnOppositeSideSwitch(true) : PlaceCubeOnOppositeSideScale(true);
-
-            case Right:
-                if (!isSwitchSideLeft && !isScaleSideLeft)
-                {
-                    return prefersSwitch ? PlaceCubeOnSameSideSwitch(false, twoCubeMode) : PlaceCubeOnSameSideScale(false, twoCubeMode);
-                }
-
-                if (!isScaleSideLeft)
-                {
-                    return PlaceCubeOnSameSideScale(false, twoCubeMode);
-                }
-
-                if (!isSwitchSideLeft)
-                {
-                    return PlaceCubeOnSameSideSwitch(false, twoCubeMode);
-                }
-
-                return CrossBaseLine(); // prefersSwitch ? PlaceCubeOnOppositeSideSwitch(false) : PlaceCubeOnOppositeSideScale(false);
-
-            case Special:
-            default:
+            if (isOpportunistic && prefersSwitch)
+            {
+                return CrossBaseLine();
+            }
+            else
+            {
                 return GetFillerRoutine();
+            }
         }
-    }
 
-    /**
-     * Fixed selection from third, opportunistic selection switch not being flipped
-     * 
-     * @return routine for either scale or switch, whichever was selected with the fourth switch
-     */
-    private static IControlTask fixedRoutineSelection(
-        Position position,
-        boolean prefersSwitch,
-        boolean twoCubeMode,
-        boolean isSwitchSideLeft,
-        boolean isScaleSideLeft)
-    {
         switch (position)
         {
             case Center:
-                if (prefersSwitch)
+                if (isOpportunistic || prefersSwitch)
                 {
                     return PlaceCubeOnSwitchFromMiddle(isSwitchSideLeft);
                 }
@@ -240,27 +155,167 @@ public class AutonomousRoutineSelector
                 }
 
             case Left:
-                if (prefersSwitch)
+                if (isOpportunistic)
                 {
-                    return isSwitchSideLeft
-                        ? PlaceCubeOnSameSideSwitch(true, twoCubeMode) : PlaceCubeOnOppositeSideSwitch(true, twoCubeMode);
+                    if (isSwitchSideLeft && isScaleSideLeft)
+                    {
+                        if (prefersSwitch)
+                        {
+                            return PlaceCubeOnSameSideSwitch(true);
+                        }
+                        else
+                        {
+                            if (twoCubePreferScaleMode)
+                            {
+                                return PlaceTwoCubesOnSameSideScale(true);
+                            }
+                            else if (twoCubePreferSwitchMode)
+                            {
+                                return PlaceCubesOnSameSideScaleAndSwitch(true);
+                            }
+                            else
+                            {
+                                return PlaceCubeOnSameSideScaleOnly(true);
+                            }
+                        }
+                    }
+
+                    if (isScaleSideLeft)
+                    {
+                        if (twoCubePreferScaleMode || twoCubePreferSwitchMode)
+                        {
+                            return PlaceTwoCubesOnSameSideScale(true);
+                        }
+                        else
+                        {
+                            return PlaceCubeOnSameSideScaleOnly(true);
+                        }
+                    }
+
+                    if (isSwitchSideLeft)
+                    {
+                        return PlaceCubeOnSameSideSwitch(true);
+                    }
+
+                    return CrossBaseLine(); // prefersSwitch ? PlaceCubeOnOppositeSideSwitch(true) : PlaceCubeOnOppositeSideScale(true);
                 }
                 else
                 {
-                    return isScaleSideLeft
-                        ? PlaceCubeOnSameSideScale(true, twoCubeMode) : PlaceCubeOnOppositeSideScale(true, twoCubeMode);
+                    if (prefersSwitch)
+                    {
+                        if (isSwitchSideLeft)
+                        {
+                            return PlaceCubeOnSameSideSwitch(true);
+                        }
+                        else
+                        {
+                            return PlaceCubeOnOppositeSideSwitch(true);
+                        }
+                    }
+                    else
+                    {
+                        if (isScaleSideLeft)
+                        {
+                            if (twoCubePreferScaleMode || (twoCubePreferSwitchMode && !isSwitchSideLeft))
+                            {
+                                return PlaceTwoCubesOnSameSideScale(true);
+                            }
+                            else if (twoCubePreferSwitchMode)
+                            {
+                                return PlaceCubesOnSameSideScaleAndSwitch(true);
+                            }
+                            else
+                            {
+                                return PlaceCubeOnSameSideScaleOnly(true);
+                            }
+                        }
+                        else
+                        {
+                            return PlaceCubeOnOppositeSideScale(true);
+                        }
+                    }
                 }
 
             case Right:
-                if (prefersSwitch)
+                if (isOpportunistic)
                 {
-                    return !isSwitchSideLeft
-                        ? PlaceCubeOnSameSideSwitch(false, twoCubeMode) : PlaceCubeOnOppositeSideSwitch(false, twoCubeMode);
+                    if (!isSwitchSideLeft && !isScaleSideLeft)
+                    {
+                        if (prefersSwitch)
+                        {
+                            return PlaceCubeOnSameSideSwitch(false);
+                        }
+                        else
+                        {
+                            if (twoCubePreferScaleMode)
+                            {
+                                return PlaceTwoCubesOnSameSideScale(false);
+                            }
+                            else if (twoCubePreferSwitchMode)
+                            {
+                                return PlaceCubesOnSameSideScaleAndSwitch(false);
+                            }
+                            else
+                            {
+                                return PlaceCubeOnSameSideScaleOnly(false);
+                            }
+                        }
+                    }
+
+                    if (!isScaleSideLeft)
+                    {
+                        if (twoCubePreferScaleMode || twoCubePreferSwitchMode)
+                        {
+                            return PlaceTwoCubesOnSameSideScale(false);
+                        }
+                        else
+                        {
+                            return PlaceCubeOnSameSideScaleOnly(false);
+                        }
+                    }
+
+                    if (!isSwitchSideLeft)
+                    {
+                        return PlaceCubeOnSameSideSwitch(false);
+                    }
+
+                    return CrossBaseLine(); // prefersSwitch ? PlaceCubeOnOppositeSideSwitch(false) : PlaceCubeOnOppositeSideScale(false);
                 }
                 else
                 {
-                    return !isScaleSideLeft
-                        ? PlaceCubeOnSameSideScale(false, twoCubeMode) : PlaceCubeOnOppositeSideScale(false, twoCubeMode);
+                    if (prefersSwitch)
+                    {
+                        if (!isSwitchSideLeft)
+                        {
+                            return PlaceCubeOnSameSideSwitch(false);
+                        }
+                        else
+                        {
+                            return PlaceCubeOnOppositeSideSwitch(false);
+                        }
+                    }
+                    else
+                    {
+                        if (!isScaleSideLeft)
+                        {
+                            if (twoCubePreferScaleMode || (twoCubePreferSwitchMode && isSwitchSideLeft))
+                            {
+                                return PlaceTwoCubesOnSameSideScale(false);
+                            }
+                            else if (twoCubePreferSwitchMode)
+                            {
+                                return PlaceCubesOnSameSideScaleAndSwitch(false);
+                            }
+                            else
+                            {
+                                return PlaceCubeOnSameSideScaleOnly(false);
+                            }
+                        }
+                        else
+                        {
+                            return PlaceCubeOnOppositeSideScale(false);
+                        }
+                    }
                 }
 
             case Special:
@@ -279,7 +334,7 @@ public class AutonomousRoutineSelector
         return new WaitTask(0);
     }
 
-    private static IControlTask PlaceCubeOnSameSideSwitch(boolean startingLeft, boolean twoCubeMode)
+    private static IControlTask PlaceCubeOnSameSideSwitch(boolean startingLeft)
     {
         return ConcurrentTask.AllTasks(
             AutonomousRoutineSelector.InitialSetUp(false),
@@ -295,7 +350,7 @@ public class AutonomousRoutineSelector
                 AutonomousRoutineSelector.PostRoutineBackUp()));
     }
 
-    private static IControlTask PlaceCubeOnSameSideScale(boolean startingLeft, boolean twoCubeMode)
+    private static IControlTask PlaceCubeOnSameSideScaleOnly(boolean startingLeft)
     {
         return SequentialTask.Sequence(
             ConcurrentTask.AllTasks(
@@ -318,41 +373,49 @@ public class AutonomousRoutineSelector
                     new WaitTask(0.75),
                     ConcurrentTask.AllTasks(
                         new IntakeArmDownTask(0.25),
-                        new ElevatorMovementTask(0.25, Operation.ElevatorCarryPosition)))),
-            !twoCubeMode
-                ? new WaitTask(0.0)
-                : SequentialTask.Sequence(
-                    new NavxTurnTask(startingLeft ? 150.0 : -150.0),
-                    ConcurrentTask.AllTasks(
-                        new DriveDistanceTimedTask(76.5, 1.75),
-                        new AdvancedIntakeOuttakeTask(Operation.ElevatorIntake, true)),
-                    ConcurrentTask.AllTasks(
-                        SequentialTask.Sequence(
-                            new DriveDistanceTimedTask(-76.5, 1.75),
-                            new NavxTurnTask(startingLeft ? 45.0 : -45.0),
-                            new DriveDistanceTimedTask(-14.5, 1.0)),
-                        SequentialTask.Sequence(
-                            new WaitTask(1.0),
-                            new ElevatorMovementTask(Operation.ElevatorHighScalePosition))),
-                    ConcurrentTask.AnyTasks(
-                        new PIDBrakeTask(),
-                        new OuttakeTask(1.0, true))));
-
-        //        return ConcurrentTask.AllTasks(
-        //            AutonomousRoutineSelector.InitialSetUp(true),
-        //            SequentialTask.Sequence(
-        //                new DriveDistanceTimedTask(303.65, 5.5),
-        //                new NavxTurnTask(startingLeft ? 90.0 : -90.0),
-        //                ConcurrentTask.AllTasks(
-        //                    new DriveDistanceTimedTask(4.0, 0.75),
-        //                    new ElevatorMovementTask(
-        //                        0.75,
-        //                        Operation.ElevatorHighScalePosition)),
-        //                AutonomousRoutineSelector.DepositCube(true),
-        //                AutonomousRoutineSelector.PostRoutineBackUp()));
+                        new ElevatorMovementTask(0.25, Operation.ElevatorCarryPosition)))));
     }
 
-    private static IControlTask PlaceCubeOnOppositeSideSwitch(boolean startingLeft, boolean twoCubeMode)
+    private static IControlTask PlaceTwoCubesOnSameSideScale(boolean startingLeft)
+    {
+        return SequentialTask.Sequence(
+            PlaceCubeOnSameSideScaleOnly(startingLeft),
+            new NavxTurnTask(startingLeft ? 150.0 : -150.0),
+            ConcurrentTask.AllTasks(
+                new DriveDistanceTimedTask(76.5, 1.75),
+                new AdvancedIntakeOuttakeTask(Operation.ElevatorIntake, true)),
+            ConcurrentTask.AllTasks(
+                SequentialTask.Sequence(
+                    new DriveDistanceTimedTask(-76.5, 1.75),
+                    new NavxTurnTask(startingLeft ? 45.0 : -45.0),
+                    new DriveDistanceTimedTask(-14.5, 1.0)),
+                SequentialTask.Sequence(
+                    new WaitTask(1.0),
+                    new ElevatorMovementTask(Operation.ElevatorHighScalePosition))),
+            ConcurrentTask.AnyTasks(
+                new PIDBrakeTask(),
+                new OuttakeTask(1.0, true)));
+    }
+
+    private static IControlTask PlaceCubesOnSameSideScaleAndSwitch(boolean startingLeft)
+    {
+        return SequentialTask.Sequence(
+            PlaceCubeOnSameSideScaleOnly(startingLeft),
+            new NavxTurnTask(startingLeft ? 150.0 : -150.0),
+            ConcurrentTask.AllTasks(
+                new DriveDistanceTimedTask(76.5, 1.75),
+                new AdvancedIntakeOuttakeTask(Operation.ElevatorIntake, true)),
+            ConcurrentTask.AllTasks(
+                new ElevatorMovementTask(Operation.ElevatorSwitchPosition),
+                SequentialTask.Sequence(
+                    new NavxTurnTask(startingLeft ? 160.0 : -160.0),
+                    new DriveDistanceTimedTask(24.0, 1.75))),
+            ConcurrentTask.AnyTasks(
+                new PIDBrakeTask(),
+                new OuttakeTask(1.0, true)));
+    }
+
+    private static IControlTask PlaceCubeOnOppositeSideSwitch(boolean startingLeft)
     {
         //general distance: 30 inches/sec
         //general turn speed: 45 degrees/sec
@@ -374,7 +437,7 @@ public class AutonomousRoutineSelector
                 AutonomousRoutineSelector.PostRoutineBackUp()));
     }
 
-    private static IControlTask PlaceCubeOnOppositeSideScale(boolean startingLeft, boolean twoCubeMode)
+    private static IControlTask PlaceCubeOnOppositeSideScale(boolean startingLeft)
     {
         return ConcurrentTask.AllTasks(
             AutonomousRoutineSelector.InitialSetUp(true),
@@ -413,22 +476,6 @@ public class AutonomousRoutineSelector
     private static IControlTask PlaceCubeOnScaleFromMiddle(boolean scaleIsLeft)
     {
         return new WaitTask(0);
-    }
-
-    private static IControlTask PlaceSecondCubeOnScaleFromScale(boolean startingLeft)
-    {
-        return SequentialTask.Sequence(
-            new NavxTurnTask(startingLeft ? 145.0 : -145.0),
-            ConcurrentTask.AllTasks(
-                new DriveDistanceTimedTask(86.0, 2.0),
-                new AdvancedIntakeOuttakeTask(Operation.ElevatorIntake, true)),
-            new DriveDistanceTimedTask(-86.0, 2.0),
-            ConcurrentTask.AllTasks(
-                new ElevatorMovementTask(Operation.ElevatorHighScalePosition),
-                SequentialTask.Sequence(
-                    new NavxTurnTask(startingLeft ? 60.0 : -60.0),
-                    new DriveDistanceTimedTask(24.0, 1.5))),
-            AutonomousRoutineSelector.DepositCubeOnly());
     }
 
     private static IControlTask CrossBaseLine()
