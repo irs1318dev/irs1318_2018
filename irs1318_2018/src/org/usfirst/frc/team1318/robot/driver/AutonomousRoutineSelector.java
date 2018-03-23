@@ -5,6 +5,7 @@ import org.usfirst.frc.team1318.robot.common.IDashboardLogger;
 import org.usfirst.frc.team1318.robot.common.wpilib.IDigitalInput;
 import org.usfirst.frc.team1318.robot.common.wpilib.IWpilibProvider;
 import org.usfirst.frc.team1318.robot.driver.common.IControlTask;
+import org.usfirst.frc.team1318.robot.driver.controltasks.AdvancedIntakeOuttakeTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.ConcurrentTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.DriveDistancePositionTimedTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.DriveDistanceTimedTask;
@@ -31,6 +32,7 @@ public class AutonomousRoutineSelector
     private final IDigitalInput dipSwitchB;
     private final IDigitalInput dipSwitchC;
     private final IDigitalInput dipSwitchD;
+    private final IDigitalInput jumperE;
 
     private enum Position
     {
@@ -51,6 +53,8 @@ public class AutonomousRoutineSelector
         this.dipSwitchB = provider.getDigitalInput(ElectronicsConstants.AUTO_DIP_SWITCH_B_DIGITAL_CHANNEL);
         this.dipSwitchC = provider.getDigitalInput(ElectronicsConstants.AUTO_DIP_SWITCH_C_DIGITAL_CHANNEL);
         this.dipSwitchD = provider.getDigitalInput(ElectronicsConstants.AUTO_DIP_SWITCH_D_DIGITAL_CHANNEL);
+
+        this.jumperE = provider.getDigitalInput(ElectronicsConstants.AUTO_DIP_JUMPER_E_DIGITAL_CHANNEL);
     }
 
     /**
@@ -64,8 +68,11 @@ public class AutonomousRoutineSelector
         boolean switchC = !this.dipSwitchC.get();
         boolean switchD = !this.dipSwitchD.get();
 
+        boolean jumperE = !this.jumperE.get();
+
         boolean isOpportunistic = switchC;  // Opportunistic if third switch flipped, fixed routine if not
         boolean prefersSwitch = switchD;  // Prefers switch if fourth switch flipped, prefers scale if not
+        boolean twoCubeMode = jumperE; // attempt 2-cube mode if the jumper is in
 
         // add next base2 number (1, 2, 4, 8, 16, etc.) here based on number of dipswitches and which is on...
         int positionSelection = 0;
@@ -104,6 +111,7 @@ public class AutonomousRoutineSelector
         this.logger.logString(AutonomousRoutineSelector.LogName, "position", position.toString());
         this.logger.logBoolean(AutonomousRoutineSelector.LogName, "isOpportunistic", isOpportunistic);
         this.logger.logBoolean(AutonomousRoutineSelector.LogName, "prefersSwitch", prefersSwitch);
+        this.logger.logBoolean(AutonomousRoutineSelector.LogName, "twoCubeMode", twoCubeMode);
 
         boolean isSwitchSideLeft = false;
         boolean isScaleSideLeft = false;
@@ -123,11 +131,11 @@ public class AutonomousRoutineSelector
         }
         else if (isOpportunistic)
         {
-            return opportunisticRoutineSelection(position, prefersSwitch, isSwitchSideLeft, isScaleSideLeft);
+            return opportunisticRoutineSelection(position, prefersSwitch, twoCubeMode, isSwitchSideLeft, isScaleSideLeft);
         }
         else
         {
-            return fixedRoutineSelection(position, prefersSwitch, isSwitchSideLeft, isScaleSideLeft);
+            return fixedRoutineSelection(position, prefersSwitch, twoCubeMode, isSwitchSideLeft, isScaleSideLeft);
         }
     }
 
@@ -156,6 +164,7 @@ public class AutonomousRoutineSelector
     private static IControlTask opportunisticRoutineSelection(
         Position position,
         boolean prefersSwitch,
+        boolean twoCubeMode,
         boolean isSwitchSideLeft,
         boolean isScaleSideLeft)
     {
@@ -167,17 +176,17 @@ public class AutonomousRoutineSelector
             case Left:
                 if (isSwitchSideLeft && isScaleSideLeft)
                 {
-                    return prefersSwitch ? PlaceCubeOnSameSideSwitch(true) : PlaceCubeOnSameSideScale(true);
+                    return prefersSwitch ? PlaceCubeOnSameSideSwitch(true, twoCubeMode) : PlaceCubeOnSameSideScale(true, twoCubeMode);
                 }
 
                 if (isScaleSideLeft)
                 {
-                    return PlaceCubeOnSameSideScale(true);
+                    return PlaceCubeOnSameSideScale(true, twoCubeMode);
                 }
 
                 if (isSwitchSideLeft)
                 {
-                    return PlaceCubeOnSameSideSwitch(true);
+                    return PlaceCubeOnSameSideSwitch(true, twoCubeMode);
                 }
 
                 return CrossBaseLine(); // prefersSwitch ? PlaceCubeOnOppositeSideSwitch(true) : PlaceCubeOnOppositeSideScale(true);
@@ -185,17 +194,17 @@ public class AutonomousRoutineSelector
             case Right:
                 if (!isSwitchSideLeft && !isScaleSideLeft)
                 {
-                    return prefersSwitch ? PlaceCubeOnSameSideSwitch(false) : PlaceCubeOnSameSideScale(false);
+                    return prefersSwitch ? PlaceCubeOnSameSideSwitch(false, twoCubeMode) : PlaceCubeOnSameSideScale(false, twoCubeMode);
                 }
 
                 if (!isScaleSideLeft)
                 {
-                    return PlaceCubeOnSameSideScale(false);
+                    return PlaceCubeOnSameSideScale(false, twoCubeMode);
                 }
 
                 if (!isSwitchSideLeft)
                 {
-                    return PlaceCubeOnSameSideSwitch(false);
+                    return PlaceCubeOnSameSideSwitch(false, twoCubeMode);
                 }
 
                 return CrossBaseLine(); // prefersSwitch ? PlaceCubeOnOppositeSideSwitch(false) : PlaceCubeOnOppositeSideScale(false);
@@ -214,6 +223,7 @@ public class AutonomousRoutineSelector
     private static IControlTask fixedRoutineSelection(
         Position position,
         boolean prefersSwitch,
+        boolean twoCubeMode,
         boolean isSwitchSideLeft,
         boolean isScaleSideLeft)
     {
@@ -232,21 +242,25 @@ public class AutonomousRoutineSelector
             case Left:
                 if (prefersSwitch)
                 {
-                    return isSwitchSideLeft ? PlaceCubeOnSameSideSwitch(true) : PlaceCubeOnOppositeSideSwitch(true);
+                    return isSwitchSideLeft
+                        ? PlaceCubeOnSameSideSwitch(true, twoCubeMode) : PlaceCubeOnOppositeSideSwitch(true, twoCubeMode);
                 }
                 else
                 {
-                    return isScaleSideLeft ? PlaceCubeOnSameSideScale(true) : PlaceCubeOnOppositeSideScale(true);
+                    return isScaleSideLeft
+                        ? PlaceCubeOnSameSideScale(true, twoCubeMode) : PlaceCubeOnOppositeSideScale(true, twoCubeMode);
                 }
 
             case Right:
                 if (prefersSwitch)
                 {
-                    return !isSwitchSideLeft ? PlaceCubeOnSameSideSwitch(false) : PlaceCubeOnOppositeSideSwitch(false);
+                    return !isSwitchSideLeft
+                        ? PlaceCubeOnSameSideSwitch(false, twoCubeMode) : PlaceCubeOnOppositeSideSwitch(false, twoCubeMode);
                 }
                 else
                 {
-                    return !isScaleSideLeft ? PlaceCubeOnSameSideScale(false) : PlaceCubeOnOppositeSideScale(false);
+                    return !isScaleSideLeft
+                        ? PlaceCubeOnSameSideScale(false, twoCubeMode) : PlaceCubeOnOppositeSideScale(false, twoCubeMode);
                 }
 
             case Special:
@@ -265,7 +279,7 @@ public class AutonomousRoutineSelector
         return new WaitTask(0);
     }
 
-    private static IControlTask PlaceCubeOnSameSideSwitch(boolean startingLeft)
+    private static IControlTask PlaceCubeOnSameSideSwitch(boolean startingLeft, boolean twoCubeMode)
     {
         return ConcurrentTask.AllTasks(
             AutonomousRoutineSelector.InitialSetUp(false),
@@ -281,24 +295,49 @@ public class AutonomousRoutineSelector
                 AutonomousRoutineSelector.PostRoutineBackUp()));
     }
 
-    private static IControlTask PlaceCubeOnSameSideScale(boolean startingLeft)
+    private static IControlTask PlaceCubeOnSameSideScale(boolean startingLeft, boolean twoCubeMode)
     {
         return ConcurrentTask.AllTasks(
             AutonomousRoutineSelector.InitialSetUp(true),
             SequentialTask.Sequence(
                 ConcurrentTask.AllTasks(
                     SequentialTask.Sequence(
-                        new DriveDistanceTimedTask(255.25, 5.5),
-                        new NavxTurnTask(startingLeft ? 45.0 : -45.0)),
+                        new DriveDistanceTimedTask(255.25, 4.0),
+                        new NavxTurnTask(startingLeft ? 45.0 : -45.0),
+                        new DriveDistanceTimedTask(14.5, 1.0)),
                     SequentialTask.Sequence(
-                        new WaitTask(4.75),
+                        new WaitTask(3.75),
                         new ElevatorMovementTask(
                             1.75,
                             Operation.ElevatorHighScalePosition))),
-                new DriveDistanceTimedTask(14.5, 1.0),
-                new NavxTurnTask(false, startingLeft ? 60.0 : -60.0),
-                AutonomousRoutineSelector.DepositCube(true),
-                AutonomousRoutineSelector.PostRoutineBackUp()));
+                ConcurrentTask.AnyTasks(
+                    new PIDBrakeTask(),
+                    new OuttakeTask(1.0, true)),
+                ConcurrentTask.AllTasks(
+                    new DriveDistanceTimedTask(-14.5, 1.0),
+                    SequentialTask.Sequence(
+                        new WaitTask(0.75),
+                        ConcurrentTask.AllTasks(
+                            new IntakeArmDownTask(0.25),
+                            new ElevatorMovementTask(0.25, Operation.ElevatorCarryPosition)))),
+                !twoCubeMode
+                    ? new WaitTask(0.0)
+                    : SequentialTask.Sequence(
+                        new NavxTurnTask(startingLeft ? 150.0 : -150.0),
+                        ConcurrentTask.AllTasks(
+                            new DriveDistanceTimedTask(76.5, 1.75),
+                            new AdvancedIntakeOuttakeTask(Operation.ElevatorIntake, true)),
+                        ConcurrentTask.AllTasks(
+                            SequentialTask.Sequence(
+                                new DriveDistanceTimedTask(-76.5, 1.75),
+                                new NavxTurnTask(startingLeft ? 45.0 : -45.0),
+                                new DriveDistanceTimedTask(-14.5, 1.0)),
+                            SequentialTask.Sequence(
+                                new WaitTask(1.0),
+                                new ElevatorMovementTask(Operation.ElevatorHighScalePosition))),
+                        ConcurrentTask.AnyTasks(
+                            new PIDBrakeTask(),
+                            new OuttakeTask(1.0, true)))));
 
         //        return ConcurrentTask.AllTasks(
         //            AutonomousRoutineSelector.InitialSetUp(true),
@@ -314,7 +353,7 @@ public class AutonomousRoutineSelector
         //                AutonomousRoutineSelector.PostRoutineBackUp()));
     }
 
-    private static IControlTask PlaceCubeOnOppositeSideSwitch(boolean startingLeft)
+    private static IControlTask PlaceCubeOnOppositeSideSwitch(boolean startingLeft, boolean twoCubeMode)
     {
         //general distance: 30 inches/sec
         //general turn speed: 45 degrees/sec
@@ -336,7 +375,7 @@ public class AutonomousRoutineSelector
                 AutonomousRoutineSelector.PostRoutineBackUp()));
     }
 
-    private static IControlTask PlaceCubeOnOppositeSideScale(boolean startingLeft)
+    private static IControlTask PlaceCubeOnOppositeSideScale(boolean startingLeft, boolean twoCubeMode)
     {
         return ConcurrentTask.AllTasks(
             AutonomousRoutineSelector.InitialSetUp(true),
@@ -377,18 +416,21 @@ public class AutonomousRoutineSelector
         return new WaitTask(0);
     }
 
-    //    private static IControlTask PlaceSecondCubeOnScaleFromScale(boolean scaleIsLeft)
-    //    {
-    //        return SequentialTask.Sequence(
-    //            new ElevatorMovementTask(2, Operation.ElevatorCarryPosition),
-    //            new DriveDistanceTimedTask(-11, 0.5),
-    //            new NavxTurnTask(false, scaleIsLeft ? 105 : -105),
-    //            new DriveDistanceTimedTask(61, 2),
-    //            new IntakeAndCorrectionTask(),
-    //            new NavxTurnTask(false, scaleIsLeft ? 255 : -255),
-    //            new DriveDistanceTimedTask(76, 2),
-    //            AutonomousRoutineSelector.DepositCube(true));
-    //    }
+    private static IControlTask PlaceSecondCubeOnScaleFromScale(boolean startingLeft)
+    {
+        return SequentialTask.Sequence(
+            new NavxTurnTask(startingLeft ? 145.0 : -145.0),
+            ConcurrentTask.AllTasks(
+                new DriveDistanceTimedTask(86.0, 2.0),
+                new AdvancedIntakeOuttakeTask(Operation.ElevatorIntake, true)),
+            new DriveDistanceTimedTask(-86.0, 2.0),
+            ConcurrentTask.AllTasks(
+                new ElevatorMovementTask(Operation.ElevatorHighScalePosition),
+                SequentialTask.Sequence(
+                    new NavxTurnTask(startingLeft ? 60.0 : -60.0),
+                    new DriveDistanceTimedTask(24.0, 1.5))),
+            AutonomousRoutineSelector.DepositCubeOnly());
+    }
 
     private static IControlTask CrossBaseLine()
     {
@@ -429,11 +471,14 @@ public class AutonomousRoutineSelector
 
     private static IControlTask PostRoutineBackUp()
     {
-        return SequentialTask.Sequence(
-            new DriveDistanceTimedTask(-24.0, 1.5),
-            ConcurrentTask.AllTasks(
-                new IntakeArmDownTask(1.25),
-                new ElevatorMovementTask(1.25, Operation.ElevatorCarryPosition)));
+        return ConcurrentTask.AllTasks(
+            SequentialTask.Sequence(
+                new WaitTask(0.75),
+                ConcurrentTask.AllTasks(
+                    new IntakeArmDownTask(0.75),
+                    new ElevatorMovementTask(0.75, Operation.ElevatorCarryPosition))),
+            new DriveDistanceTimedTask(-24.0, 1.5));
+
     }
 }
 
