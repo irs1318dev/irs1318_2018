@@ -118,18 +118,7 @@ public class AutonomousRoutineSelector
         this.logger.logBoolean(AutonomousRoutineSelector.LogName, "twoCubePreferScaleMode", twoCubePreferScaleMode);
         this.logger.logBoolean(AutonomousRoutineSelector.LogName, "twoCubePreferSwitchMode", twoCubePreferSwitchMode);
 
-        boolean isSwitchSideLeft = false;
-        boolean isScaleSideLeft = false;
-        if (rawSideData != null && rawSideData.length() >= 2)
-        {
-            isSwitchSideLeft = (rawSideData.charAt(0) == 'L');
-            isScaleSideLeft = (rawSideData.charAt(1) == 'L');
-        }
-        else
-        {
-            return CrossBaseLine();
-        }
-
+        // handle special scenarios before trying to parse game data
         if (position == Position.Special)
         {
             if (isOpportunistic && prefersSwitch)
@@ -142,185 +131,113 @@ public class AutonomousRoutineSelector
             }
         }
 
-        switch (position)
+        // parse game data
+        boolean isSwitchSideLeft = false;
+        boolean isScaleSideLeft = false;
+        if (rawSideData != null && rawSideData.length() >= 2)
         {
-            case Center:
-                if (isOpportunistic || prefersSwitch)
+            isSwitchSideLeft = (rawSideData.charAt(0) == 'L');
+            isScaleSideLeft = (rawSideData.charAt(1) == 'L');
+        }
+        else
+        {
+            return CrossBaseLine();
+        }
+
+        // handle center scenario
+        if (position == Position.Center)
+        {
+            if (isOpportunistic || prefersSwitch)
+            {
+                return PlaceCubeOnSwitchFromMiddle(isSwitchSideLeft);
+            }
+            else
+            {
+                return PlaceCubeOnScaleFromMiddle(isScaleSideLeft);
+            }
+        }
+
+        // handle left/right scenarios
+        boolean isRobotLeft = position == Position.Left;
+        if (isOpportunistic)
+        {
+            if (isRobotLeft == isSwitchSideLeft && isRobotLeft == isScaleSideLeft)
+            {
+                if (prefersSwitch)
                 {
-                    return PlaceCubeOnSwitchFromMiddle(isSwitchSideLeft);
+                    return PlaceCubeOnSameSideSwitch(isRobotLeft);
                 }
                 else
                 {
-                    return PlaceCubeOnScaleFromMiddle(isScaleSideLeft);
-                }
-
-            case Left:
-                if (isOpportunistic)
-                {
-                    if (isSwitchSideLeft && isScaleSideLeft)
+                    if (twoCubePreferScaleMode)
                     {
-                        if (prefersSwitch)
-                        {
-                            return PlaceCubeOnSameSideSwitch(true);
-                        }
-                        else
-                        {
-                            if (twoCubePreferScaleMode)
-                            {
-                                return PlaceTwoCubesOnSameSideScale(true);
-                            }
-                            else if (twoCubePreferSwitchMode)
-                            {
-                                return PlaceCubesOnSameSideScaleAndSwitch(true);
-                            }
-                            else
-                            {
-                                return PlaceCubeOnSameSideScaleOnly(true);
-                            }
-                        }
+                        return PlaceTwoCubesOnSameSideScale(isRobotLeft);
                     }
-
-                    if (isScaleSideLeft)
+                    else if (twoCubePreferSwitchMode)
                     {
-                        if (twoCubePreferScaleMode || twoCubePreferSwitchMode)
-                        {
-                            return PlaceTwoCubesOnSameSideScale(true);
-                        }
-                        else
-                        {
-                            return PlaceCubeOnSameSideScaleOnly(true);
-                        }
-                    }
-
-                    if (isSwitchSideLeft)
-                    {
-                        return PlaceCubeOnSameSideSwitch(true);
-                    }
-
-                    return CrossBaseLine(); // prefersSwitch ? PlaceCubeOnOppositeSideSwitch(true) : PlaceCubeOnOppositeSideScale(true);
-                }
-                else
-                {
-                    if (prefersSwitch)
-                    {
-                        if (isSwitchSideLeft)
-                        {
-                            return PlaceCubeOnSameSideSwitch(true);
-                        }
-                        else
-                        {
-                            return PlaceCubeOnOppositeSideSwitch(true);
-                        }
+                        return PlaceCubesOnSameSideScaleAndSwitch(isRobotLeft);
                     }
                     else
                     {
-                        if (isScaleSideLeft)
-                        {
-                            if (twoCubePreferScaleMode || (twoCubePreferSwitchMode && !isSwitchSideLeft))
-                            {
-                                return PlaceTwoCubesOnSameSideScale(true);
-                            }
-                            else if (twoCubePreferSwitchMode)
-                            {
-                                return PlaceCubesOnSameSideScaleAndSwitch(true);
-                            }
-                            else
-                            {
-                                return PlaceCubeOnSameSideScaleOnly(true);
-                            }
-                        }
-                        else
-                        {
-                            return PlaceCubeOnOppositeSideScale(true);
-                        }
+                        return PlaceCubeOnSameSideScaleOnly(isRobotLeft);
                     }
                 }
+            }
 
-            case Right:
-                if (isOpportunistic)
+            if (isRobotLeft == isScaleSideLeft)
+            {
+                if (twoCubePreferScaleMode || twoCubePreferSwitchMode)
                 {
-                    if (!isSwitchSideLeft && !isScaleSideLeft)
-                    {
-                        if (prefersSwitch)
-                        {
-                            return PlaceCubeOnSameSideSwitch(false);
-                        }
-                        else
-                        {
-                            if (twoCubePreferScaleMode)
-                            {
-                                return PlaceTwoCubesOnSameSideScale(false);
-                            }
-                            else if (twoCubePreferSwitchMode)
-                            {
-                                return PlaceCubesOnSameSideScaleAndSwitch(false);
-                            }
-                            else
-                            {
-                                return PlaceCubeOnSameSideScaleOnly(false);
-                            }
-                        }
-                    }
-
-                    if (!isScaleSideLeft)
-                    {
-                        if (twoCubePreferScaleMode || twoCubePreferSwitchMode)
-                        {
-                            return PlaceTwoCubesOnSameSideScale(false);
-                        }
-                        else
-                        {
-                            return PlaceCubeOnSameSideScaleOnly(false);
-                        }
-                    }
-
-                    if (!isSwitchSideLeft)
-                    {
-                        return PlaceCubeOnSameSideSwitch(false);
-                    }
-
-                    return CrossBaseLine(); // prefersSwitch ? PlaceCubeOnOppositeSideSwitch(false) : PlaceCubeOnOppositeSideScale(false);
+                    return PlaceTwoCubesOnSameSideScale(isRobotLeft);
                 }
                 else
                 {
-                    if (prefersSwitch)
+                    return PlaceCubeOnSameSideScaleOnly(isRobotLeft);
+                }
+            }
+
+            if (isRobotLeft == isSwitchSideLeft)
+            {
+                return PlaceCubeOnSameSideSwitch(isRobotLeft);
+            }
+
+            return CrossBaseLine(); // prefersSwitch ? PlaceCubeOnOppositeSideSwitch(isRobotLeft) : PlaceCubeOnOppositeSideScale(isRobotLeft);
+        }
+        else
+        {
+            if (prefersSwitch)
+            {
+                if (isRobotLeft == isSwitchSideLeft)
+                {
+                    return PlaceCubeOnSameSideSwitch(isRobotLeft);
+                }
+                else
+                {
+                    return PlaceCubeOnOppositeSideSwitch(isRobotLeft);
+                }
+            }
+            else
+            {
+                if (isRobotLeft == isScaleSideLeft)
+                {
+                    if (twoCubePreferScaleMode || (twoCubePreferSwitchMode && (isRobotLeft != isSwitchSideLeft)))
                     {
-                        if (!isSwitchSideLeft)
-                        {
-                            return PlaceCubeOnSameSideSwitch(false);
-                        }
-                        else
-                        {
-                            return PlaceCubeOnOppositeSideSwitch(false);
-                        }
+                        return PlaceTwoCubesOnSameSideScale(isRobotLeft);
+                    }
+                    else if (twoCubePreferSwitchMode)
+                    {
+                        return PlaceCubesOnSameSideScaleAndSwitch(isRobotLeft);
                     }
                     else
                     {
-                        if (!isScaleSideLeft)
-                        {
-                            if (twoCubePreferScaleMode || (twoCubePreferSwitchMode && isSwitchSideLeft))
-                            {
-                                return PlaceTwoCubesOnSameSideScale(false);
-                            }
-                            else if (twoCubePreferSwitchMode)
-                            {
-                                return PlaceCubesOnSameSideScaleAndSwitch(false);
-                            }
-                            else
-                            {
-                                return PlaceCubeOnSameSideScaleOnly(false);
-                            }
-                        }
-                        else
-                        {
-                            return PlaceCubeOnOppositeSideScale(false);
-                        }
+                        return PlaceCubeOnSameSideScaleOnly(isRobotLeft);
                     }
                 }
-
-            case Special:
-            default:
-                return GetFillerRoutine();
+                else
+                {
+                    return PlaceCubeOnOppositeSideScale(isRobotLeft);
+                }
+            }
         }
     }
 
@@ -339,14 +256,15 @@ public class AutonomousRoutineSelector
         return ConcurrentTask.AllTasks(
             AutonomousRoutineSelector.InitialSetUp(false),
             SequentialTask.Sequence(
-                new DriveDistanceTimedTask(148.0, 3.5),
-                new NavxTurnTask(startingLeft ? 90.0 : -90.0),
+                new DriveDistanceTimedTask(148.0, 2.5), // 3.5s
                 ConcurrentTask.AllTasks(
-                    new DriveDistanceTimedTask(24.0, 0.75), // 18.5
+                    SequentialTask.Sequence(
+                        new NavxTurnTask(startingLeft ? 90.0 : -90.0),
+                        new DriveDistanceTimedTask(24.0, 0.75)), // 18.5"
                     new ElevatorMovementTask(
-                        0.75,
+                        1.25,
                         Operation.ElevatorSwitchPosition)),
-                AutonomousRoutineSelector.DepositCube(false),
+                AutonomousRoutineSelector.DepositCubeOnly(),
                 AutonomousRoutineSelector.PostRoutineBackUp()));
     }
 
