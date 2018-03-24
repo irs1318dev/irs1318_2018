@@ -637,10 +637,12 @@ public class ElevatorMechanism implements IMechanism
 
         this.collectedIndicatorLight.set(this.isThroughBeamBlocked);
         this.positionReachedIndicatorLight.set(
-            Helpers.WithinDelta(
-                currentTotalHeight,
-                this.desiredInnerHeight + this.desiredOuterHeight,
-                TuningConstants.ELEVATOR_POSITION_REACHED_DELTA));
+            this.isThroughBeamBlocked // Turn on all lights when power cube is collected
+                ||
+                Helpers.WithinDelta(
+                    currentTotalHeight,
+                    this.desiredInnerHeight + this.desiredOuterHeight,
+                    TuningConstants.ELEVATOR_POSITION_REACHED_DELTA));
 
         if (moveArmDown)
         {
