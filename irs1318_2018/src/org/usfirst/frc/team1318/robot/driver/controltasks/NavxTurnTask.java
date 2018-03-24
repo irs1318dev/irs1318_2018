@@ -91,7 +91,7 @@ public class NavxTurnTask extends ControlTaskBase implements IControlTask
 
         this.setAnalogOperationState(
             Operation.DriveTrainTurn,
-            this.turnPidHandler.calculatePosition(desiredAngle, currentMeasuredAngle));
+            this.turnPidHandler.calculatePosition(this.desiredAngle, currentMeasuredAngle));
     }
 
     /**
