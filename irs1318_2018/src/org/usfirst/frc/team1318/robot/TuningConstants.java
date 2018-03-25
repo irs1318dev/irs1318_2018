@@ -25,7 +25,7 @@ public class TuningConstants
     public static final double NAVX_TURN_COMPLETE_TIME = 0.5;
 
     // Navx Turn PID Constants
-    public static final double NAVX_TURN_PID_KP = 0.165;
+    public static final double NAVX_TURN_PID_KP = 0.25;
     public static final double NAVX_TURN_PID_KI = 0.0;
     public static final double NAVX_TURN_PID_KD = 1.0;
     public static final double NAVX_TURN_PID_KF = 0.0;
