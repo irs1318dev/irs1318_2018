@@ -75,8 +75,8 @@ public class AutonomousRoutineSelector
 
         boolean isOpportunistic = switchC;  // Opportunistic if third switch flipped, fixed routine if not
         boolean prefersSwitch = switchD;  // Prefers switch if fourth switch flipped, prefers scale if not
-        boolean twoCubePreferScaleMode = jumperE; // attempt 2-cube mode if the jumper is in, prefer the scale
-        boolean twoCubePreferSwitchMode = jumperF; // attempt 2-cube mode if the jumper is in, prefer the switch
+        boolean twoCubePreferSwitchMode = jumperE; // attempt 2-cube mode if the jumper is in, prefer the switch
+        boolean twoCubePreferScaleMode = jumperF; // attempt 2-cube mode if the jumper is in, prefer the scale
 
         // add next base2 number (1, 2, 4, 8, 16, etc.) here based on number of dipswitches and which is on...
         int positionSelection = 0;
@@ -149,7 +149,14 @@ public class AutonomousRoutineSelector
         {
             if (isOpportunistic || prefersSwitch)
             {
-                return PlaceCubeOnSwitchFromMiddle(isSwitchSideLeft);
+                if (twoCubePreferSwitchMode || twoCubePreferScaleMode)
+                {
+                    return PlaceTwoCubesOnSwitchFromMiddle(isSwitchSideLeft);
+                }
+                else
+                {
+                    return PlaceCubeOnSwitchFromMiddleOnly(isSwitchSideLeft);
+                }
             }
             else
             {
@@ -375,23 +382,37 @@ public class AutonomousRoutineSelector
                 AutonomousRoutineSelector.PostRoutineBackUp()));
     }
 
-    private static IControlTask PlaceCubeOnSwitchFromMiddle(boolean switchIsLeft)
+    private static IControlTask PlaceCubeOnSwitchFromMiddleOnly(boolean switchIsLeft)
     {
-        return ConcurrentTask.AllTasks(
-            AutonomousRoutineSelector.InitialSetUp(false),
-            SequentialTask.Sequence(
-                new DriveDistanceTimedTask(20.0, .75), //1s
-                new NavxTurnTask(switchIsLeft ? -45.0 : 37.5),
-                ConcurrentTask.AllTasks(
-                    SequentialTask.Sequence(
-                        new DriveDistanceTimedTask(switchIsLeft ? 85.0 : 80.0, 1.5), //3s
-                        new NavxTurnTask(false, 0.0),
-                        new DriveDistanceTimedTask(switchIsLeft ? 20.0 : 18.0, .75)), //1.25s
-                    SequentialTask.Sequence(
-                        new WaitTask(1.0),
-                        new ElevatorMovementTask(1.25, Operation.ElevatorSwitchPosition))),
-                AutonomousRoutineSelector.DepositCubeOnly(),
-                AutonomousRoutineSelector.PostRoutineBackUp()));
+        return SequentialTask.Sequence(
+            ConcurrentTask.AllTasks(
+                SequentialTask.Sequence(
+                    new DriveDistanceTimedTask(20.0, .75), //1s
+                    new NavxTurnTask(switchIsLeft ? -45.0 : 37.5),
+                    new DriveDistanceTimedTask(switchIsLeft ? 85.0 : 80.0, 1.5), //3s
+                    new NavxTurnTask(false, 0.0),
+                    new DriveDistanceTimedTask(switchIsLeft ? 20.0 : 18.0, .75)), //1.25s
+                SequentialTask.Sequence(
+                    AutonomousRoutineSelector.InitialSetUp(false),
+                    new WaitTask(2.5),
+                    new ElevatorMovementTask(1.25, Operation.ElevatorSwitchPosition))),
+            AutonomousRoutineSelector.DepositCubeOnly(),
+            AutonomousRoutineSelector.PostRoutineBackUp());
+    }
+
+    private static IControlTask PlaceTwoCubesOnSwitchFromMiddle(boolean switchIsLeft)
+    {
+        return SequentialTask.Sequence(
+            PlaceCubeOnSwitchFromMiddleOnly(switchIsLeft),
+            new NavxTurnTask(switchIsLeft ? 67.25 : -67.25),
+            ConcurrentTask.AllTasks(
+                new AdvancedIntakeOuttakeTask(Operation.ElevatorIntake, true),
+                new DriveDistanceTimedTask(45.0, 1.25)),
+            new DriveDistanceTimedTask(-24.0, 1.25),
+            new NavxTurnTask(false, 0.0),
+            new DriveDistanceTimedTask(24.0, 1.0), //1.25s
+            AutonomousRoutineSelector.DepositCubeOnly(),
+            AutonomousRoutineSelector.PostRoutineBackUp());
     }
 
     private static IControlTask PlaceCubeOnScaleFromMiddle(boolean scaleIsLeft)
@@ -433,7 +454,7 @@ public class AutonomousRoutineSelector
     {
         return ConcurrentTask.AnyTasks(
             new PIDBrakeTask(),
-            new OuttakeTask(2.0, true));
+            new OuttakeTask(1.0, true));
     }
 
     private static IControlTask PostRoutineBackUp()
