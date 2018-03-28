@@ -120,7 +120,7 @@ public class AutonomousRoutineSelector
         // handle special scenarios before trying to parse game data
         if (position == Position.Special)
         {
-            if (isOpportunistic && prefersSwitch)
+            if (isOpportunistic)
             {
                 return CrossBaseLine();
             }
