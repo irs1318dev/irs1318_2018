@@ -6,6 +6,7 @@ import org.usfirst.frc.team1318.robot.common.PIDHandler;
 import org.usfirst.frc.team1318.robot.common.wpilib.ITimer;
 import org.usfirst.frc.team1318.robot.driver.Operation;
 import org.usfirst.frc.team1318.robot.driver.common.IControlTask;
+import org.usfirst.frc.team1318.robot.drivetrain.DriveTrainMechanism;
 import org.usfirst.frc.team1318.robot.general.PositionManager;
 
 /**
@@ -18,9 +19,11 @@ public class NavxTurnTask extends ControlTaskBase implements IControlTask
     private final double minRange;
     private final double maxRange;
 
+    private double desiredTurnVelocity;
     private PIDHandler turnPidHandler;
     private Double completeTime;
     protected PositionManager pManager;
+    protected DriveTrainMechanism dt;
 
     /**
     * Initializes a new NavxTurnTask using time to make sure we completed turn
@@ -70,6 +73,7 @@ public class NavxTurnTask extends ControlTaskBase implements IControlTask
     public void begin()
     {
         this.pManager = this.getInjector().getInstance(PositionManager.class);
+        this.dt = this.getInjector().getInstance(DriveTrainMechanism.class);
         this.turnPidHandler = this.createTurnHandler();
     }
 
@@ -89,9 +93,11 @@ public class NavxTurnTask extends ControlTaskBase implements IControlTask
             currentMeasuredAngle = this.pManager.getOdometryAngle();
         }
 
+        this.desiredTurnVelocity = this.turnPidHandler.calculatePosition(this.desiredAngle, currentMeasuredAngle);
+
         this.setAnalogOperationState(
             Operation.DriveTrainTurn,
-            this.turnPidHandler.calculatePosition(this.desiredAngle, currentMeasuredAngle));
+            this.desiredTurnVelocity);
     }
 
     /**
@@ -123,6 +129,7 @@ public class NavxTurnTask extends ControlTaskBase implements IControlTask
     public boolean hasCompleted()
     {
         double currentMeasuredAngle = this.pManager.getNavxAngle();
+        double currentTurnVelocity = this.dt.getLeftVelocity();
 
         // if we are not within the expected range, let's fall back to using odometry
         if (!Helpers.WithinRange(currentMeasuredAngle, this.minRange, this.maxRange))
@@ -142,6 +149,13 @@ public class NavxTurnTask extends ControlTaskBase implements IControlTask
         }
         else
         {
+            // If desired and current turn velocity are near 0, complete this task. Otherwise, use timer.
+            if (Helpers.WithinDelta(currentTurnVelocity, 0.0, TuningConstants.NAVX_TURN_COMPLETE_CURRENT_VELOCITY_DELTA)
+                && Helpers.WithinDelta(this.desiredTurnVelocity, 0.0, TuningConstants.NAVX_TURN_COMPLETE_DESIRED_VELOCITY_DELTA))
+            {
+                return true;
+            }
+
             ITimer timer = this.getInjector().getInstance(ITimer.class);
             if (this.completeTime == null)
             {

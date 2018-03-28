@@ -173,7 +173,7 @@ public class AutonomousRoutineSelector
             {
                 if (prefersSwitch)
                 {
-                    return PlaceCubeOnSameSideSwitch(isRobotLeft);
+                    return PlaceCubeOnSameSideSwitchOnly(isRobotLeft);
                 }
                 else
                 {
@@ -206,7 +206,7 @@ public class AutonomousRoutineSelector
 
             if (isRobotLeft == isSwitchSideLeft)
             {
-                return PlaceCubeOnSameSideSwitch(isRobotLeft);
+                return PlaceCubeOnSameSideSwitchOnly(isRobotLeft);
             }
 
             return CrossBaseLine(); // prefersSwitch ? PlaceCubeOnOppositeSideSwitch(isRobotLeft) : PlaceCubeOnOppositeSideScale(isRobotLeft);
@@ -217,7 +217,7 @@ public class AutonomousRoutineSelector
             {
                 if (isRobotLeft == isSwitchSideLeft)
                 {
-                    return PlaceCubeOnSameSideSwitch(isRobotLeft);
+                    return PlaceCubeOnSameSideSwitchOnly(isRobotLeft);
                 }
                 else
                 {
@@ -259,7 +259,7 @@ public class AutonomousRoutineSelector
         return new WaitTask(0);
     }
 
-    private static IControlTask PlaceCubeOnSameSideSwitch(boolean startingLeft)
+    private static IControlTask PlaceCubeOnSameSideSwitchOnly(boolean startingLeft)
     {
         return ConcurrentTask.AllTasks(
             AutonomousRoutineSelector.InitialSetUp(false),
@@ -274,6 +274,24 @@ public class AutonomousRoutineSelector
                         Operation.ElevatorSwitchPosition)),
                 AutonomousRoutineSelector.DepositCubeOnly(),
                 AutonomousRoutineSelector.PostRoutineBackUp()));
+    }
+
+    private static IControlTask PlaceTwoCubesOnSameSideSwitch(boolean startingLeft)
+    {
+        return SequentialTask.Sequence(PlaceCubeOnSameSideSwitchOnly(startingLeft),
+            new NavxTurnTask(0),
+            new DriveDistanceTimedTask(60.5, 1.5),
+            new NavxTurnTask(startingLeft ? 145.0 : -145.0),
+            ConcurrentTask.AllTasks(
+                new DriveDistanceTimedTask(18.0, 1),
+                new AdvancedIntakeOuttakeTask(Operation.ElevatorIntake, true)),
+            ConcurrentTask.AllTasks(
+                new ElevatorMovementTask(1.25, Operation.ElevatorSwitchPosition),
+                SequentialTask.Sequence(
+                    new IntakeArmUpTask(0.25),
+                    new DriveDistanceTimedTask(10.0, 1))),
+            AutonomousRoutineSelector.DepositCubeOnly(),
+            AutonomousRoutineSelector.PostRoutineBackUp());
     }
 
     private static IControlTask PlaceCubeOnSameSideScaleOnly(boolean startingLeft)
