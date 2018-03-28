@@ -19,6 +19,7 @@ import org.usfirst.frc.team1318.robot.driver.common.descriptions.ShiftDescriptio
 import org.usfirst.frc.team1318.robot.driver.common.descriptions.UserInputDevice;
 import org.usfirst.frc.team1318.robot.driver.controltasks.AdvancedIntakeOuttakeTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.ConcurrentTask;
+import org.usfirst.frc.team1318.robot.driver.controltasks.DriveDistanceTimedTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.ElevatorMovementTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.IntakeArmUpTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.OuttakeTask;
@@ -157,6 +158,7 @@ public class ButtonMap implements IButtonMap
                 new DigitalOperationDescription(
                     UserInputDevice.Driver,
                     UserInputDeviceButton.JOYSTICK_STICK_TOP_RIGHT_BUTTON,
+                    Shift.None,
                     ButtonType.Click));
             put(
                 Operation.ElevatorTopPosition,
@@ -279,6 +281,36 @@ public class ButtonMap implements IButtonMap
                         Operation.DriveTrainUseBrakeMode,
                         Operation.DriveTrainLeftPosition,
                         Operation.DriveTrainRightPosition,
+                    }));
+
+            // Climber-hooking macro
+            put(
+                MacroOperation.HookClimber,
+                new MacroOperationDescription(
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_STICK_TOP_RIGHT_BUTTON,
+                    Shift.Debug,
+                    ButtonType.Toggle,
+                    () -> SequentialTask.Sequence(
+                        ConcurrentTask.AllTasks(
+                            new DriveDistanceTimedTask(5.0, 0.75),
+                            new ElevatorMovementTask(1.75, Operation.ElevatorClimbPosition)),
+                        new DriveDistanceTimedTask(-5.0, 0.75)),
+                    new Operation[]
+                    {
+                        Operation.DriveTrainUsePositionalMode,
+                        Operation.DriveTrainUseBrakeMode,
+                        Operation.DriveTrainLeftPosition,
+                        Operation.DriveTrainRightPosition,
+                        Operation.DriveTrainTurn,
+                        Operation.DriveTrainMoveForward,
+                        Operation.ElevatorBottomPosition,
+                        Operation.ElevatorCarryPosition,
+                        Operation.ElevatorSwitchPosition,
+                        Operation.ElevatorLowScalePosition,
+                        Operation.ElevatorHighScalePosition,
+                        Operation.ElevatorClimbPosition,
+                        Operation.ElevatorTopPosition,
                     }));
 
             // Centering macro
