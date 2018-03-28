@@ -33,8 +33,8 @@ public class AutonomousRoutineSelector
     private final IDigitalInput dipSwitchB;
     private final IDigitalInput dipSwitchC;
     private final IDigitalInput dipSwitchD;
-    private final IDigitalInput jumperE;
-    private final IDigitalInput jumperF;
+    private final IDigitalInput dipSwitchE;
+    private final IDigitalInput dipSwitchF;
 
     private enum Position
     {
@@ -55,9 +55,8 @@ public class AutonomousRoutineSelector
         this.dipSwitchB = provider.getDigitalInput(ElectronicsConstants.AUTO_DIP_SWITCH_B_DIGITAL_CHANNEL);
         this.dipSwitchC = provider.getDigitalInput(ElectronicsConstants.AUTO_DIP_SWITCH_C_DIGITAL_CHANNEL);
         this.dipSwitchD = provider.getDigitalInput(ElectronicsConstants.AUTO_DIP_SWITCH_D_DIGITAL_CHANNEL);
-
-        this.jumperE = provider.getDigitalInput(ElectronicsConstants.AUTO_DIP_JUMPER_E_DIGITAL_CHANNEL);
-        this.jumperF = provider.getDigitalInput(ElectronicsConstants.AUTO_DIP_JUMPER_F_DIGITAL_CHANNEL);
+        this.dipSwitchE = provider.getDigitalInput(ElectronicsConstants.AUTO_DIP_SWITCH_E_DIGITAL_CHANNEL);
+        this.dipSwitchF = provider.getDigitalInput(ElectronicsConstants.AUTO_DIP_SWITCH_F_DIGITAL_CHANNEL);
     }
 
     /**
@@ -70,14 +69,13 @@ public class AutonomousRoutineSelector
         boolean switchB = !this.dipSwitchB.get();
         boolean switchC = !this.dipSwitchC.get();
         boolean switchD = !this.dipSwitchD.get();
-
-        boolean jumperE = !this.jumperE.get();
-        boolean jumperF = !this.jumperF.get();
+        boolean switchE = !this.dipSwitchE.get();
+        boolean switchF = !this.dipSwitchF.get();
 
         boolean isOpportunistic = switchC;  // Opportunistic if third switch flipped, fixed routine if not
         boolean prefersSwitch = switchD;  // Prefers switch if fourth switch flipped, prefers scale if not
-        boolean twoCubePreferSwitchMode = jumperE; // attempt 2-cube mode if the jumper is in, prefer the switch
-        boolean twoCubePreferScaleMode = jumperF; // attempt 2-cube mode if the jumper is in, prefer the scale
+        boolean twoCubeEnabled = switchE; // 2-cube mode is enabled if fifth switch flipped. 
+        boolean twoCubePrefersSwitch = switchF; // 2nd cube should prefer switch if sixth switch flipped
 
         // add next base2 number (1, 2, 4, 8, 16, etc.) here based on number of dipswitches and which is on...
         int positionSelection = 0;
@@ -116,8 +114,8 @@ public class AutonomousRoutineSelector
         this.logger.logString(AutonomousRoutineSelector.LogName, "position", position.toString());
         this.logger.logBoolean(AutonomousRoutineSelector.LogName, "isOpportunistic", isOpportunistic);
         this.logger.logBoolean(AutonomousRoutineSelector.LogName, "prefersSwitch", prefersSwitch);
-        this.logger.logBoolean(AutonomousRoutineSelector.LogName, "twoCubePreferScaleMode", twoCubePreferScaleMode);
-        this.logger.logBoolean(AutonomousRoutineSelector.LogName, "twoCubePreferSwitchMode", twoCubePreferSwitchMode);
+        this.logger.logBoolean(AutonomousRoutineSelector.LogName, "twoCubeEnabled", twoCubeEnabled);
+        this.logger.logBoolean(AutonomousRoutineSelector.LogName, "twoCubePrefersSwitch", twoCubePrefersSwitch);
 
         // handle special scenarios before trying to parse game data
         if (position == Position.Special)
@@ -150,7 +148,7 @@ public class AutonomousRoutineSelector
         {
             if (isOpportunistic || prefersSwitch)
             {
-                if (twoCubePreferSwitchMode || twoCubePreferScaleMode)
+                if (twoCubeEnabled)
                 {
                     return PlaceTwoCubesOnSwitchFromMiddle(isSwitchSideLeft);
                 }
@@ -173,7 +171,7 @@ public class AutonomousRoutineSelector
             {
                 if (prefersSwitch)
                 {
-                    if (twoCubePreferSwitchMode || twoCubePreferScaleMode)
+                    if (twoCubeEnabled)
                     {
                         return PlaceTwoCubesOnSameSideSwitch(isRobotLeft);
                     }
@@ -184,13 +182,16 @@ public class AutonomousRoutineSelector
                 }
                 else
                 {
-                    if (twoCubePreferScaleMode)
+                    if (twoCubeEnabled)
                     {
-                        return PlaceTwoCubesOnSameSideScale(isRobotLeft);
-                    }
-                    else if (twoCubePreferSwitchMode)
-                    {
-                        return PlaceCubesOnSameSideScaleAndSwitch(isRobotLeft);
+                        if (twoCubePrefersSwitch)
+                        {
+                            return PlaceCubesOnSameSideScaleAndSwitch(isRobotLeft);
+                        }
+                        else
+                        {
+                            return PlaceTwoCubesOnSameSideScale(isRobotLeft);
+                        }
                     }
                     else
                     {
@@ -201,7 +202,7 @@ public class AutonomousRoutineSelector
 
             if (isRobotLeft == isScaleSideLeft)
             {
-                if (twoCubePreferScaleMode || twoCubePreferSwitchMode)
+                if (twoCubeEnabled)
                 {
                     return PlaceTwoCubesOnSameSideScale(isRobotLeft);
                 }
@@ -218,13 +219,13 @@ public class AutonomousRoutineSelector
 
             return CrossBaseLine(); // prefersSwitch ? PlaceCubeOnOppositeSideSwitch(isRobotLeft) : PlaceCubeOnOppositeSideScale(isRobotLeft);
         }
-        else // Not opportunistic
+        else // "always" mode
         {
             if (prefersSwitch)
             {
                 if (isRobotLeft == isSwitchSideLeft)
                 {
-                    if (twoCubePreferScaleMode || twoCubePreferSwitchMode)
+                    if (twoCubeEnabled)
                     {
                         return PlaceTwoCubesOnSameSideSwitch(isRobotLeft);
                     }
@@ -233,29 +234,32 @@ public class AutonomousRoutineSelector
                         return PlaceCubeOnSameSideSwitchOnly(isRobotLeft);
                     }
                 }
-                else
+                else // switch is on opposite side
                 {
                     return PlaceCubeOnOppositeSideSwitch(isRobotLeft);
                 }
             }
-            else
+            else // prefers scale
             {
                 if (isRobotLeft == isScaleSideLeft)
                 {
-                    if (twoCubePreferScaleMode || (twoCubePreferSwitchMode && (isRobotLeft != isSwitchSideLeft)))
+                    if (twoCubeEnabled)
                     {
-                        return PlaceTwoCubesOnSameSideScale(isRobotLeft);
+                        if (!twoCubePrefersSwitch || isRobotLeft != isSwitchSideLeft)
+                        {
+                            return PlaceTwoCubesOnSameSideScale(isRobotLeft);
+                        }
+                        else
+                        {
+                            return PlaceCubesOnSameSideScaleAndSwitch(isRobotLeft);
+                        }
                     }
-                    else if (twoCubePreferSwitchMode)
-                    {
-                        return PlaceCubesOnSameSideScaleAndSwitch(isRobotLeft);
-                    }
-                    else
+                    else // single-cube mode
                     {
                         return PlaceCubeOnSameSideScaleOnly(isRobotLeft);
                     }
                 }
-                else
+                else // scale is on opposite side
                 {
                     return PlaceCubeOnOppositeSideScale(isRobotLeft);
                 }

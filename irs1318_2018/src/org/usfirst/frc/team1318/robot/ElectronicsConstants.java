@@ -29,8 +29,8 @@ public class ElectronicsConstants
     public static final int AUTO_DIP_SWITCH_B_DIGITAL_CHANNEL = 1;
     public static final int AUTO_DIP_SWITCH_C_DIGITAL_CHANNEL = 2;
     public static final int AUTO_DIP_SWITCH_D_DIGITAL_CHANNEL = 3;
-    public static final int AUTO_DIP_JUMPER_E_DIGITAL_CHANNEL = 4;
-    public static final int AUTO_DIP_JUMPER_F_DIGITAL_CHANNEL = 5;
+    public static final int AUTO_DIP_SWITCH_E_DIGITAL_CHANNEL = 4;
+    public static final int AUTO_DIP_SWITCH_F_DIGITAL_CHANNEL = 5;
 
     //================================================== Vision ==============================================================
 
