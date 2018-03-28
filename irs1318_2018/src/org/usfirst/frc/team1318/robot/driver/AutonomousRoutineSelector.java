@@ -173,7 +173,14 @@ public class AutonomousRoutineSelector
             {
                 if (prefersSwitch)
                 {
-                    return PlaceCubeOnSameSideSwitchOnly(isRobotLeft);
+                    if (twoCubePreferSwitchMode || twoCubePreferScaleMode)
+                    {
+                        return PlaceTwoCubesOnSameSideSwitch(isRobotLeft);
+                    }
+                    else
+                    {
+                        return PlaceCubeOnSameSideSwitchOnly(isRobotLeft);
+                    }
                 }
                 else
                 {
@@ -211,13 +218,20 @@ public class AutonomousRoutineSelector
 
             return CrossBaseLine(); // prefersSwitch ? PlaceCubeOnOppositeSideSwitch(isRobotLeft) : PlaceCubeOnOppositeSideScale(isRobotLeft);
         }
-        else
+        else // Not opportunistic
         {
             if (prefersSwitch)
             {
                 if (isRobotLeft == isSwitchSideLeft)
                 {
-                    return PlaceCubeOnSameSideSwitchOnly(isRobotLeft);
+                    if (twoCubePreferScaleMode || twoCubePreferSwitchMode)
+                    {
+                        return PlaceTwoCubesOnSameSideSwitch(isRobotLeft);
+                    }
+                    else
+                    {
+                        return PlaceCubeOnSameSideSwitchOnly(isRobotLeft);
+                    }
                 }
                 else
                 {
