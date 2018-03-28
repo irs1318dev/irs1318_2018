@@ -287,9 +287,7 @@ public class AutonomousRoutineSelector
                 SequentialTask.Sequence(
                     AutonomousRoutineSelector.InitialSetUp(true),
                     new WaitTask(2.75),
-                    new ElevatorMovementTask(
-                        1.75,
-                        Operation.ElevatorHighScalePosition))),
+                    new ElevatorMovementTask(1.75, Operation.ElevatorHighScalePosition))),
             ConcurrentTask.AnyTasks(
                 new PIDBrakeTask(),
                 new OuttakeTask(0.75, true)),
@@ -320,10 +318,11 @@ public class AutonomousRoutineSelector
                     new DriveDistanceTimedTask(14.5, 0.75)), //1s
                 SequentialTask.Sequence(
                     new WaitTask(1.0),
-                    new ElevatorMovementTask(Operation.ElevatorHighScalePosition))),
+                    new ElevatorMovementTask(1.25, Operation.ElevatorHighScalePosition))),
             ConcurrentTask.AnyTasks(
                 new PIDBrakeTask(),
-                new OuttakeTask(1.0, true)));
+                new OuttakeTask(1.0, true)),
+            AutonomousRoutineSelector.PostRoutineBackUp());
     }
 
     private static IControlTask PlaceCubesOnSameSideScaleAndSwitch(boolean startingLeft)
@@ -338,14 +337,15 @@ public class AutonomousRoutineSelector
                     new AdvancedIntakeOuttakeTask(Operation.ElevatorIntake, true))),
             ConcurrentTask.AllTasks(
                 new IntakeArmUpTask(0.25),
-                new ElevatorMovementTask(Operation.ElevatorSwitchPosition),
+                new ElevatorMovementTask(1.25, Operation.ElevatorSwitchPosition),
                 SequentialTask.Sequence(
                     new DriveDistanceTimedTask(-12.0, 1.0),
                     new NavxTurnTask(startingLeft ? 160.0 : -160.0),
                     new DriveDistanceTimedTask(24.0, 1.0))),
             ConcurrentTask.AnyTasks(
                 new PIDBrakeTask(),
-                new OuttakeTask(1.0, true)));
+                new OuttakeTask(1.0, true)),
+            AutonomousRoutineSelector.PostRoutineBackUp());
     }
 
     private static IControlTask PlaceCubeOnOppositeSideSwitch(boolean startingLeft)
