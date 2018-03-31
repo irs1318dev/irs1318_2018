@@ -293,17 +293,15 @@ public class ButtonMap implements IButtonMap
                     ButtonType.Toggle,
                     () -> SequentialTask.Sequence(
                         ConcurrentTask.AllTasks(
-                            new DriveDistanceTimedTask(5.0, 0.75),
+                            new DriveDistanceTimedTask(6.0, 0.75),
                             new ElevatorMovementTask(1.75, Operation.ElevatorClimbPosition)),
-                        new DriveDistanceTimedTask(-5.0, 0.75)),
+                        new DriveDistanceTimedTask(-6.0, 0.75)),
                     new Operation[]
                     {
                         Operation.DriveTrainUsePositionalMode,
                         Operation.DriveTrainUseBrakeMode,
                         Operation.DriveTrainLeftPosition,
                         Operation.DriveTrainRightPosition,
-                        Operation.DriveTrainTurn,
-                        Operation.DriveTrainMoveForward,
                         Operation.ElevatorBottomPosition,
                         Operation.ElevatorCarryPosition,
                         Operation.ElevatorSwitchPosition,

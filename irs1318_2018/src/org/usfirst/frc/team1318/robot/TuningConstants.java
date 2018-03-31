@@ -140,7 +140,7 @@ public class TuningConstants
     public static final double ELEVATOR_MM_POSITION_PID_INNER_KD = 0.0;
     public static final double ELEVATOR_MM_POSITION_PID_INNER_KF = 0.276;
     public static final int ELEVATOR_MM_POSITION_PID_INNER_CRUISE_VELOC = 3500;
-    public static final int ELEVATOR_MM_POSITION_PID_INNER_ACCEL = 2500;
+    public static final int ELEVATOR_MM_POSITION_PID_INNER_ACCEL = 5000;
 
     // MotionMagic Position PID (outer)
     public static final double ELEVATOR_MM_POSITION_PID_OUTER_KP = 0.133;

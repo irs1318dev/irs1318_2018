@@ -12,22 +12,22 @@ import org.usfirst.frc.team1318.robot.elevator.ElevatorMechanism;
  */
 public class AdvancedIntakeOuttakeTask extends ControlTaskBase implements IControlTask
 {
-    private static final Operation[] allOperations =
-        new Operation[]
-        {
-            Operation.ElevatorIntake,
-            Operation.ElevatorIntakeCorrection,
-            Operation.ElevatorWeakOuttake,
-            Operation.ElevatorStrongOuttake,
-        };
+    private static final Operation[] allOperations = new Operation[] {
+        Operation.ElevatorIntake,
+        Operation.ElevatorIntakeCorrection,
+        Operation.ElevatorWeakOuttake,
+        Operation.ElevatorStrongOuttake,
+    };
 
     private final Operation intakeOuttakeOperation;
     private final boolean completeWhenThroughBeamBroken;
+    private final double completionTimeout;
 
     private ITimer timer;
     private ElevatorMechanism elevator;
 
     private double startTime;
+    private Double completeTime;
     private boolean areElevatorArmsDown;
 
     /**
@@ -35,7 +35,7 @@ public class AdvancedIntakeOuttakeTask extends ControlTaskBase implements IContr
      */
     public AdvancedIntakeOuttakeTask(Operation intakeOuttakeOperation)
     {
-        this(intakeOuttakeOperation, false);
+        this(intakeOuttakeOperation, false, 0.25);
     }
 
     /**
@@ -43,8 +43,17 @@ public class AdvancedIntakeOuttakeTask extends ControlTaskBase implements IContr
      */
     public AdvancedIntakeOuttakeTask(Operation intakeOuttakeOperation, boolean completeWhenThroughBeamBroken)
     {
+        this(intakeOuttakeOperation, completeWhenThroughBeamBroken, 0.25);
+    }
+
+    /**
+     * Initializes a new AdvancedIntakeOuttakeTask
+     */
+    public AdvancedIntakeOuttakeTask(Operation intakeOuttakeOperation, boolean completeWhenThroughBeamBroken, double completionTimeout)
+    {
         this.intakeOuttakeOperation = intakeOuttakeOperation;
         this.completeWhenThroughBeamBroken = completeWhenThroughBeamBroken;
+        this.completionTimeout = completionTimeout;
     }
 
     /**
@@ -55,6 +64,7 @@ public class AdvancedIntakeOuttakeTask extends ControlTaskBase implements IContr
     {
         this.timer = this.getInjector().getInstance(ITimer.class);
         this.startTime = this.timer.get();
+        this.completeTime = null;
 
         this.elevator = this.getInjector().getInstance(ElevatorMechanism.class);
         this.areElevatorArmsDown = this.elevator.getArmDownStatus();
@@ -117,7 +127,20 @@ public class AdvancedIntakeOuttakeTask extends ControlTaskBase implements IContr
     @Override
     public boolean hasCompleted()
     {
-        return this.completeWhenThroughBeamBroken && this.elevator.getThroughBeamStatus();
+        if (!this.completeWhenThroughBeamBroken || !this.elevator.getThroughBeamStatus())
+        {
+            this.completeTime = null;
+            return false;
+        }
+
+        double currentTime = this.timer.get();
+        if (this.completeTime == null)
+        {
+            this.completeTime = currentTime;
+            return false;
+        }
+
+        return currentTime - this.completeTime > this.completionTimeout;
     }
 
     private void setOperation(boolean clear)

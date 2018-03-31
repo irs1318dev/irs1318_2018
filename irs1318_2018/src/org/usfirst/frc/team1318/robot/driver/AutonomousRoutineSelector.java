@@ -150,7 +150,14 @@ public class AutonomousRoutineSelector
             {
                 if (twoCubeEnabled)
                 {
-                    return PlaceTwoCubesOnSwitchFromMiddle(isSwitchSideLeft);
+                    if (twoCubePrefersSwitch)
+                    {
+                        return PlaceTwoCubesOnSwitchFromMiddle(isSwitchSideLeft);
+                    }
+                    else
+                    {
+                        return PlaceCubeOnSwitchPrepScaleFromMiddle(isSwitchSideLeft, isScaleSideLeft);
+                    }
                 }
                 else
                 {
@@ -319,16 +326,16 @@ public class AutonomousRoutineSelector
                 SequentialTask.Sequence(
                     new DriveDistanceTimedTask(255.25, 3.5),
                     new NavxTurnTask(startingLeft ? 45.0 : -45.0),
-                    new DriveDistanceTimedTask(14.5, 0.75)),
+                    new DriveDistanceTimedTask(14.5, 0.5)),
                 SequentialTask.Sequence(
                     AutonomousRoutineSelector.InitialSetUp(true),
                     new WaitTask(2.75),
                     new ElevatorMovementTask(1.75, Operation.ElevatorHighScalePosition))),
             ConcurrentTask.AnyTasks(
                 new PIDBrakeTask(),
-                new OuttakeTask(0.75, true)),
+                new OuttakeTask(1.5, true)), // 0.75
             ConcurrentTask.AllTasks(
-                new DriveDistanceTimedTask(-14.5, 0.75),
+                new DriveDistanceTimedTask(-14.5, 0.5),
                 SequentialTask.Sequence(
                     new WaitTask(0.5),
                     ConcurrentTask.AllTasks(
@@ -342,22 +349,22 @@ public class AutonomousRoutineSelector
             PlaceCubeOnSameSideScaleOnly(startingLeft),
             new NavxTurnTask(startingLeft ? 145.0 : -145.0),
             ConcurrentTask.AllTasks(
-                new DriveDistanceTimedTask(72.5, 1.75), // 76.5
+                new DriveDistanceTimedTask(72.5, 1.5), // 76.5
                 SequentialTask.Sequence(
                     new WaitTask(0.75),
                     new AdvancedIntakeOuttakeTask(Operation.ElevatorIntake, true))),
+            new NavxTurnTask(startingLeft ? 145.0 : -145.0),
             ConcurrentTask.AllTasks(
                 SequentialTask.Sequence(
-                    new NavxTurnTask(startingLeft ? 145.0 : -145.0),
                     new DriveDistanceTimedTask(-72.5, 1.75), // 76.5
                     new NavxTurnTask(startingLeft ? 45.0 : -45.0),
-                    new DriveDistanceTimedTask(14.5, 0.75)), //1s
+                    new DriveDistanceTimedTask(14.5, 0.5)), //1s
                 SequentialTask.Sequence(
-                    new WaitTask(1.0),
-                    new ElevatorMovementTask(1.25, Operation.ElevatorHighScalePosition))),
+                    new WaitTask(1.25),
+                    new ElevatorMovementTask(1.75, Operation.ElevatorHighScalePosition))),
             ConcurrentTask.AnyTasks(
                 new PIDBrakeTask(),
-                new OuttakeTask(1.0, true)),
+                new OuttakeTask(1.5, true)), // 1.0
             AutonomousRoutineSelector.PostRoutineBackUp());
     }
 
@@ -380,7 +387,7 @@ public class AutonomousRoutineSelector
                     new DriveDistanceTimedTask(24.0, 1.0))),
             ConcurrentTask.AnyTasks(
                 new PIDBrakeTask(),
-                new OuttakeTask(1.0, true)),
+                new OuttakeTask(1.5, true)), // 1.0
             AutonomousRoutineSelector.PostRoutineBackUp());
     }
 
@@ -419,9 +426,9 @@ public class AutonomousRoutineSelector
                 new NavxTurnTask(startingLeft ? 0.0 : 0.0),
                 new DriveDistanceTimedTask(44.0, 1.25), // 29.0 ??   1.75s
                 new NavxTurnTask(startingLeft ? -45.0 : 45.0),
-                ConcurrentTask.AllTasks(
-                    new DriveDistanceTimedTask(12.0, 0.75), //.75s
-                    new ElevatorMovementTask(0.75, Operation.ElevatorHighScalePosition)),
+                //ConcurrentTask.AllTasks(
+                new ElevatorMovementTask(0.75, Operation.ElevatorHighScalePosition),//),
+                new DriveDistanceTimedTask(14, 0.75), //12in, .75s
                 AutonomousRoutineSelector.DepositCube(true),
                 AutonomousRoutineSelector.PostRoutineBackUp()));
     }
@@ -460,7 +467,8 @@ public class AutonomousRoutineSelector
                 new DriveDistanceTimedTask(45.0, 1.25)),
             ConcurrentTask.AllTasks(
                 SequentialTask.Sequence(
-                    new WaitTask(1.25),
+                    new WaitTask(1.0),
+                    new IntakeArmUpTask(0.25),
                     new ElevatorMovementTask(0.5, Operation.ElevatorSwitchPosition)),
                 SequentialTask.Sequence(
                     new DriveDistanceTimedTask(-24.0, 1.25),
@@ -468,6 +476,40 @@ public class AutonomousRoutineSelector
                     new DriveDistanceTimedTask(24.0, 1.0))), //1.25s
             AutonomousRoutineSelector.DepositCubeOnly(),
             AutonomousRoutineSelector.PostRoutineBackUp());
+    }
+
+    private static IControlTask PlaceCubeOnSwitchPrepScaleFromMiddle(boolean switchIsLeft, boolean scaleIsLeft)
+    {
+        if (switchIsLeft == scaleIsLeft)
+        {
+            return SequentialTask.Sequence(
+                PlaceCubeOnSwitchFromMiddleOnly(switchIsLeft),
+                new NavxTurnTask(switchIsLeft ? 67.25 : -67.25),
+                ConcurrentTask.AllTasks(
+                    new AdvancedIntakeOuttakeTask(Operation.ElevatorIntake, true),
+                    new DriveDistanceTimedTask(45.0, 1.25)),
+                new DriveDistanceTimedTask(-24.0, 0.75),
+                new NavxTurnTask(true, switchIsLeft ? -90.0 : 90.0),
+                new DriveDistanceTimedTask(70.0, 1.5),
+                new NavxTurnTask(true, 0.0),
+                new DriveDistanceTimedTask(150.0, 2.5));
+        }
+        else
+        {
+            return SequentialTask.Sequence(
+                PlaceCubeOnSwitchFromMiddleOnly(switchIsLeft),
+                new NavxTurnTask(switchIsLeft ? 67.25 : -67.25),
+                ConcurrentTask.AllTasks(
+                    new AdvancedIntakeOuttakeTask(Operation.ElevatorIntake, true),
+                    new DriveDistanceTimedTask(45.0, 1.25)),
+                new DriveDistanceTimedTask(-24.0, 0.75),
+                new NavxTurnTask(true, 0.0),
+                new DriveDistanceTimedTask(-50.0, 1.5),
+                new NavxTurnTask(true, scaleIsLeft ? -90.0 : 90.0),
+                new DriveDistanceTimedTask(160.0, 2.5),
+                new NavxTurnTask(true, 0.0),
+                new DriveDistanceTimedTask(160.0, 2.5));
+        }
     }
 
     private static IControlTask PlaceCubeOnScaleFromMiddle(boolean scaleIsLeft)
@@ -509,7 +551,7 @@ public class AutonomousRoutineSelector
     {
         return ConcurrentTask.AnyTasks(
             new PIDBrakeTask(),
-            new OuttakeTask(1.0, true));
+            new OuttakeTask(1.375, true)); // 1.0
     }
 
     private static IControlTask PostRoutineBackUp()
