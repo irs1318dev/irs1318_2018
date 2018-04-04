@@ -88,7 +88,8 @@ public class NavxTurnTask extends ControlTaskBase implements IControlTask
         double currentMeasuredAngle = this.pManager.getNavxAngle();
 
         // if we are not within the expected range, let's fall back to using odometry
-        if (!Helpers.WithinRange(currentMeasuredAngle, this.minRange, this.maxRange))
+        if (!this.pManager.getNavxIsConnected()
+            || !Helpers.WithinRange(currentMeasuredAngle, this.minRange, this.maxRange))
         {
             currentMeasuredAngle = this.pManager.getOdometryAngle();
         }
@@ -132,7 +133,8 @@ public class NavxTurnTask extends ControlTaskBase implements IControlTask
         double currentTurnVelocity = this.dt.getLeftVelocity();
 
         // if we are not within the expected range, let's fall back to using odometry
-        if (!Helpers.WithinRange(currentMeasuredAngle, this.minRange, this.maxRange))
+        if (!this.pManager.getNavxIsConnected()
+            || !Helpers.WithinRange(currentMeasuredAngle, this.minRange, this.maxRange))
         {
             currentMeasuredAngle = this.pManager.getOdometryAngle();
         }
