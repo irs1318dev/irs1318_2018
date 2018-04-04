@@ -690,9 +690,6 @@ public class ElevatorMechanism implements IMechanism
         this.outerElevatorForwardLimitSwitchStatus = false;
         this.outerElevatorReverseLimitSwitchStatus = false;
 
-        this.desiredInnerHeight = 0.0;
-        this.desiredOuterHeight = 0.0;
-
         this.isThroughBeamBlocked = false;
     }
 }

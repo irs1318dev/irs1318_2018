@@ -27,6 +27,7 @@ import org.usfirst.frc.team1318.robot.driver.controltasks.PIDBrakeTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.SequentialTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.VisionAdvanceAndCenterTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.VisionCenteringTask;
+import org.usfirst.frc.team1318.robot.driver.controltasks.WaitTask;
 
 @Singleton
 public class ButtonMap implements IButtonMap
@@ -293,9 +294,11 @@ public class ButtonMap implements IButtonMap
                     ButtonType.Toggle,
                     () -> SequentialTask.Sequence(
                         ConcurrentTask.AllTasks(
-                            new DriveDistanceTimedTask(6.0, 0.75),
-                            new ElevatorMovementTask(1.75, Operation.ElevatorClimbPosition)),
-                        new DriveDistanceTimedTask(-6.0, 0.75)),
+                            SequentialTask.Sequence(
+                                new WaitTask(0.5),
+                                new ElevatorMovementTask(1.75, Operation.ElevatorClimbPosition)),
+                            new DriveDistanceTimedTask(6.0, 0.75)),
+                        new DriveDistanceTimedTask(-10.0, 1.0)), // -6.0 (drive faster back into the rung) 
                     new Operation[]
                     {
                         Operation.DriveTrainUsePositionalMode,
