@@ -478,8 +478,8 @@ public class ElevatorMechanism implements IMechanism
                     && this.desiredInnerHeight == TuningConstants.ELEVATOR_INNER_CARRY_POSITION
                     && this.desiredOuterHeight == TuningConstants.ELEVATOR_OUTER_CARRY_POSITION))
             {
-                newDesiredInnerHeight = 0;
-                newDesiredOuterHeight = 0;
+                newDesiredInnerHeight = TuningConstants.ELEVATOR_INNER_BOTTOM_POSITION;
+                newDesiredOuterHeight = TuningConstants.ELEVATOR_OUTER_BOTTOM_POSITION;
             }
             else if (this.driver.getDigital(Operation.ElevatorCarryPosition))
             {
@@ -549,8 +549,16 @@ public class ElevatorMechanism implements IMechanism
                 }
             }
 
-            this.desiredInnerHeight = Helpers.EnforceRange(newDesiredInnerHeight, 0.0, HardwareConstants.ELEVATOR_INNER_MAX_HEIGHT);
-            this.desiredOuterHeight = Helpers.EnforceRange(newDesiredOuterHeight, 0.0, HardwareConstants.ELEVATOR_OUTER_MAX_HEIGHT);
+            this.desiredInnerHeight =
+                Helpers.EnforceRange(
+                    newDesiredInnerHeight,
+                    TuningConstants.ELEVATOR_INNER_BOTTOM_POSITION,
+                    HardwareConstants.ELEVATOR_INNER_MAX_HEIGHT);
+            this.desiredOuterHeight =
+                Helpers.EnforceRange(
+                    newDesiredOuterHeight,
+                    TuningConstants.ELEVATOR_OUTER_BOTTOM_POSITION,
+                    HardwareConstants.ELEVATOR_OUTER_MAX_HEIGHT);
 
             this.logger.logNumber(ElevatorMechanism.LogName, "desiredInnerHeight", this.desiredInnerHeight);
             this.logger.logNumber(ElevatorMechanism.LogName, "desiredOuterHeight", this.desiredOuterHeight);

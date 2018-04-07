@@ -296,7 +296,7 @@ public class ButtonMap implements IButtonMap
                         ConcurrentTask.AllTasks(
                             SequentialTask.Sequence(
                                 new WaitTask(0.5),
-                                new ElevatorMovementTask(1.75, Operation.ElevatorClimbPosition)),
+                                new ElevatorMovementTask(1.0, Operation.ElevatorClimbPosition)),
                             new DriveDistanceTimedTask(6.0, 0.75)),
                         new DriveDistanceTimedTask(-10.0, 1.0)), // -6.0 (drive faster back into the rung) 
                     new Operation[]

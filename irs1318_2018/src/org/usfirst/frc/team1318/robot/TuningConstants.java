@@ -22,7 +22,7 @@ public class TuningConstants
     public static final double NAVX_TURN_MIN_ACCEPTABLE_ANGLE_VALUE = -720.0;
     public static final double NAVX_TURN_MAX_ACCEPTABLE_ANGLE_VALUE = 720.0;
     public static final double MAX_NAVX_TURN_RANGE_DEGREES = 4.0;
-    public static final double NAVX_TURN_COMPLETE_TIME = 0.5;
+    public static final double NAVX_TURN_COMPLETE_TIME = 0.4;
     public static final double NAVX_TURN_COMPLETE_CURRENT_VELOCITY_DELTA = 0;
     public static final double NAVX_TURN_COMPLETE_DESIRED_VELOCITY_DELTA = 0;
 
@@ -90,14 +90,14 @@ public class TuningConstants
     public static final double DRIVETRAIN_POSITION_PID_RIGHT_KI = 0.0;
     public static final double DRIVETRAIN_POSITION_PID_RIGHT_KD = 0.0;
     public static final double DRIVETRAIN_POSITION_PID_RIGHT_KF = 0.0;
-    public static final double DRIVETRAIN_POSITION_PID_RIGHT_KCC = 0.00005;
+    public static final double DRIVETRAIN_POSITION_PID_RIGHT_KCC = 0.0001;
 
     // Position PID (left)
     public static final double DRIVETRAIN_POSITION_PID_LEFT_KP = 0.0002;
     public static final double DRIVETRAIN_POSITION_PID_LEFT_KI = 0.0;
     public static final double DRIVETRAIN_POSITION_PID_LEFT_KD = 0.0;
     public static final double DRIVETRAIN_POSITION_PID_LEFT_KF = 0.0;
-    public static final double DRIVETRAIN_POSITION_PID_LEFT_KCC = 0.00005;
+    public static final double DRIVETRAIN_POSITION_PID_LEFT_KCC = 0.0001;
 
     // Brake PID (right)
     public static final double DRIVETRAIN_BRAKE_PID_RIGHT_KP = 0.0012;
@@ -124,7 +124,7 @@ public class TuningConstants
     public static final double DRIVETRAIN_MAX_POWER_POSITIONAL_NON_PID = 0.2;// max power level (positional, non-PID)
 
     public static final double DRIVETRAIN_CROSS_COUPLING_ZERO_ERROR_RANGE = 100.0; // (in ticks)
-    public static final double DRIVETRAIN_POSITIONAL_MAX_POWER_LEVEL = 0.85; // 0.75
+    public static final double DRIVETRAIN_POSITIONAL_MAX_POWER_LEVEL = 0.90; // 0.85
     public static final double DRIVETRAIN_BRAKE_MAX_POWER_LEVEL = 0.6;
     public static final double DRIVETRAIN_VELOCITY_MAX_POWER_LEVEL = 1.0;
 
@@ -186,6 +186,8 @@ public class TuningConstants
     public static final double ELEVATOR_THROUGH_BEAM_UNBLOCKED_VOLTAGE_THRESHOLD = 3.0;
 
     // Elevator positions (in inches)
+    public static final double ELEVATOR_INNER_BOTTOM_POSITION = 0.0;
+    public static final double ELEVATOR_OUTER_BOTTOM_POSITION = -1.0;
     public static final double ELEVATOR_INNER_CARRY_POSITION = 0.0;
     public static final double ELEVATOR_OUTER_CARRY_POSITION = 3.5;
     public static final double ELEVATOR_INNER_SWITCH_POSITION = 0; // Switch Fence Height: 19in. 

@@ -463,12 +463,10 @@ public class DriveTrainMechanism implements IMechanism
             double leftPositionError = this.leftPID.getError();
             double rightPositionError = this.rightPID.getError();
 
+            double positionErrorMagnitudeDelta = leftPositionError - rightPositionError;
             if (TuningConstants.DRIVETRAIN_USE_CROSS_COUPLING
-                && Helpers.WithinDelta(leftPositionError, 0.0, TuningConstants.DRIVETRAIN_CROSS_COUPLING_ZERO_ERROR_RANGE)
-                && Helpers.WithinDelta(rightPositionError, 0.0, TuningConstants.DRIVETRAIN_CROSS_COUPLING_ZERO_ERROR_RANGE))
+                && !Helpers.WithinDelta(positionErrorMagnitudeDelta, 0.0, TuningConstants.DRIVETRAIN_CROSS_COUPLING_ZERO_ERROR_RANGE))
             {
-                double positionErrorMagnitudeDelta = leftPositionError - rightPositionError;
-
                 // add the delta times the coupling factor to the left, and subtract from the right
                 // (if left error is greater than right error, left should be given some more power than right)
                 leftPower += TuningConstants.DRIVETRAIN_POSITION_PID_LEFT_KCC * positionErrorMagnitudeDelta;
