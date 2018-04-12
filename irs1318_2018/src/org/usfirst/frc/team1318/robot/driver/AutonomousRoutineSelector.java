@@ -78,6 +78,8 @@ public class AutonomousRoutineSelector
         boolean twoCubeEnabled = switchE; // 2-cube mode is enabled if fifth switch flipped. 
         boolean twoCubePrefersSwitch = switchF; // 2nd cube should prefer switch if sixth switch flipped
 
+        boolean nuclearOption = false;
+
         // add next base2 number (1, 2, 4, 8, 16, etc.) here based on number of dipswitches and which is on...
         int positionSelection = 0;
         if (switchA)
@@ -121,9 +123,31 @@ public class AutonomousRoutineSelector
         // handle special scenarios before trying to parse game data
         if (position == Position.Special)
         {
-            if (isOpportunistic)
+            if (!switchE || !switchF)
             {
-                return CrossBaseLine();
+                if (switchC)
+                {
+                    return CrossBaseLine();
+                }
+                else
+                {
+                    return GetFillerRoutine();
+                }
+            }
+
+            // Nuclear option...
+            // nuclearOption = true;
+            isOpportunistic = true;
+            prefersSwitch = true;
+            twoCubeEnabled = true;
+            twoCubePrefersSwitch = true;
+            if (switchC && !switchD)
+            {
+                position = Position.Left;
+            }
+            else if (!switchC && switchD)
+            {
+                position = Position.Right;
             }
             else
             {
@@ -230,6 +254,11 @@ public class AutonomousRoutineSelector
                 {
                     return PlaceCubeOnSameSideSwitchOnly(isRobotLeft);
                 }
+            }
+
+            if (nuclearOption)
+            {
+                return NuclearOption(isRobotLeft);
             }
 
             return CrossBaseLine(); // prefersSwitch ? PlaceCubeOnOppositeSideSwitch(isRobotLeft) : PlaceCubeOnOppositeSideScale(isRobotLeft);
@@ -539,6 +568,18 @@ public class AutonomousRoutineSelector
         return ConcurrentTask.AllTasks(
             AutonomousRoutineSelector.InitialSetUp(true),
             new DriveDistancePositionTimedTask(0.5, 145.0, 5.0));
+    }
+
+    private static IControlTask NuclearOption(boolean isRobotLeft)
+    {
+        return SequentialTask.Sequence(
+            new DriveDistanceTimedTask(305.0, 5.0),
+            new NavxTurnTask(isRobotLeft ? 90.0 : -90.0),
+            ConcurrentTask.AnyTasks(
+                new PIDBrakeTask(),
+                new WaitTask(7.0)),
+            new NavxTurnTask(0.0),
+            new DriveDistanceTimedTask(-70.0, 1.5));
     }
 
     private static IControlTask InitialSetUp(boolean putArmDown)
