@@ -138,9 +138,9 @@ public class AutonomousRoutineSelector
             // Nuclear option...
             // nuclearOption = true;
             isOpportunistic = true;
-            prefersSwitch = true;
+            prefersSwitch = false;
             twoCubeEnabled = true;
-            twoCubePrefersSwitch = true;
+            twoCubePrefersSwitch = false;
             if (switchC && !switchD)
             {
                 position = Position.Left;
