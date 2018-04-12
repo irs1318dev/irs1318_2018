@@ -244,6 +244,11 @@ public class AutonomousRoutineSelector
                 }
             }
 
+            if (nuclearOption)
+            {
+                return NuclearOption(isRobotLeft);
+            }
+
             if (isRobotLeft == isSwitchSideLeft)
             {
                 if (twoCubeEnabled)
@@ -254,11 +259,6 @@ public class AutonomousRoutineSelector
                 {
                     return PlaceCubeOnSameSideSwitchOnly(isRobotLeft);
                 }
-            }
-
-            if (nuclearOption)
-            {
-                return NuclearOption(isRobotLeft);
             }
 
             return CrossBaseLine(); // prefersSwitch ? PlaceCubeOnOppositeSideSwitch(isRobotLeft) : PlaceCubeOnOppositeSideScale(isRobotLeft);
