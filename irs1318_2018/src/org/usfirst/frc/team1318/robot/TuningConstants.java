@@ -128,6 +128,9 @@ public class TuningConstants
     public static final double DRIVETRAIN_BRAKE_MAX_POWER_LEVEL = 0.6;
     public static final double DRIVETRAIN_VELOCITY_MAX_POWER_LEVEL = 1.0;
 
+    public static final boolean DRIVETRAIN_REGULAR_MODE_SQUARING = false;
+    public static final boolean DRIVETRAIN_SIMPLE_MODE_SQUARING = true;
+
     public static final double DRIVETRAIN_ENCODER_ODOMETRY_ANGLE_CORRECTION = 1.0; // account for turning weirdness (any degree offset in the angle)
 
     //================================================== Elevator ==============================================================

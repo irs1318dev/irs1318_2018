@@ -86,9 +86,9 @@ public class ButtonMap implements IButtonMap
             put(
                 Operation.DriveTrainSimpleMode,
                 new DigitalOperationDescription(
-                    UserInputDevice.None,
-                    UserInputDeviceButton.NONE,
-                    ButtonType.Toggle));
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_STICK_BOTTOM_RIGHT_BUTTON,
+                    ButtonType.Simple));
             put(
                 Operation.DriveTrainUsePositionalMode,
                 new DigitalOperationDescription(
@@ -398,8 +398,8 @@ public class ButtonMap implements IButtonMap
             put(
                 MacroOperation.ReIntake,
                 new MacroOperationDescription(
-                    UserInputDevice.Driver,
-                    UserInputDeviceButton.JOYSTICK_STICK_BOTTOM_RIGHT_BUTTON,
+                    UserInputDevice.None,
+                    UserInputDeviceButton.NONE,
                     ButtonType.Simple,
                     () -> SequentialTask.Sequence(
                         new OuttakeTask(0.1, false),

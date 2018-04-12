@@ -395,6 +395,28 @@ public class DriveTrainMechanism implements IMechanism
             forwardVelocity *= -1.0;
         }
 
+        if ((!simpleDriveModeEnabled && TuningConstants.DRIVETRAIN_REGULAR_MODE_SQUARING)
+            || (simpleDriveModeEnabled && TuningConstants.DRIVETRAIN_SIMPLE_MODE_SQUARING))
+        {
+            if (turnAmount >= 0)
+            {
+                turnAmount = turnAmount * turnAmount;
+            }
+            else
+            {
+                turnAmount = -1.0 * turnAmount * turnAmount;
+            }
+
+            if (forwardVelocity >= 0)
+            {
+                forwardVelocity = forwardVelocity * forwardVelocity;
+            }
+            else
+            {
+                forwardVelocity = -1.0 * forwardVelocity * forwardVelocity;
+            }
+        }
+
         // adjust the intensity of the input
         if (simpleDriveModeEnabled)
         {
