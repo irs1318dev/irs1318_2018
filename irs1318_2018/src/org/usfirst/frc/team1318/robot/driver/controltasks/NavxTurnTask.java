@@ -18,6 +18,7 @@ public class NavxTurnTask extends ControlTaskBase implements IControlTask
     private final double desiredAngle;
     private final double minRange;
     private final double maxRange;
+    private final double waitTime;
 
     private double desiredTurnVelocity;
     private PIDHandler turnPidHandler;
@@ -45,7 +46,23 @@ public class NavxTurnTask extends ControlTaskBase implements IControlTask
             useTime,
             desiredAngle,
             TuningConstants.NAVX_TURN_MIN_ACCEPTABLE_ANGLE_VALUE,
-            TuningConstants.NAVX_TURN_MAX_ACCEPTABLE_ANGLE_VALUE);
+            TuningConstants.NAVX_TURN_MAX_ACCEPTABLE_ANGLE_VALUE,
+            TuningConstants.NAVX_TURN_COMPLETE_TIME);
+    }
+
+    /**
+     * Initializes a new NavxTurnTask using a variable wait time after turn has reached the goal
+     * @param desiredAngle the desired angle
+     * @param waitTime the desired wait time
+     */
+    public NavxTurnTask(double desiredAngle, double waitTime)
+    {
+        this(true,
+            desiredAngle,
+            TuningConstants.NAVX_TURN_MIN_ACCEPTABLE_ANGLE_VALUE,
+            TuningConstants.NAVX_TURN_MAX_ACCEPTABLE_ANGLE_VALUE,
+            waitTime);
+
     }
 
     /**
@@ -55,12 +72,13 @@ public class NavxTurnTask extends ControlTaskBase implements IControlTask
     * @param minRange the minimum of the measured angle range that we accept from the navx
     * @param maxRange the maximum of the measured angle range that we accept from the navx
     */
-    public NavxTurnTask(boolean useTime, double desiredAngle, double minRange, double maxRange)
+    public NavxTurnTask(boolean useTime, double desiredAngle, double minRange, double maxRange, double waitTime)
     {
         this.useTime = useTime;
         this.desiredAngle = desiredAngle;
         this.minRange = minRange;
         this.maxRange = maxRange;
+        this.waitTime = waitTime;
 
         this.turnPidHandler = null;
         this.completeTime = null;
@@ -164,7 +182,7 @@ public class NavxTurnTask extends ControlTaskBase implements IControlTask
                 this.completeTime = timer.get();
                 return false;
             }
-            else if (timer.get() - this.completeTime < TuningConstants.NAVX_TURN_COMPLETE_TIME)
+            else if (timer.get() - this.completeTime < this.waitTime)
             {
                 return false;
             }
