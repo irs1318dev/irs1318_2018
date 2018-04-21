@@ -73,12 +73,10 @@ public class AutonomousRoutineSelector
         boolean switchE = !this.dipSwitchE.get();
         boolean switchF = !this.dipSwitchF.get();
 
-        //boolean isOpportunistic = switchC;  // Opportunistic if third switch flipped, fixed routine if not
-        //boolean prefersSwitch = switchD;  // Prefers switch if fourth switch flipped, prefers scale if not
-        //boolean twoCubeEnabled = switchE; // 2-cube mode is enabled if fifth switch flipped. 
-        //boolean twoCubePrefersSwitch = switchF; // 2nd cube should prefer switch if sixth switch flipped
-
-        boolean nuclearOption = false;
+        boolean isOpportunistic = switchC;  // Opportunistic if third switch flipped, fixed routine if not
+        boolean prefersSwitch = switchD;  // Prefers switch if fourth switch flipped, prefers scale if not
+        boolean twoCubeEnabled = switchE; // 2-cube mode is enabled if fifth switch flipped. 
+        boolean twoCubePrefersSwitch = switchF; // 2nd cube should prefer switch if sixth switch flipped
 
         // add next base2 number (1, 2, 4, 8, 16, etc.) here based on number of dipswitches and which is on...
         int positionSelection = 0;
@@ -115,39 +113,17 @@ public class AutonomousRoutineSelector
         // print routine parameters to the smartdash
         this.logger.logString(AutonomousRoutineSelector.LogName, "gameData", rawSideData);
         this.logger.logString(AutonomousRoutineSelector.LogName, "position", position.toString());
-        //this.logger.logBoolean(AutonomousRoutineSelector.LogName, "isOpportunistic", isOpportunistic);
-        //this.logger.logBoolean(AutonomousRoutineSelector.LogName, "prefersSwitch", prefersSwitch);
-        //this.logger.logBoolean(AutonomousRoutineSelector.LogName, "twoCubeEnabled", twoCubeEnabled);
-        //this.logger.logBoolean(AutonomousRoutineSelector.LogName, "twoCubePrefersSwitch", twoCubePrefersSwitch);
+        this.logger.logBoolean(AutonomousRoutineSelector.LogName, "isOpportunistic", isOpportunistic);
+        this.logger.logBoolean(AutonomousRoutineSelector.LogName, "prefersSwitch", prefersSwitch);
+        this.logger.logBoolean(AutonomousRoutineSelector.LogName, "twoCubeEnabled", twoCubeEnabled);
+        this.logger.logBoolean(AutonomousRoutineSelector.LogName, "twoCubePrefersSwitch", twoCubePrefersSwitch);
 
         // handle special scenarios before trying to parse game data
         if (position == Position.Special)
         {
-            if (!switchE || !switchF)
+            if (switchC)
             {
-                if (switchC)
-                {
-                    return CrossBaseLine();
-                }
-                else
-                {
-                    return GetFillerRoutine();
-                }
-            }
-
-            // Nuclear option...
-            // nuclearOption = true;
-            //isOpportunistic = true;
-            //prefersSwitch = false;
-            //twoCubeEnabled = true;
-            //twoCubePrefersSwitch = false;
-            if (switchC && !switchD)
-            {
-                position = Position.Left;
-            }
-            else if (!switchC && switchD)
-            {
-                position = Position.Right;
+                return CrossBaseLine();
             }
             else
             {
@@ -171,11 +147,11 @@ public class AutonomousRoutineSelector
         // handle center scenario
         if (position == Position.Center)
         {
-            return PlaceTwoCubesOnSwitchFromMiddle(isSwitchSideLeft);
-            /*            if (twoCubeEnabled)
+            if (twoCubeEnabled)
             {
                 if (twoCubePrefersSwitch)
                 {
+                    return PlaceTwoCubesOnSwitchFromMiddle(isSwitchSideLeft);
                 }
                 else
                 {
@@ -186,9 +162,10 @@ public class AutonomousRoutineSelector
             {
                 return PlaceCubeOnSwitchFromMiddleOnly(isSwitchSideLeft);
             }
-            */
         }
 
+        /*
+        // Houston Turing eliminations strategy:
         boolean isRobotLeft = position == Position.Left;
         if (isRobotLeft == isSwitchSideLeft && isRobotLeft == isScaleSideLeft)
         {
@@ -210,9 +187,10 @@ public class AutonomousRoutineSelector
             // neither on our side
             return OpportunisticCrossCenter(isRobotLeft);
         }
+         */
 
-        /*
         // handle left/right scenarios
+        boolean isRobotLeft = position == Position.Left;
         if (isOpportunistic)
         {
             if (isRobotLeft == isSwitchSideLeft && isRobotLeft == isScaleSideLeft)
@@ -247,7 +225,7 @@ public class AutonomousRoutineSelector
                     }
                 }
             }
-        
+
             if (isRobotLeft == isScaleSideLeft)
             {
                 if (twoCubeEnabled)
@@ -259,12 +237,7 @@ public class AutonomousRoutineSelector
                     return PlaceCubeOnSameSideScaleCollaborative(isRobotLeft);
                 }
             }
-        
-            if (nuclearOption)
-            {
-                return NuclearOption(isRobotLeft);
-            }
-        
+
             if (isRobotLeft == isSwitchSideLeft)
             {
                 if (twoCubeEnabled)
@@ -283,7 +256,7 @@ public class AutonomousRoutineSelector
                     return PlaceCubeOnSameSideSwitch(isRobotLeft);
                 }
             }
-        
+
             //return CrossBaseLine(); 
             return OpportunisticCrossCenter(isRobotLeft);
         }
@@ -340,7 +313,6 @@ public class AutonomousRoutineSelector
                 }
             }
         }
-        */
     }
 
     private IControlTask OpportunisticCrossCenter(boolean startingLeft)
