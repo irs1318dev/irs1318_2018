@@ -659,17 +659,6 @@ public class AutonomousRoutineSelector
             new DriveDistancePositionTimedTask(0.5, 145.0, 5.0));
     }
 
-    private static IControlTask NuclearOption(boolean isRobotLeft)
-    {
-        return SequentialTask.Sequence(
-            new DriveDistanceTimedTask(318.0, 5.0),
-            ConcurrentTask.AnyTasks(
-                new PIDBrakeTask(),
-                new WaitTask(7.0)),
-            new NavxTurnTask(true, 0.0),
-            new DriveDistanceTimedTask(-70.0, 1.5));
-    }
-
     private static IControlTask InitialSetUp(boolean putArmDown)
     {
         if (putArmDown)
